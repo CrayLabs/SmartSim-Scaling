@@ -77,6 +77,16 @@ installation instructions.
 Next, we build the scaling tests themselves with SILC C++ client
 included.
 
+Prior to this step, ensure that SILC has been installed as follows
+
+```bash
+
+# inside top-level silc dir
+make lib
+make pyclient
+source setup_env.sh
+```
+
 One Cmake edit is required. Near the top of the CMake file, change the
 path to the SILC variable to the top level of the directory where
 you installed SILC.
