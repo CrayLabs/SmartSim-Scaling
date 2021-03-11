@@ -92,7 +92,7 @@ The following will build both the Resnet and MNIST examples
     mkdir build
     cd build
     cmake ..
-    CC=cc CXX=CC cmake .. # for Cray machines
+    CC=cc CXX=CC cmake .. # for Cray machines (we actually build with GNU I think)
     make
 ```
 

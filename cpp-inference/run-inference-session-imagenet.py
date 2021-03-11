@@ -2,9 +2,13 @@ import pandas as pd
 import os.path as osp
 from itertools import product
 
-from smartsim import slurm
-from smartsim import Experiment
 
+from smartsim import Experiment
+from smartsim.settings import SrunSettings, SbatchSettings
+from smartsim.database import SlurmOrchestrator
+from smartsim import slurm
+from silc import Client
+from smartsim import constants
 """Run an experiment for testing the scaling of the SILC c++ client.
    This script will run as many permutations of CLIENT_NODES and
    CPN (Clients per node) listed in the globals at the top.
@@ -15,23 +19,20 @@ from smartsim import Experiment
 """
 
 # Constants
+NAME = "infer-resnet"        # name of experiment directory
 DB_NODES = 16                 # number of database nodes
 DPN = 1                      # number of databases per node
-CLIENT_ALLOC = 200           # number of nodes in client alloc
-CLIENT_NODES = [200]      # list of node sizes to run clients within client alloc
+CLIENT_ALLOC = 100           # number of nodes in client alloc
+CLIENT_NODES = [20, 40, 60, 80, 100]      # list of node sizes to run clients within client alloc
 CPN = [80]                   # clients per node
-NAME = "infer-resnet"        # name of experiment directory
+DB_CPUS = 36                 # number of CPUS per database shard
+DB_TPQ = 4                   # database threads per queue
+BATCH_SIZE = 10              # batch size of DL model
+DEVICE = "GPU"               # device for script and model
+MODEL = "../imagenet/resnet-1.5.0.pt" # path to DL model
 
 
-# get allocations
-add_opts = {
-    "ntasks-per-node": DPN,
-    "mem": "50GB",
-    "C": "P100",
-    "exclusive": None
-}
-orc_alloc = slurm.get_slurm_allocation(nodes=DB_NODES, add_opts=add_opts)
-
+# obtain allocation for client
 client_add_opts = {
     "ntasks-per-node": max(CPN),
     "time": "1:00:00",
@@ -42,31 +43,39 @@ client_alloc = slurm.get_slurm_allocation(nodes=CLIENT_ALLOC, add_opts=client_ad
 
 exp = Experiment(NAME, launcher="slurm")
 
+def setup_pytorch(device, batch_size):
+    """Set Pytorch model and script inside database"""
+    
+    client = Client(address="10.128.0.154:6780", cluster=bool(DB_NODES>1))
+    client.set_model_from_file("resnet_model", MODEL, "TORCH", device, batch_size)
+    client.set_script_from_file("resnet_script", "../imagenet/data_processing_script.txt", device)
+
 def setup_run(nodes, tasks):
     """Construct an MPI program with one SILC client on each rank
     to perform parallel inference.
     """
-    run_settings = {
+    run_args = {
         "nodes": nodes,
-        "ntasks-per-node": tasks,
-        "executable": "./build/run_resnet_inference",
-        "alloc": client_alloc,
+        "ntasks-per-node": tasks
     }
+    srun = SrunSettings("./build/run_resnet_inference", run_args=run_args, alloc=client_alloc)
+
     name = "-".join(("infer-sess", str(nodes), str(tasks)))
-    model = exp.create_model(name, run_settings)
-    model.attach_generator_files(to_copy=["../imagenet", "./process_results.py"])
+    model = exp.create_model(name, srun)
+    model.attach_generator_files(to_copy=["../imagenet/cat.raw", "./process_results.py"])
     exp.generate(model, overwrite=True)
     return model
 
 def start_database():
     """Create a empty database for each run b/c resnet images take up alot of space"""
 
-    db = exp.create_orchestrator(
-        port=6780, overwrite=True, db_nodes=DB_NODES, dpn=DPN, alloc=orc_alloc
-    )
+    db = SlurmOrchestrator(port=6780, db_nodes=DB_NODES, batch=True, threads_per_queue=DB_TPQ)
+    db.set_cpus(DB_CPUS)
+    db.set_walltime("10:00:00")
+    db.batch_settings.batch_args["exclusive"] = None
+    db.batch_settings.batch_args["C"] = "P100"
     exp.generate(db)
     exp.start(db)
-    print("DB created and up")
     return db
 
 def setup_post_process(model_path, name):
@@ -74,14 +83,13 @@ def setup_post_process(model_path, name):
     for analysis.
     """
 
-    run_settings = {
-        "executable": "python",
-        "exe_args": f"process_results.py --path={model_path} --name={name}",
-        "ntasks": 1,
-        "alloc": client_alloc,
-    }
+    exe_args = f"process_results.py --path={model_path} --name={name}"
+    srun = SrunSettings("python", exe_args=exe_args, alloc=client_alloc)
+    srun.set_nodes(1)
+    srun.set_tasks(1)
+
     pp_name = "-".join(("post", name))
-    post_process = exp.create_model(pp_name, run_settings, path=model_path)
+    post_process = exp.create_model(pp_name, srun, path=model_path)
     return post_process
 
 
@@ -111,14 +119,24 @@ data_locations = []
 for perm in perms:
     # start a new database
     db = start_database()
+    print("Database setup")
+    # set models and script
+    setup_pytorch(DEVICE, BATCH_SIZE)
+    print("Model and script setup")
     # setup a an instance of the C++ driver and start it
     infer_session = setup_run(*perm)
     exp.start(infer_session, summary=True)
+    status = exp.get_status(infer_session)
+    if status[0] != constants.STATUS_COMPLETED:
+        print(f"ERROR: One of the simulations failed {infer_session.name}")
+        break
 
     # get the statistics from the run
     post = setup_post_process(infer_session.path, infer_session.name)
     data_locations.append((infer_session.path, infer_session.name, perm))
     exp.start(post)
+
+    exp.stop(db)
 
 try:
     # get the statistics from post processing
@@ -135,4 +153,3 @@ except Exception:
     print("Could not preprocess results")
 
 slurm.release_slurm_allocation(client_alloc)
-slurm.release_slurm_allocation(orc_alloc)

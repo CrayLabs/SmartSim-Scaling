@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.10)
 SET(CMAKE_CXX_STANDARD 17)
 
 # set this to the path to your silc installation
-set(SILC ../../silc/)
+set(SILC ../../smarter/silc/)
 
 # find hiredis library and include path
 string(CONCAT HIREDIS_LIB_PATH ${SILC} "third-party/hiredis/install/lib")

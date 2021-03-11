@@ -57,7 +57,7 @@ void run_mnist(const std::string& model_name,
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
   double loop_start = MPI_Wtime();
-  for (int i=0; i<10; i++) {
+  for (int i=0; i<1; i++) {
 
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
@@ -117,53 +117,6 @@ int main(int argc, char* argv[]) {
   //Open Timing file
   std::ofstream timing_file;
   timing_file.open("rank_"+std::to_string(rank)+"_timing.csv");
-  MPI_Barrier(MPI_COMM_WORLD);
-
-  if(rank==0) {
-
-    double constructor_start = MPI_Wtime();
-    SILC::Client client(true);
-    double constructor_end = MPI_Wtime();
-    double delta_t = constructor_end - constructor_start;
-    timing_file << rank << "," << "client()" << ","
-                << delta_t << std::endl << std::flush;
-
-
-    std::string model_key = "resnet_model";
-    std::string model_file = "./resnet50.pt";
-    double model_set_start = MPI_Wtime();
-    client.set_model_from_file(model_key, model_file, "TORCH", "GPU", 10);
-    double model_set_end = MPI_Wtime();
-    delta_t = model_set_end - model_set_start;
-    timing_file << rank << "," << "model_set" << ","
-                << delta_t << std::endl << std::flush;
-
-    std::string script_key = "resnet_script";
-    std::string script_file = "./data_processing_script.txt";
-
-    double script_set_start = MPI_Wtime();
-    client.set_script_from_file(script_key, "GPU", script_file);
-    double script_set_end = MPI_Wtime();
-    delta_t = script_set_end - script_set_start;
-    timing_file << rank << "," << "script_set" << ","
-                << delta_t << std::endl << std::flush;
-
-    double model_get_start = MPI_Wtime();
-    std::string_view model = client.get_model(model_key);
-    double model_get_end = MPI_Wtime();
-    delta_t = model_get_end - model_get_start;
-    timing_file << rank << "," << "model_get" << ","
-                << delta_t << std::endl << std::flush;
-
-    double script_get_start = MPI_Wtime();
-    std::string_view script = client.get_script(script_key);
-    double script_get_end = MPI_Wtime();
-    delta_t = script_get_end - script_get_start;
-    timing_file << rank << "," << "script_get" << ","
-                << delta_t << std::endl << std::flush;
-  }
-
-  MPI_Barrier(MPI_COMM_WORLD);
 
   run_mnist("resnet_model", "resnet_script", timing_file);
 
