@@ -85,17 +85,18 @@ then, build the scaling tests with CMake.
 For help running the tests, execute the following after installation
 
 ```bash
-python run-scaling.py resnet --help
+python driver.py resnet --help
 ```
 
-Which will show the following help output
+Which will show the following help output and demonstate how to
+run the scaling test with varying parameters.
 
 ```
 NAME
-    run-inference-session-imagenet.py resnet - Run the resnet50 inference tests.
+    driver.py resnet - Run the resnet50 inference tests.
 
 SYNOPSIS
-    run-inference-session-imagenet.py resnet <flags>
+    driver.py resnet <flags>
 
 DESCRIPTION
     The lists of clients_per_node, db_nodes, and client_nodes will
