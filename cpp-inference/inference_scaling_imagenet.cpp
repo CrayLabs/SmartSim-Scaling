@@ -27,7 +27,7 @@ void run_mnist(const std::string& model_name,
     std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
   double constructor_start = MPI_Wtime();
-  SILC::Client client(true);
+  SmartRedis::Client client(true);
   double constructor_end = MPI_Wtime();
   double delta_t = constructor_end - constructor_start;
   timing_file << rank << "," << "client()" << ","
@@ -65,8 +65,8 @@ void run_mnist(const std::string& model_name,
 
     double put_tensor_start = MPI_Wtime();
     client.put_tensor(in_key, array, {224, 224, 3},
-                      SILC::TensorType::flt,
-                      SILC::MemoryLayout::nested);
+                      SmartRedis::TensorType::flt,
+                      SmartRedis::MemoryLayout::nested);
     double put_tensor_end = MPI_Wtime();
     delta_t = put_tensor_end - put_tensor_start;
     timing_file << rank << "," << "put_tensor" << ","
@@ -88,8 +88,8 @@ void run_mnist(const std::string& model_name,
 
   double unpack_tensor_start = MPI_Wtime();
   client.unpack_tensor(out_key, result, {1,1000},
-                       SILC::TensorType::flt,
-                       SILC::MemoryLayout::nested);
+                       SmartRedis::TensorType::flt,
+                       SmartRedis::MemoryLayout::nested);
   double unpack_tensor_end = MPI_Wtime();
   delta_t = unpack_tensor_end - unpack_tensor_start;
   timing_file << rank << "," << "unpack_tensor" << ","

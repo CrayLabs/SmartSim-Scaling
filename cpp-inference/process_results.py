@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from statistics import median
 import pandas as pd
 import numpy as np
-from pprint import pprint
 
 def make_hist_plot(data, title, fname):
     x = plt.hist(data, color = 'blue', edgecolor = 'black', bins = 500)
@@ -58,7 +57,6 @@ if __name__ == "__main__":
                         function_times[vals[1]].append(float(vals[2]))
                     else:
                         function_times[vals[1]] = [float(vals[2])]
-            os.remove(fp)
         else:
             print(file)
 
