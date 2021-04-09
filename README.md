@@ -1,41 +1,145 @@
 
-## SmartSim Scaling
+# SmartSim Scaling
 
 This repository holds all of the scripts and materials for testing
-the scaling of SmartSim.
+the scaling of SmartSim and the SmartRedis clients.
 
-### Inference Tests
 
-the inference tests run as an MPI program where a single SILC client
-is initialized on every rank. Each client performs some number of
-inferences with the same piece of data (an image).
+## Inference Tests
+
+the inference tests run as an MPI program where a single SmartRedis client
+is initialized on every rank.
 
 Currently supported inference tests
 
-  1) MNIST CNN
-  2) Resnet50 CNN with ImageNet dataset
+  1) Resnet50 CNN with ImageNet dataset
 
-For more information on the scaling tests, see the directory corresponding
-to the client langauge type (e.g. cpp-inference )
+Each client performs 10 executions of the following commands
 
-### Scaling data
+  1) put_tensor     (send image to database)
+  2) run_script     (preprocess image)
+  3) run_model      (run resnet50 on the image)
+  4) unpack_tensor  (Retrieve the inference result)
 
-Scaling data will also be included in the repository.
+The tests are currently designed to run on a Slurm system but
+can be adapted to a PBSPro, or Cobalt system.
 
-### Requirements
+The input parameters to the test are used to generate permutations
+of tests with varying configurations.
 
-Both SmartSim and SILC should be installed and SmartSim will need
-to have it's environment setup. Follow the instructions in the documentation
-for building SmartSim and SILC.
+The lists of ``clients_per_node``, ``db_nodes``, and ``client_nodes`` will
+be permuted into 3-tuples and run as an individual test.
 
-A python environment with the `requirements-dev.txt` listed in SmartSim
-is required as well.
+The number of tests will be ``client_nodes`` * ``clients_per_node`` * ``db_nodes``
+
+An allocation will be obtained of size ``max(client_nodes)`` and will be
+used for each run of the client driver
+
+Each run, the database will launch as a batch job that will wait until
+its running (e.g. not queued) before running the client driver.
+
+Please note that in the default configuration, this will launch
+many batch jobs on the system and users should be wary of launching
+this on systems supporting multiple users.
+
+### Building the Inference Tests
+
+To run the scaling tests, SmartSim and SmartRedis will need to be
+installed. Follow the instructions for the full installation of
+both libraries and be sure to build for the architecture you
+want to run the tests on (e.g. CPU or GPU)
+
+In addition, when installing SmartSim, be sure to install the
+developer dependencies by specifying ``[dev]`` as shown in the
+installation instructions. This will install PyTorch 1.7.1 which
+is needed to run the tests.
+
+Lastly, one extra library ``fire`` is needed to run the tests.
+To install fire, activate your python environment and run.
 
 ```bash
-# in a python env
-pip install -r requirements-dev.txt
+pip install fire
 ```
 
-Lastly, git-lfs will have to be installed on the machine to get the model
-files. This is installable on most package managers for major OS's as well
-as conda if you are not the root.
+Next, the inference tests themselves need to be built.
+One Cmake edit is required. Near the top of the CMake file, change the
+path to the ``SMARTREDIS`` variable to the top level of the directory where
+you installed SmartRedis.
+
+```text
+  set(SMARTREDIS <path to top level SmartRedis install dir>)
+```
+
+then, build the scaling tests with CMake.
+
+```bash
+    cd cpp-inference/
+    mkdir build
+    cd build
+    cmake ..
+    make
+```
+
+### Running the Inference Tests
+
+For help running the tests, execute the following after installation
+
+```bash
+python driver.py resnet --help
+```
+
+Which will show the following help output and demonstate how to
+run the scaling test with varying parameters.
+
+```
+NAME
+    driver.py resnet - Run the resnet50 inference tests.
+
+SYNOPSIS
+    driver.py resnet <flags>
+
+DESCRIPTION
+    The lists of clients_per_node, db_nodes, and client_nodes will
+    be permuted into 3-tuples and run as an individual test.
+
+    The number of tests will be client_nodes * clients_per_node * db_nodes
+
+    An allocation will be obtained of size max(client_nodes) and will be
+    used for each run of the client driver
+
+    Each run, the database will launch as a batch job that will wait until
+    its running (e.g. not queued) before running the client driver.
+
+    Resource constraints listed in this module are specific to in house
+    systems and will need to be changed for your system.
+
+FLAGS
+    --db_nodes=DB_NODES
+        Default: [4, 8, 16]
+        list of db node sizes
+    --db_cpus=DB_CPUS
+        Default: 36
+        number of cpus per db shard
+    --db_tpq=DB_TPQ
+        Default: 4
+        device threads per database shard
+    --db_port=DB_PORT
+        Default: 6780
+        database port
+    --batch_size=BATCH_SIZE
+        Default: 1000
+        batch size for inference
+    --device=DEVICE
+        Default: 'GPU'
+        CPU or GPU
+    --model=MODEL
+        Default: '../imagenet/resnet5...
+        path to serialized model
+    --clients_per_node=CLIENTS_PER_NODE
+        Default: [48]
+        list of ranks per node
+    --client_nodes=CLIENT_NODES
+        Default: [20, 40, 60, 80...
+        list of client node counts
+```
+
