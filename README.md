@@ -7,8 +7,8 @@ the scaling of SmartSim and the SmartRedis clients.
 
 ## Inference Tests
 
-the inference tests run as an MPI program where a single SmartRedis client
-is initialized on every rank.
+The inference tests run as an MPI program where a single SmartRedis C++ client
+is initialized on every rank. 
 
 Currently supported inference tests
 
@@ -16,10 +16,10 @@ Currently supported inference tests
 
 Each client performs 10 executions of the following commands
 
-  1) put_tensor     (send image to database)
-  2) run_script     (preprocess image)
-  3) run_model      (run resnet50 on the image)
-  4) unpack_tensor  (Retrieve the inference result)
+  1) ``put_tensor``     (send image to database)
+  2) ``run_script``     (preprocess image)
+  3) ``run_model``      (run resnet50 on the image)
+  4) ``unpack_tensor``  (Retrieve the inference result)
 
 The tests are currently designed to run on a Slurm system but
 can be adapted to a PBSPro, or Cobalt system.
@@ -45,13 +45,13 @@ this on systems supporting multiple users.
 ### Building the Inference Tests
 
 To run the scaling tests, SmartSim and SmartRedis will need to be
-installed. Follow the instructions for the full installation of
+installed. Follow the [instructions for the full installation](https://www.craylabs.org/build/html/installation.html#full-installation) of
 both libraries and be sure to build for the architecture you
 want to run the tests on (e.g. CPU or GPU)
 
 In addition, when installing SmartSim, be sure to install the
 developer dependencies by specifying ``[dev]`` as shown in the
-installation instructions. This will install PyTorch 1.7.1 which
+installation instructions. This will install ``PyTorch 1.7.1`` which
 is needed to run the tests.
 
 Lastly, one extra library ``fire`` is needed to run the tests.
