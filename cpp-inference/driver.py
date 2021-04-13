@@ -132,7 +132,7 @@ class SlurmScalingTests:
         slurm.release_allocation(allocation)
 
 
-def start_database(self, port, nodes, cpus, tpq):
+def start_database(port, nodes, cpus, tpq):
     """Create and start the Redis database for the scaling test
 
     This function launches the redis database instances as a
@@ -207,7 +207,7 @@ def create_resnet_inference_session(nodes, tasks, db, allocation):
     exp.generate(model, overwrite=True)
     return model
 
-def create_post_process(self, model_path, name, allocation):
+def create_post_process(model_path, name, allocation):
     """Create a Model to post process the inference results
 
     :param model_path: path to model output data
@@ -226,7 +226,7 @@ def create_post_process(self, model_path, name, allocation):
     srun.set_tasks(1)
 
     pp_name = "-".join(("post", name))
-    post_process = self.exp.create_model(pp_name, srun, path=model_path)
+    post_process = exp.create_model(pp_name, srun, path=model_path)
     return post_process
 
 def get_stats(data_locations):
