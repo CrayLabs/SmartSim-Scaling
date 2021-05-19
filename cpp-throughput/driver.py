@@ -20,16 +20,17 @@ class SlurmScalingTests:
 
     def __init__(self):
         logger.info("Starting Scaling Tests")
-
+    #tensor_bytes=[256000, 512000, 1024000, 2048000, 4096000, 9216000, 16384000, 32768000, 65536000]
+    #client_nodes=[20, 40, 60, 80, 100, 120, 140, 160]
     def throughput(self,
-                   db_nodes=[4,8,16],
+                   db_nodes=[15],
                    db_cpus=36,
                    db_tpq=4,
                    db_port=6780,
-                   batch_size=1000,
                    device="GPU",
                    clients_per_node=[48],
-                   client_nodes=[20, 40, 60, 80, 100, 120, 140, 160]):
+                   client_nodes=[160],
+                   tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 1024000, 2048000, 4096000, 9216000, 16384000]):
         """Run the throughput scaling tests
 
         The lists of clients_per_node, db_nodes, and client_nodes will
@@ -54,17 +55,17 @@ class SlurmScalingTests:
         :type db_tpq: int, optional
         :param db_port: database port
         :type db_port: int, optional
-        :param batch_size: batch size for inference
-        :type batch_size: int, optional
         :param device: CPU or GPU
         :type device: str, optional
         :param clients_per_node: list of ranks per node
         :type clients_per_node: list[int], optional
         :param client_nodes: list of client node counts
         :type client_nodes: list[int], optional
+        :param tensor_bytes: list of tensor sizes in bytes
+        :type tensor_bytes: list[int], optional
         """
 
-        # obtain allocation for the inference client program
+        # obtain allocation for the client program
         allocation = slurm.get_allocation(nodes=max(client_nodes),
                                           time="10:00:00",
                                           options={"exclusive": None,
@@ -73,8 +74,8 @@ class SlurmScalingTests:
 
         data_locations = []
         # create permutations of each input list and run each of the permutations
-        # as a single inference scaling test
-        perms = list(product(client_nodes, clients_per_node, db_nodes))
+        # as a single scaling test
+        perms = list(product(client_nodes, clients_per_node, db_nodes, tensor_bytes))
         for perm in perms:
 
             # start a new database each time
@@ -84,24 +85,25 @@ class SlurmScalingTests:
             logger.info("Orchestrator Database created and running")
 
             # setup a an instance of the C++ driver and start it
-            infer_session = create_throughput_session(perm[0], # nodes
+            scale_session = create_throughput_session(perm[0], # nodes
                                                       perm[1], # tasks
                                                       perm[2], # db nodes
+                                                      perm[3], # tensor bytes
                                                       allocation
                                                       )
-            exp.start(infer_session, summary=True)
+            exp.start(scale_session, summary=True)
 
             # confirm scaling test run successfully
-            status = exp.get_status(infer_session)
+            status = exp.get_status(scale_session)
             if status[0] != constants.STATUS_COMPLETED:
-                logger.error(f"ERROR: One of the scaling tests failed {infer_session.name}")
+                logger.error(f"ERROR: One of the scaling tests failed {scale_session.name}")
                 break
 
             # get the statistics from the run
-            post = create_post_process(infer_session.path,
-                                       infer_session.name,
+            post = create_post_process(scale_session.path,
+                                       scale_session.name,
                                        allocation)
-            data_locations.append((infer_session.path, infer_session.name, perm))
+            data_locations.append((scale_session.path, scale_session.name, perm))
             exp.start(post)
 
             # release DB batch job
@@ -153,8 +155,8 @@ def start_database(port, nodes, cpus, tpq):
     exp.start(db)
     return db
 
-def create_throughput_session(nodes, tasks, db, allocation):
-    """Create a inference session using the C++ driver with the SmartRedis client
+def create_throughput_session(nodes, tasks, db, bytes, allocation):
+    """Create a scaling session using the C++ driver with the SmartRedis client
 
     :param nodes: number of nodes for the client driver
     :type nodes: int
@@ -162,23 +164,25 @@ def create_throughput_session(nodes, tasks, db, allocation):
     :type tasks: int
     :param db: number of database nodes
     :type db: int
+    :param bytes: the tensor size in bytes
+    :type bytes: int
     :param allocation: client allocation id
     :type allocation: str
     :return: created Model instance
     :rtype: Model
     """
-    srun = SrunSettings("./build/throughput", alloc=allocation)
+    srun = SrunSettings("./build/throughput", str(bytes), alloc=allocation)
     srun.set_nodes(nodes)
     srun.set_tasks_per_node(tasks)
 
-    name = "-".join(("infer-sess", str(nodes), str(tasks), str(db)))
+    name = "-".join(("throughput-sess", str(nodes), str(tasks), str(db), str(bytes)))
     model = exp.create_model(name, srun)
     model.attach_generator_files(to_copy=["./process_results.py"])
     exp.generate(model, overwrite=True)
     return model
 
 def create_post_process(model_path, name, allocation):
-    """Create a Model to post process the inference results
+    """Create a Model to post process the throughput results
 
     :param model_path: path to model output data
     :type model_path: str
@@ -200,7 +204,7 @@ def create_post_process(model_path, name, allocation):
     return post_process
 
 def get_stats(data_locations):
-    """Compile inference results into pandas dataframe
+    """Compile throughput results into pandas dataframe
 
     :param data_locations: path, name, (nodes, tasks, db nodes)
     :type data_locations: tuple(str, str, tuple(int, int, int))

@@ -29,11 +29,13 @@ void run_throughput(std::ofstream& timing_file,
 
     double loop_start = MPI_Wtime();
 
+    // Keys are overwritten in order to help
+    // ensure that the database does not run out of memory
+    // for large messages.
     for (int i=0; i<10; i++) {
 
         std::string key = "throughput_rank_" +
-                          std::to_string(rank) +
-                          "_" + std::to_string(i);
+                          std::to_string(rank);
 
         double put_tensor_start = MPI_Wtime();
         client.put_tensor(key, array.data(), {1, n_values},
@@ -66,16 +68,28 @@ int main(int argc, char* argv[]) {
 
     MPI_Init(&argc, &argv);
 
-    double main_start = MPI_Wtime();
-
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if(argc==1)
+        throw std::runtime_error("The number tensor size in "\
+                                 "bytes must be provided as "\
+                                 "a command line argument.");
+
+    std::string s_bytes(argv[1]);
+    int n_bytes = std::stoi(s_bytes);
+
+    double main_start = MPI_Wtime();
+
+    if(rank==0)
+        std::cout<<"Running throughput scaling test with tensor size of "
+                 <<n_bytes<<"bytes."<<std::endl;
+
 
     //Open Timing file
     std::ofstream timing_file;
     timing_file.open("rank_" + std::to_string(rank) + "_timing.csv");
 
-    size_t n_bytes = 1024;
     run_throughput(timing_file, n_bytes);
 
     if(rank==0)

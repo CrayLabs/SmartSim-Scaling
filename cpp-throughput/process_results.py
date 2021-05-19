@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", type=str)
-    parser.add_argument("--name", type=str, default="infer-sess")
+    parser.add_argument("--name", type=str, default="throughput-sess")
     args = parser.parse_args()
 
     files = os.listdir(args.path)
@@ -60,14 +60,10 @@ if __name__ == "__main__":
         else:
             print(file)
 
-    num_run = len(function_times['run_model'])
-    print(f'there are {num_run} values in the run_model entries')
     print('Max {0}'.format(max(function_times['client()'])))
     print('Min {0}'.format(min(function_times['client()'])))
 
     make_hist_plot(function_times['client()'], 'client()', 'client_constructor_dist.pdf')
-    make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf')
-    make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf')
     make_hist_plot(function_times['put_tensor'], 'put_tensor()', 'put_tensor.pdf')
     make_hist_plot(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf')
     make_hist_plot(function_times['main()'], 'main()', 'main.pdf')
