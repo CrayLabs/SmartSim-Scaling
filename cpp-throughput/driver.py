@@ -20,8 +20,7 @@ class SlurmScalingTests:
 
     def __init__(self):
         logger.info("Starting Scaling Tests")
-    #tensor_bytes=[256000, 512000, 1024000, 2048000, 4096000, 9216000, 16384000, 32768000, 65536000]
-    #client_nodes=[20, 40, 60, 80, 100, 120, 140, 160]
+
     def throughput(self,
                    db_nodes=[15],
                    db_cpus=36,
@@ -29,7 +28,7 @@ class SlurmScalingTests:
                    db_port=6780,
                    device="GPU",
                    clients_per_node=[48],
-                   client_nodes=[160],
+                   client_nodes=[20, 40, 60, 80, 100, 120, 140, 160],
                    tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 1024000, 2048000, 4096000, 9216000, 16384000]):
         """Run the throughput scaling tests
 
