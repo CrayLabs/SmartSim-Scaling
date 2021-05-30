@@ -3,7 +3,7 @@ project(CppInferenceTests)
 cmake_minimum_required(VERSION 3.10)
 
 # set this to the path to your smartredis installation
-set(SMARTREDIS ../smartredis-0.1.1/)
+set(SMARTREDIS ../../SmartRedis/)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_BUILD_TYPE RELEASE)
@@ -20,10 +20,10 @@ include_directories(SYSTEM
 # tests need MPI
 find_package(MPI)
 
-add_executable(run_resnet_inference
-	inference_scaling_imagenet.cpp
+add_executable(throughput
+	 throughput_scaling.cpp
 )
-target_link_libraries(run_resnet_inference
+target_link_libraries(throughput
 	MPI::MPI_CXX
 	${SR_LIB}
 )
