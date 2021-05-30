@@ -66,8 +66,49 @@ kind of performance to expect.
 
 ### Inference
 
+The following are scaling results from the cpp-inference scaling tests with ResNet-50
+and the imagenet dataset. For more information on these scaling tests, please see
+the SmartSim paper on arXiv
+
+
+
+<div align="center">
+     <br />
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/put_tensor.png" width="60%"><img>
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/unpack_tensor.png" width="60%"><img>
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/run_model.png" width="60%"><img>
+    <br />
+     <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/run_script.png" width="60%"><img>
+    <br />
+
+</div>
+
+
 ### Throughput
 
+The following are results from the throughput tests for Redis. See section below on KeyDB to see comparisons between Redis and
+KeyDB.
+
+All the throughput data listed here is based on the ``loop time`` which is the time to complete a single put and get. Each client
+in the test performs 10 loop iterations and the max, min, and mean are shown in the box-whisker plots. 
+
+Each test has three lines for the three database sizes tested: 16, 32, 64. Each of the plots represents a different number of total clients
+the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256 nodes x 32 ranks per node) and lastly 16384 clients 
+(512 nodes x 32 ranks per node)
+
+<div align="center">
+     <br />
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/loop_time-128.png" width="80%"><img>
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/loop_time-256.png" width="80%"><img>
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/loop_time-512.png" width="80%"><img>
+    <br />
+</div>
 
 ## Using KeyDB
 
@@ -78,7 +119,24 @@ we recommend building SmartSim with KeyDB.
 
 In future releases, switching between Redis and KeyDB will be an ``Orchestrator`` parameter.
 
-Below we compare KeyDB and Redis for the general throughput tests.
+### KeyDB vs Redis
+
+Below we compare KeyDB and Redis for the general throughput tests. Each plot represents the same breakdown of clients as the
+above throughput tests, however, each plot is for a single database size (16 db nodes) and shows both Redis and KeyDB performance in
+terms of throughput.
+
+<div align="center">
+     <br />
+    <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/KeyDB-128.png" width="80%"><img>
+    <br />
+      <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/KeyDB-256.png" width="80%"><img>
+    <br />
+      <br />
+    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/KeyDB-512.png" width="80%"><img>
+    <br />
+</div>
 
 
 A few interesting points:
