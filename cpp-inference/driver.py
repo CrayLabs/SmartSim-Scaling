@@ -2,15 +2,18 @@ import pandas as pd
 import os.path as osp
 from itertools import product
 
-from smartsim.settings import SrunSettings
-from smartsim.database import SlurmOrchestrator
+from smartsim.settings import SrunSettings, JsrunSettings
+from smartsim.database import SlurmOrchestrator, LSFOrchestrator
 from smartsim import Experiment, slurm, constants
 from smartredis import Client
 
 from smartsim.utils.log import get_logger
 logger = get_logger("Scaling Tests")
 
-exp = Experiment(name="inference-scaling-tests", launcher="slurm")
+WLM = "lsf"
+
+exp = Experiment(name="inference-scaling-tests", launcher=WLM)
+
 
 class SlurmScalingTests:
     """Create a battery of scaling tests to launch
@@ -23,14 +26,15 @@ class SlurmScalingTests:
 
     def resnet(self,
                db_nodes=[4,8,16],
-               db_cpus=36,
+               db_cpus=[42],
                db_tpq=4,
                db_port=6780,
                batch_size=1000,
                device="GPU",
-               model="../imagenet/resnet50-1.7.0.pt",
-               clients_per_node=[48],
-               client_nodes=[20, 40, 60, 80, 100, 120, 140, 160]):
+               model="resnet_model.pt",
+               clients_per_node=[42],
+               client_nodes=[8,16,32,64,128],
+               batch=False):
         """Run the resnet50 inference tests.
 
         The lists of clients_per_node, db_nodes, and client_nodes will
@@ -38,11 +42,17 @@ class SlurmScalingTests:
 
         The number of tests will be client_nodes * clients_per_node * db_nodes
 
-        An allocation will be obtained of size max(client_nodes) and will be
-        used for each run of the client driver
+        On a Slurm WLM system, n allocation will be obtained of
+        size max(client_nodes) and will be used for each run of the client driver.
+        On other workloads, an interactive allocation with
+        at least max(client_nodes) nodes and max(clients_per_node)
+        cores per node is required.
 
-        Each run, the database will launch as a batch job that will wait until
-        its running (e.g. not queued) before running the client driver.
+        Each run, if ``batch==True``, the database will launch as a batch job
+        that will wait until it is running (e.g. not queued) before running
+        the client driver. If ``batch==False``, the db will be run in the allocation
+        in which this driver is running (thus the size of the allocation must account)
+        for the the DB nodes too).
 
         Resource constraints listed in this module are specific to in house
         systems and will need to be changed for your system.
@@ -65,14 +75,24 @@ class SlurmScalingTests:
         :type clients_per_node: list[int], optional
         :param client_nodes: list of client node counts
         :type client_nodes: list[int], optional
+        :param batch: whether the DB should be run in a separate batch job
+        :type batch: bool
         """
 
-        # obtain allocation for the inference client program
-        allocation = slurm.get_allocation(nodes=max(client_nodes),
-                                          time="10:00:00",
-                                          options={"exclusive": None,
-                                                   "constraint": '[SK48*107&SK56*53]'})
-
+        if WLM == "slurm":
+            # obtain allocation for the inference client program
+            if batch:
+                allocation = slurm.get_allocation(nodes=max(client_nodes)+max(db_nodes),
+                                                time="10:00:00",
+                                                options={"exclusive": None,
+                                                        "constraint": '[SK48*107&SK56*53]'})
+            else:
+                allocation = slurm.get_allocation(nodes=max(client_nodes),
+                                                time="10:00:00",
+                                                options={"exclusive": None,
+                                                        "constraint": '[SK48*107&SK56*53]'})
+        else:
+            allocation = None
 
         data_locations = []
         # create permutations of each input list and run each of the permutations
@@ -82,7 +102,7 @@ class SlurmScalingTests:
 
             # start a new database each time
             db_node_count = perm[2]
-            db = start_database(db_port, db_node_count, db_cpus, db_tpq)
+            db = start_database(db_port, db_node_count, db_cpus, db_tpq, allocation, batch)
             address = ":".join((db.hosts[0], str(db.ports[0])))
             logger.info("Orchestrator Database created and running")
 
@@ -95,7 +115,8 @@ class SlurmScalingTests:
             infer_session = create_resnet_inference_session(perm[0], # nodes
                                                             perm[1], # tasks
                                                             perm[2], # db nodes
-                                                            allocation
+                                                            allocation,
+                                                            db_cpus=db_cpus
                                                             )
             exp.start(infer_session, summary=True)
 
@@ -106,9 +127,15 @@ class SlurmScalingTests:
                 break
 
             # get the statistics from the run
-            post = create_post_process(infer_session.path,
-                                       infer_session.name,
-                                       allocation)
+            if WLM=='slurm':
+                post = create_post_process(infer_session.path,
+                                            infer_session.name,
+                                            allocation)
+            else:
+
+                post = create_post_process(infer_session.path,
+                                            infer_session.name,
+                                            allocation=None)
             data_locations.append((infer_session.path, infer_session.name, perm))
             exp.start(post)
 
@@ -129,14 +156,18 @@ class SlurmScalingTests:
         except Exception:
             print("Could not preprocess results")
 
-        slurm.release_allocation(allocation)
+        if WLM=='slurm':
+            slurm.release_allocation(allocation)
 
 
-def start_database(port, nodes, cpus, tpq):
+def start_database(port, nodes, cpus, tpq, allocation, batch):
     """Create and start the Redis database for the scaling test
 
-    This function launches the redis database instances as a
-    Sbatch script.
+    This function launches the redis database instances. If
+    ``batch==True``, the database is launched through a
+    Sbatch, Bsub, or Qsub script, otherwise it will use nodes
+    from the allocation in which this driver is running.
+
 
     :param port: port number of database
     :type port: int
@@ -146,17 +177,48 @@ def start_database(port, nodes, cpus, tpq):
     :type cpus: int
     :param tpq: number of threads per queue
     :type tpq: int
+    :param batch: Whether db should be launched as batch
+    :type batch: bool
     :return: orchestrator instance
     :rtype: Orchestrator
     """
-    db = SlurmOrchestrator(port=port,
-                            db_nodes=nodes,
-                            batch=True,
-                            threads_per_queue=tpq)
-    db.set_cpus(cpus)
-    db.set_walltime("1:00:00")
-    db.set_batch_arg("exclusive", None)
-    db.set_batch_arg("C", "P100") # specific to our testing machines; request GPU nodes
+    if WLM=='slurm':
+        if batch:
+            db = SlurmOrchestrator(port=port,
+                                db_nodes=nodes,
+                                batch=batch,
+                                threads_per_queue=tpq)
+        else:
+            db = SlurmOrchestrator(port=port,
+                                db_nodes=nodes,
+                                batch=batch,
+                                threads_per_queue=tpq,
+                                alloc=allocation)
+
+    elif WLM=='lsf':
+        db_per_host = 42//cpus  # Summit specific
+        db = LSFOrchestrator(port=port,
+                             db_per_host=db_per_host,
+                             db_nodes=nodes*db_per_host,
+                             batch=batch,
+                             cpus_per_shard=cpus,
+                             gpus_per_shard=6//db_per_host,
+                             threads_per_queue=tpq,
+                             project="GEN150_SMARTSIM")
+                             
+    else:
+        raise Exception("WLM not supported")
+    
+    if WLM != 'lsf':
+        db.set_cpus(cpus)
+    if batch:
+        if WLM=='lsf':
+            db.set_walltime("01:00")
+        else:
+            db.set_walltime("1:00:00")
+        if WLM=='slurm':
+            db.set_batch_arg("exclusive", None)
+            db.set_batch_arg("C", "P100")  # specific to our testing machines; request GPU nodes
     exp.generate(db)
     exp.start(db)
     return db
@@ -183,7 +245,7 @@ def setup_resnet(model, device, batch_size, address, cluster=True):
                                 "../imagenet/data_processing_script.txt",
                                 device)
 
-def create_resnet_inference_session(nodes, tasks, db, allocation):
+def create_resnet_inference_session(nodes, tasks, db, allocation, db_cpus):
     """Create a inference session using the C++ driver with the SmartRedis client
 
     :param nodes: number of nodes for the client driver
@@ -197,12 +259,23 @@ def create_resnet_inference_session(nodes, tasks, db, allocation):
     :return: created Model instance
     :rtype: Model
     """
-    srun = SrunSettings("./build/run_resnet_inference", alloc=allocation)
-    srun.set_nodes(nodes)
-    srun.set_tasks_per_node(tasks)
+    if WLM=="slurm":
+        run = SrunSettings("./build/run_resnet_inference", alloc=allocation)
+        run.set_nodes(nodes)
+        run.set_tasks_per_node(tasks)
+    elif WLM=="lsf":
+        run_args={}
+        run_args["b"] = "packed:1"
+        run = JsrunSettings("./build/run_resnet_inference", run_args=run_args)
+        run.update_env({"OMP_NUM_THREADS": "1"})
+        run.set_rs_per_host(tasks)
+        run.set_cpus_per_rs(42//tasks)
+        run.set_num_rs(nodes*tasks)
+    else:
+        raise Exception("WLM not supported")
 
-    name = "-".join(("infer-sess", str(nodes), str(tasks), str(db)))
-    model = exp.create_model(name, srun)
+    name = "-".join(("infer-sess", str(nodes), str(tasks), str(db), str(db_cpus)))
+    model = exp.create_model(name, run)
     model.attach_generator_files(to_copy=["../imagenet/cat.raw", "./process_results.py"])
     exp.generate(model, overwrite=True)
     return model
@@ -221,12 +294,19 @@ def create_post_process(model_path, name, allocation):
     """
 
     exe_args = f"process_results.py --path={model_path} --name={name}"
-    srun = SrunSettings("python", exe_args=exe_args, alloc=allocation)
-    srun.set_nodes(1)
-    srun.set_tasks(1)
+    if WLM=="slurm":
+        run = SrunSettings("python", exe_args=exe_args, alloc=allocation)
+        run.set_nodes(1)
+        run.set_tasks(1)
+    elif WLM=="lsf":
+        run = JsrunSettings("python", exe_args=exe_args)
+        run.set_tasks(1)
+        run.set_num_rs(1)
+    else:
+        raise Exception("WLM not supported")        
 
     pp_name = "-".join(("post", name))
-    post_process = exp.create_model(pp_name, srun, path=model_path)
+    post_process = exp.create_model(pp_name, run, path=model_path)
     return post_process
 
 def get_stats(data_locations):

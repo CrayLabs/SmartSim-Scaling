@@ -2,19 +2,19 @@ import pandas as pd
 import os.path as osp
 from itertools import product
 
-from smartsim.settings import AprunSettings, SrunSettings
-from smartsim.database import PBSOrchestrator, SlurmOrchestrator
+from smartsim.settings import AprunSettings, SrunSettings, JsrunSettings
+from smartsim.database import PBSOrchestrator, SlurmOrchestrator, LSFOrchestrator
 from smartsim import Experiment, constants
 
 from smartsim.utils.log import get_logger
 logger = get_logger("Scaling Tests")
 
-WLM = "pbs"
+WLM="lsf"
 exp = Experiment(name="throughput-scaling-tests", launcher=WLM)
 
 class ThroughputScaling:
     """Create a battery of throughput scaling tests to launch
-    on a slurm or PBS system, launch them, and record the
+    on a slurm, LSF, or PBS system, launch them, and record the
     performance results.
 
     Note: You must obtain an interactive allocation with
@@ -35,7 +35,8 @@ class ThroughputScaling:
                    clients_per_node=[32],
                    client_nodes=[128, 256, 512],
                    tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076,
-                                 262152, 524304, 1024000, 2048000, 4096000]):
+                                 262152, 524304, 1024000, 2048000, 4096000],
+                   batch=False):
 
         """Run the throughput scaling tests
 
@@ -65,14 +66,16 @@ class ThroughputScaling:
         :type client_nodes: list[int], optional
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
+        :param batch: whether the DB should be launched through a separate
+                      batch job
+        :type batch: bool
         """
 
 
         data_locations = []
         for db_node_count in db_nodes:
 
-            db = start_database(db_port, db_node_count, db_cpus)
-            address = ":".join((db.hosts[0], str(db.ports[0])))
+            db = start_database(db_port, int(db_node_count), db_cpus, batch=batch)
             logger.info("Orchestrator Database created and running")
 
             perms = list(product(client_nodes, clients_per_node, tensor_bytes))
@@ -116,11 +119,13 @@ class ThroughputScaling:
 
             exp.stop(db)
 
-def start_database(port, nodes, cpus):
+def start_database(port, nodes, cpus, batch):
     """Create and start the Redis database for the scaling test
 
-    This function launches the redis database instances as a
-    Sbatch or Qsub script.
+    This function launches the redis database instances. If
+    ``batch==True``, the database is launched through a
+    Sbatch, Bsub, or Qsub script, otherwise it will use nodes
+    from the allocation in which this driver is running.
 
     :param port: port number of database
     :type port: int
@@ -134,16 +139,29 @@ def start_database(port, nodes, cpus):
     if WLM == "pbs":
         db = PBSOrchestrator(port=port,
                             db_nodes=nodes,
-                            batch=True)
+                            batch=batch)
     elif WLM == "slurm":
         db = SlurmOrchestrator(port=port,
                                db_nodes=nodes,
-                               batch=True)
+                               batch=batch)
+    elif WLM == "lsf":
+        db_per_host = 42//cpus  # Summit specific
+        db = LSFOrchestrator(port=port,
+                             db_per_host=db_per_host,
+                             db_nodes=nodes*db_per_host,
+                             batch=batch,
+                             cpus_per_shard=cpus,
+                             gpus_per_shard=6//db_per_host,
+                             project="GEN150_SMARTSIM")
     else:
         raise Exception("WLM not supported")
 
-    db.set_cpus(cpus)
-    db.set_walltime("3:00:00")
+
+    if batch:
+        if WLM=="lsf":
+            db.set_walltime("03:00")
+        else:
+            db.set_walltime("3:00:00")
     exp.generate(db)
     exp.start(db)
     return db
@@ -168,6 +186,16 @@ def create_throughput_session(nodes, tasks, db, _bytes):
     elif WLM == "slurm":
         run = SrunSettings("./build/throughput", str(_bytes))
         run.set_tasks_per_node(tasks)
+    elif WLM == "lsf":
+        run_args = dict()
+        run_args["b"] = "packed:1"
+        run = JsrunSettings("./build/throughput",
+                            str(_bytes),
+                            run_args=run_args)
+        run.update_env({"OMP_NUM_THREADS": "1"})
+        run.set_rs_per_host(tasks)
+        run.set_cpus_per_rs(42//tasks)  # Summit specific
+        run.set_num_rs(nodes*tasks)
     else:
         raise Exception("WLM not supported")
 
@@ -194,6 +222,9 @@ def create_post_process(model_path, name):
         run.set_tasks(1)
     elif WLM == "slurm":
         run = SrunSettings("python", exe_args=exe_args)
+        run.set_tasks(1)
+    elif WLM == "lsf":
+        run = JsrunSettings("python", exe_args=exe_args)
         run.set_tasks(1)
     else:
         raise Exception("WLM not supported")
@@ -230,7 +261,6 @@ def get_stats(data_locations, db_node_count):
         else:
             all_data = pd.concat([all_data, data])
     return all_data
-
 
 if __name__ == "__main__":
     import fire
