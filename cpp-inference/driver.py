@@ -81,7 +81,7 @@ class SlurmScalingTests:
 
         if WLM == "slurm":
             # obtain allocation for the inference client program
-            if batch:
+            if not batch:
                 allocation = slurm.get_allocation(nodes=max(client_nodes)+max(db_nodes),
                                                 time="10:00:00",
                                                 options={"exclusive": None,
