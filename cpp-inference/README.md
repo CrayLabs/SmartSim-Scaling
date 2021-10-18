@@ -74,6 +74,16 @@ then, build the scaling tests with CMake.
     make
 ```
 
+### Building the Resnet model
+
+Since models can vary across library versions, we include a quick ResNet model maker. To create the model:
+
+```bash
+   cd cpp-inference/utils
+   python resnet_maker.py
+```
+the script will determine whether a GPU is available, and if it is, the model will be saved in a GPU-compatible format. Otherwise, the CPU version will be created.
+
 ### Running the Inference Tests
 
 For help running the tests, execute the following after installation
