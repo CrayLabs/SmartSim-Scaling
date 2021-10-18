@@ -26,7 +26,7 @@ class SlurmScalingTests:
 
     def resnet(self,
                db_nodes=[4,8,16],
-               db_cpus=[42],
+               db_cpus=42,
                db_tpq=4,
                db_port=6780,
                batch_size=1000,
@@ -188,12 +188,14 @@ def start_database(port, nodes, cpus, tpq, allocation, batch):
                                 db_nodes=nodes,
                                 batch=batch,
                                 threads_per_queue=tpq)
+            db.set_cpus(cpus)
         else:
             db = SlurmOrchestrator(port=port,
                                 db_nodes=nodes,
                                 batch=batch,
                                 threads_per_queue=tpq,
                                 alloc=allocation)
+            db.set_cpus(cpus)
 
     elif WLM=='lsf':
         db_per_host = 42//cpus  # Summit specific
