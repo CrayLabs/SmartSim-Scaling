@@ -22,15 +22,15 @@ class SlurmScalingTests:
         logger.info("Starting Scaling Tests")
 
     def resnet(self,
-               db_nodes=[4,8,16],
-               db_cpus=36,
-               db_tpq=4,
+               db_nodes=[16],
+               db_cpus=1,
+               db_tpq=1,
                db_port=6780,
-               batch_size=1000,
+               batch_size=100,
                device="GPU",
-               model="../imagenet/resnet50-1.7.0.pt",
-               clients_per_node=[48],
-               client_nodes=[20, 40, 60, 80, 100, 120, 140, 160]):
+               model="../imagenet/resnet50.pt",
+               clients_per_node=[17],
+               client_nodes=[16]):
         """Run the resnet50 inference tests.
 
         The lists of clients_per_node, db_nodes, and client_nodes will
@@ -68,12 +68,13 @@ class SlurmScalingTests:
         """
 
         # obtain allocation for the inference client program
-        allocation = slurm.get_allocation(nodes=max(client_nodes),
-                                          time="10:00:00",
-                                          options={"exclusive": None,
-                                                   "constraint": '[SK48*107&SK56*53]'})
+        allocation = slurm.get_allocation(nodes=16,
+                                    time="10:00:00",
+                                    options={"exclusive": None,
+                                             "constraint": 'P100'})
 
-
+        #allocation = str(1728392)
+        #"constraint": '[SK48*107&SK56*53]'})
         data_locations = []
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
@@ -82,7 +83,7 @@ class SlurmScalingTests:
 
             # start a new database each time
             db_node_count = perm[2]
-            db = start_database(db_port, db_node_count, db_cpus, db_tpq)
+            db = start_database(db_port, db_node_count, db_cpus, db_tpq, allocation)
             address = ":".join((db.hosts[0], str(db.ports[0])))
             logger.info("Orchestrator Database created and running")
 
@@ -113,7 +114,7 @@ class SlurmScalingTests:
             exp.start(post)
 
             # release DB batch job
-            exp.stop(db)
+            #exp.stop(db)
 
         try:
             # get the statistics from post processing
@@ -129,10 +130,10 @@ class SlurmScalingTests:
         except Exception:
             print("Could not preprocess results")
 
-        slurm.release_allocation(allocation)
+        #slurm.release_allocation(allocation)
 
 
-def start_database(port, nodes, cpus, tpq):
+def start_database(port, nodes, cpus, tpq, alloc):
     """Create and start the Redis database for the scaling test
 
     This function launches the redis database instances as a
@@ -151,12 +152,16 @@ def start_database(port, nodes, cpus, tpq):
     """
     db = SlurmOrchestrator(port=port,
                             db_nodes=nodes,
-                            batch=True,
-                            threads_per_queue=tpq)
+                            batch=False,
+                            interface="lo",
+                            threads_per_queue=tpq,
+                           alloc=alloc)
     db.set_cpus(cpus)
-    db.set_walltime("1:00:00")
-    db.set_batch_arg("exclusive", None)
-    db.set_batch_arg("C", "P100") # specific to our testing machines; request GPU nodes
+    db.set_run_arg("oversubscribe", None)
+    db.set_hosts(["nid00196", "nid00197", "nid00198", "nid00199",
+                  "nid00152", "nid00153", "nid00154", "nid00155",
+                  "nid00224", "nid00225", "nid00226", "nid00227",
+                  "nid00228", "nid00229", "nid00230", "nid00231"])
     exp.generate(db)
     exp.start(db)
     return db
@@ -173,15 +178,21 @@ def setup_resnet(model, device, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    client = Client(address=address, cluster=cluster)
-    client.set_model_from_file("resnet_model",
-                                model,
-                                "TORCH",
-                                device,
-                                batch_size)
-    client.set_script_from_file("resnet_script",
-                                "../imagenet/data_processing_script.txt",
-                                device)
+    hosts = ["nid00196", "nid00197", "nid00198", "nid00199",
+             "nid00152", "nid00153", "nid00154", "nid00155",
+             "nid00224", "nid00225", "nid00226", "nid00227",
+             "nid00228", "nid00229", "nid00230", "nid00231"]
+    for host in hosts:
+        client = Client(address=host + ":6780", cluster=False)
+        client.set_model_from_file("resnet_model",
+                                   model,
+                                   "TORCH",
+                                   device,
+                                   batch_size)
+        client.set_script_from_file("resnet_script",
+                                    "../imagenet/data_processing_script.txt",
+                                    device)
+        print(f"Set model on host {host}")
 
 def create_resnet_inference_session(nodes, tasks, db, allocation):
     """Create a inference session using the C++ driver with the SmartRedis client
@@ -200,6 +211,8 @@ def create_resnet_inference_session(nodes, tasks, db, allocation):
     srun = SrunSettings("./build/run_resnet_inference", alloc=allocation)
     srun.set_nodes(nodes)
     srun.set_tasks_per_node(tasks)
+    srun.run_args["oversubscribe"] = None
+    #srun.update_env({"SSDB":"127.0.0.1:6780"})
 
     name = "-".join(("infer-sess", str(nodes), str(tasks), str(db)))
     model = exp.create_model(name, srun)
@@ -224,6 +237,7 @@ def create_post_process(model_path, name, allocation):
     srun = SrunSettings("python", exe_args=exe_args, alloc=allocation)
     srun.set_nodes(1)
     srun.set_tasks(1)
+    srun.run_args["oversubscribe"] = None
 
     pp_name = "-".join(("post", name))
     post_process = exp.create_model(pp_name, srun, path=model_path)

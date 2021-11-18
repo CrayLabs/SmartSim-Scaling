@@ -27,7 +27,7 @@ void run_mnist(const std::string& model_name,
     std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
   double constructor_start = MPI_Wtime();
-  SmartRedis::Client client(true);
+  SmartRedis::Client client(false);
   double constructor_end = MPI_Wtime();
   double delta_t = constructor_end - constructor_start;
   timing_file << rank << "," << "client()" << ","
@@ -57,7 +57,7 @@ void run_mnist(const std::string& model_name,
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
   double loop_start = MPI_Wtime();
-  for (int i=0; i<1; i++) {
+  for (int i=0; i<100; i++) {
 
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);

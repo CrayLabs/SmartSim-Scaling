@@ -3,7 +3,7 @@ project(CppInferenceTests)
 cmake_minimum_required(VERSION 3.10)
 
 # set this to the path to your smartredis installation
-set(SMARTREDIS ../smartredis-0.1.1/)
+set(SMARTREDIS /home/users/spartee/dev/SmartRedis)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_BUILD_TYPE RELEASE)
