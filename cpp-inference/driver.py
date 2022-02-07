@@ -25,13 +25,13 @@ class SmartSimScalingTests:
     def resnet(self,
                db_nodes=[16],
                db_cpus=[1, 2, 4, 8],
-               db_tpq=[1, 2],
+               db_tpq=[1],
                db_port=6780,
                batch_size=16,
                device="GPU",
                colocated=True,
                model="../imagenet/resnet50.pt",
-               clients_per_node=[14, 18, 24, 28, 32],
+               clients_per_node=[14, 18, 24, 32],
                client_nodes=[16]):
         """Run the resnet50 inference tests.
 
@@ -275,8 +275,8 @@ def create_colocated_inference_session(nodes,
     # add co-located database
     model.colocate_db(port=db_port,
                       db_cpus=db_cpus,
-                      limit_app_cpus=False,
-                      ifname="lo",
+                      limit_app_cpus=True,
+                      ifname="ipogif0",
                       threads_per_queue=db_tpq,
                       debug=True,
                       server_threads=2, # keydb only
