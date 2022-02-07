@@ -2,6 +2,41 @@
 #include "client_test_utils.h"
 #include <mpi.h>
 
+
+
+// some helpers for handling model settings from the
+// driver script in colocated and non-colocated cases
+int get_batch_size() {
+  char* batch_setting = std::getenv("SS_BATCH_SIZE");
+  int batch_size = batch_setting ? std::stoi(batch_setting) : 1;
+  return batch_size;
+}
+
+std::string get_device() {
+  char* device = std::getenv("SS_DEVICE");
+  std::string device_str = device ? device : "GPU";
+  return device_str;
+}
+
+bool get_set_flag() {
+  char* set_flag = std::getenv("SS_SET_MODEL");
+  bool should_set = set_flag ? std::stoi(set_flag) : false;
+  return should_set;
+}
+
+bool get_cluster_flag() {
+  char* cluster_flag = std::getenv("SS_CLUSTER");
+  bool use_cluster = cluster_flag ? std::stoi(cluster_flag) : false;
+  return use_cluster;
+}
+
+int get_client_count() {
+  char* client_count_flag = std::getenv("SS_CLIENT_COUNT");
+  int client_count = client_count_flag ? std::stoi(client_count_flag) : 18;
+  return client_count;
+}
+
+
 void load_mnist_image_to_array(float*& img)
 {
   std::string image_file = "./cat.raw";
@@ -27,12 +62,31 @@ void run_mnist(const std::string& model_name,
     std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
   double constructor_start = MPI_Wtime();
-  SmartRedis::Client client(false);
+  bool cluster = get_cluster_flag();
+  SmartRedis::Client client(cluster);
   double constructor_end = MPI_Wtime();
   double delta_t = constructor_end - constructor_start;
   timing_file << rank << "," << "client()" << ","
               << delta_t << std::endl << std::flush;
 
+  bool should_set = get_set_flag();
+  if (should_set) {
+
+    int n_clients = get_client_count();
+    if (rank % n_clients == 0) {
+
+      int batch_size = get_batch_size();
+      std::string device = get_device();
+
+      std::cout<<"Setting Resnet Model from scaling app"<<std::endl<<std::flush;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) <<std::endl<<std::flush;
+      std::cout<<"Setting on device: "<< device <<std::endl<<std::flush;
+
+
+      client.set_model_from_file("resnet_model", "./resnet50.pt", "TORCH", device, batch_size);
+      client.set_script_from_file("resnet_script", device, "./data_processing_script.txt");
+    }
+  }
   MPI_Barrier(MPI_COMM_WORLD);
 
   //Allocate a continugous memory to make bcast easier
