@@ -106,6 +106,11 @@ void run_mnist(const std::string& model_name,
   //float**** array = allocate_4D_array<float>(1,1,28,28);
   float** result = allocate_2D_array<float>(1, 1000);
 
+  std::vector<double> put_tensor_times;
+  std::vector<double> run_script_times;
+  std::vector<double> run_model_times;
+  std::vector<double> unpack_tensor_times;
+
   MPI_Barrier(MPI_COMM_WORLD);
   if(!rank)
     std::cout<<"All ranks have Resnet image"<<std::endl;
@@ -123,22 +128,25 @@ void run_mnist(const std::string& model_name,
                       SmartRedis::MemoryLayout::nested);
     double put_tensor_end = MPI_Wtime();
     delta_t = put_tensor_end - put_tensor_start;
-    timing_file << rank << "," << "put_tensor" << ","
-                << delta_t << std::endl << std::flush;
+    put_tensor_times.push_back(delta_t);
+    //timing_file << rank << "," << "put_tensor" << ","
+    //            << delta_t << std::endl << std::flush;
 
     double run_script_start = MPI_Wtime();
     client.run_script(script_name, "pre_process_3ch", {in_key}, {script_out_key});
     double run_script_end = MPI_Wtime();
     delta_t = run_script_end - run_script_start;
-    timing_file << rank << "," << "run_script" << ","
-                << delta_t << std::endl << std::flush;
+    run_script_times.push_back(delta_t);
+    //timing_file << rank << "," << "run_script" << ","
+    //            << delta_t << std::endl << std::flush;
 
     double run_model_start = MPI_Wtime();
     client.run_model(model_name, {script_out_key}, {out_key});
     double run_model_end = MPI_Wtime();
     delta_t = run_model_end - run_model_start;
-    timing_file << rank << "," << "run_model" << ","
-                << delta_t << std::endl << std::flush;
+    run_model_times.push_back(delta_t);
+    //timing_file << rank << "," << "run_model" << ","
+    //            << delta_t << std::endl << std::flush;
 
   double unpack_tensor_start = MPI_Wtime();
   client.unpack_tensor(out_key, result, {1,1000},
@@ -146,11 +154,29 @@ void run_mnist(const std::string& model_name,
                        SmartRedis::MemoryLayout::nested);
   double unpack_tensor_end = MPI_Wtime();
   delta_t = unpack_tensor_end - unpack_tensor_start;
-  timing_file << rank << "," << "unpack_tensor" << ","
-              << delta_t << std::endl << std::flush;
+  unpack_tensor_times.push_back(delta_t);
+  //timing_file << rank << "," << "unpack_tensor" << ","
+  //            << delta_t << std::endl << std::flush;
   }
   double loop_end = MPI_Wtime();
   delta_t = loop_end - loop_start;
+
+  // write times to file
+  for (int i=0; i<100; i++) {
+
+    timing_file << rank << "," << "put_tensor" << ","
+                << put_tensor_times[i] << std::endl << std::flush;
+
+    timing_file << rank << "," << "run_script" << ","
+                << run_script_times[i] << std::endl << std::flush;
+
+    timing_file << rank << "," << "run_model" << ","
+                << run_model_times[i] << std::endl << std::flush;
+
+    timing_file << rank << "," << "unpack_tensor" << ","
+                << unpack_tensor_times[i] << std::endl << std::flush;
+
+  }
   timing_file << rank << "," << "loop_time" << ","
                 << delta_t << std::endl << std::flush;
 
