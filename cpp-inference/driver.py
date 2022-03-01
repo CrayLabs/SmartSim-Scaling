@@ -24,15 +24,15 @@ class SmartSimScalingTests:
 
     def resnet(self,
                db_nodes=[16],
-               db_cpus=[2, 4],
-               db_tpq=[1],
+               db_cpus=[10],
+               db_tpq=[4],
                db_port=6780,
-               batch_size=16,
+               batch_size=2,
                device="GPU",
                colocated=True,
                model="../imagenet/resnet50.pt",
-               clients_per_node=[14, 16, 18],
-               client_nodes=[16]):
+               clients_per_node=[18],
+               client_nodes=[12]):
         """Run the resnet50 inference tests.
 
         The lists of clients_per_node, db_nodes, and client_nodes will
@@ -77,7 +77,7 @@ class SmartSimScalingTests:
         for perm in perms:
 
             # set batch size to client count
-            batch_size = perm[1]
+            #batch_size = perm[1]
 
             # start a new database each time
             if not colocated:
@@ -255,7 +255,8 @@ def create_colocated_inference_session(nodes,
         "SS_CLUSTER": "0",     # never cluster for colocated db
         "SS_BATCH_SIZE": str(batch_size),
         "SS_DEVICE": device,
-        "SS_CLIENT_COUNT": str(tasks)
+        "SS_CLIENT_COUNT": str(tasks),
+        "SS_NUM_DEVICES": "8"
     })
 
     name = "-".join((
@@ -276,7 +277,7 @@ def create_colocated_inference_session(nodes,
     model.colocate_db(port=db_port,
                       db_cpus=db_cpus,
                       limit_app_cpus=True,
-                      ifname="ipogif0",
+                      ifname="ib0",
                       threads_per_queue=db_tpq,
                       # turning this to true can result in performance loss
                       # on networked file systems(many writes to db log file)
