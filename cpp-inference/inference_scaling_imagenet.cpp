@@ -145,8 +145,8 @@ void run_mnist(const std::string& model_name,
 
     double put_tensor_start = MPI_Wtime();
     client.put_tensor(in_key, array, {224, 224, 3},
-                      SmartRedis::TensorType::flt,
-                      SmartRedis::MemoryLayout::nested);
+                      SRTensorTypeFloat,
+                      SRMemLayoutNested);
     double put_tensor_end = MPI_Wtime();
     delta_t = put_tensor_end - put_tensor_start;
     put_tensor_times.push_back(delta_t);
@@ -165,8 +165,8 @@ void run_mnist(const std::string& model_name,
 
   double unpack_tensor_start = MPI_Wtime();
   client.unpack_tensor(out_key, result, {1,1000},
-                       SmartRedis::TensorType::flt,
-                       SmartRedis::MemoryLayout::nested);
+		       SRTensorTypeFloat,
+                       SRMemLayoutNested);
   double unpack_tensor_end = MPI_Wtime();
   delta_t = unpack_tensor_end - unpack_tensor_start;
   unpack_tensor_times.push_back(delta_t);
