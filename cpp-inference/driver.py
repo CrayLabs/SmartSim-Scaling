@@ -1,157 +1,269 @@
-import pandas as pd
-import os.path as osp
+import os
+import configparser
+import datetime
+from pathlib import Path
 from itertools import product
+from tqdm import tqdm
 
-
+import smartsim
 from smartsim import Experiment, status
 from smartredis import Client
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
-log_to_file("scaling.log")
-
-exp = Experiment(name="inference-scaling-tests", launcher="auto")
 
 class SmartSimScalingTests:
-    """Create a battery of scaling tests to launch
-    on a slurm system, launch them, and record the
-    performance results.
-    """
 
     def __init__(self):
-        logger.info("Starting Scaling Tests")
+        self.resnet_model = "../imagenet/resnet50.pt"
+        self.date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
 
-    def resnet(self,
-               db_nodes=[16],
-               db_cpus=[10],
-               db_tpq=[4],
-               db_port=6780,
-               batch_size=2,
-               device="GPU",
-               colocated=True,
-               model="../imagenet/resnet50.pt",
-               clients_per_node=[18],
-               client_nodes=[12]):
-        """Run the resnet50 inference tests.
+    def resnet_standard(self,
+                        exp_name="inference-scaling",
+                        launcher="auto",
+                        run_db_as_batch=True,
+                        batch_args={},
+                        db_hosts=[],
+                        db_nodes=[12],
+                        db_cpus=[2],
+                        db_tpq=[1],
+                        db_port=6780,
+                        batch_size=[1000],
+                        device="GPU",
+                        num_devices=1,
+                        net_ifname="ipogif0",
+                        clients_per_node=[48],
+                        client_nodes=[12]):
+        """Run ResNet50 inference tests with standard Orchestrator deployment
 
-        The lists of clients_per_node, db_nodes, and client_nodes will
-        be permuted into 3-tuples and run as an individual test.
-
-        The number of tests will be client_nodes * clients_per_node * db_nodes
-
-        An allocation will be obtained of size max(client_nodes) and will be
-        used for each run of the client driver
-
-        Each run, the database will launch as a batch job that will wait until
-        its running (e.g. not queued) before running the client driver.
-
-        Resource constraints listed in this module are specific to in house
-        systems and will need to be changed for your system.
-
-        :param db_nodes: list of db node sizes
-        :type db_nodes: list[int], optional
-        :param db_cpus: number of cpus per db shard
-        :type db_cpus: int, optional
-        :param db_tpq: device threads per database shard
-        :type db_tpq: int, optional
-        :param db_port: database port
+        :param exp_name: name of output dir
+        :type exp_name: str, optional
+        :param launcher: workload manager i.e. "slurm", "pbs"
+        :type launcher: str, optional
+        :param run_db_as_batch: run database as seperate batch submission each iteration
+        :type run_db_as_batch: bool, optional
+        :param batch_args: additional batch args for the database
+        :type batch_args: dict, optional
+        :param db_hosts: optionally supply hosts to launch the database on
+        :type db_hosts: list, optional
+        :param db_nodes: number of compute hosts to use for the database
+        :type db_nodes: list, optional
+        :param db_cpus: number of cpus per compute host for the database
+        :type db_cpus: list, optional
+        :param db_tpq: number of device threads to use for the database
+        :type db_tpq: list, optional
+        :param db_port: port to use for the database
         :type db_port: int, optional
-        :param batch_size: batch size for inference
-        :type batch_size: int, optional
-        :param device: CPU or GPU
+        :param batch_size: batch size to set Resnet50 model with
+        :type batch_size: list, optional
+        :param device: device used to run the models in the database
         :type device: str, optional
-        :param model: path to serialized model
-        :type model: str, optional
-        :param clients_per_node: list of ranks per node
-        :type clients_per_node: list[int], optional
-        :param client_nodes: list of client node counts
-        :type client_nodes: list[int], optional
+        :param num_devices: number of devices per compute node to use to run ResNet
+        :type num_devices: int, optional
+        :param net_ifname: network interface to use i.e. "ib0" for infiniband or
+                           "ipogif0" aries networks
+        :type net_ifname: str, optional
+        :param clients_per_node: client tasks per compute node for the synthetic scaling app
+        :type clients_per_node: list, optional
+        :param client_nodes: number of compute nodes to use for the synthetic scaling app
+        :type client_nodes: list, optional
         """
+        logger.info("Starting inference scaling tests")
 
-        data_locations = []
+        exp = Experiment(name=exp_name, launcher=launcher)
+        exp.generate()
+        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
 
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
-        perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq))
+        perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
         for perm in perms:
+            c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
 
-            # set batch size to client count
-            #batch_size = perm[1]
+            db = start_database(exp,
+                                db_port,
+                                dbn,
+                                dbc,
+                                dbtpq,
+                                net_ifname,
+                                run_db_as_batch,
+                                batch_args,
+                                db_hosts)
 
-            # start a new database each time
-            if not colocated:
-                db_node_count = perm[2]
-                db = start_database(db_port,
-                                    db_node_count,
-                                    perm[3], # db_cpus
-                                    perm[4]) # db_tpq
-                logger.info("Orchestrator Database created and running")
+            # setup a an instance of the synthetic C++ app and start it
+            infer_session = create_inference_session(exp,
+                                                     c_nodes,
+                                                     cpn,
+                                                     dbn,
+                                                     dbc,
+                                                     dbtpq,
+                                                     batch,
+                                                     device,
+                                                     num_devices)
 
+            # only need 1 address to set model
+            address = db.get_address()[0]
+            setup_resnet(self.resnet_model,
+                         device,
+                         num_devices,
+                         batch,
+                         address,
+                         cluster=bool(dbn>1))
 
-                # setup a an instance of the C++ driver and start it
-                infer_session = create_inference_session(perm[0], # nodes
-                                                         perm[1], # tasks
-                                                         perm[2], # db nodes
-                                                         perm[3], # db cpus
-                                                         perm[4]) # db tpq
+            exp.start(infer_session, block=True, summary=True)
 
-                # only need 1 address to set model
-                address = db.get_address()[0]
-                setup_resnet(model, device, batch_size, address, cluster=bool(db_node_count>1))
-                logger.info("PyTorch Model and Script in Orchestrator")
-
-                exp.start(infer_session, block=True, summary=True)
-
-                # kill the database each time so we get a fresh start
-                exp.stop(db)
-
-            else:
-                infer_session = create_colocated_inference_session(perm[0], # nodes
-                                                                   perm[1], # tasks
-                                                                   perm[2],  # db nodes
-                                                                   perm[3],  # db cpus
-                                                                   perm[4],  # db tpq
-                                                                   db_port,
-                                                                   batch_size,
-                                                                   device
-                                                                   )
-                exp.start(infer_session, block=True, summary=True)
+            # kill the database each time so we get a fresh start
+            exp.stop(db)
 
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
-                logger.error(f"ERROR: One of the scaling tests failed {infer_session.name}")
-                break
+                logger.error(f"One of the scaling tests failed {infer_session.name}")
 
-            # run process_results.py to collect the results for this
-            # single run into a CSV
-            post = create_post_process(infer_session.path,
-                                       infer_session.name)
-            data_locations.append((infer_session.path, infer_session.name, perm))
-            exp.start(post)
+
+    def resnet_colocated(self,
+                         exp_name="inference-scaling",
+                         launcher="auto",
+                         nodes=[12],
+                         clients_per_node=[18],
+                         db_cpus=[2],
+                         db_tpq=[1],
+                         db_port=6780,
+                         pin_app_cpus=[False],
+                         batch_size=[1],
+                         device="GPU",
+                         num_devices=1,
+                         net_ifname="ipogif0",
+                        ):
+        """Run ResNet50 inference tests with colocated Orchestrator deployment
+
+        :param exp_name: name of output dir, defaults to "inference-scaling"
+        :type exp_name: str, optional
+        :param launcher: workload manager i.e. "slurm", "pbs"
+        :type launcher: str, optional
+        :param nodes: compute nodes to use for synthetic scaling app with
+                      a co-located orchestrator database
+        :type clients_per_node: list, optional
+        :param clients_per_node: client tasks per compute node for the synthetic scaling app
+        :type clients_per_node: list, optional
+        :param db_hosts: optionally supply hosts to launch the database on
+        :type db_hosts: list, optional
+        :param db_nodes: number of compute hosts to use for the database
+        :type db_nodes: list, optional
+        :param db_cpus: number of cpus per compute host for the database
+        :type db_cpus: list, optional
+        :param db_tpq: number of device threads to use for the database
+        :type db_tpq: list, optional
+        :param db_port: port to use for the database
+        :type db_port: int, optional
+        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
+        :type pin_app_cpus: int, optional
+        :param batch_size: batch size to set Resnet50 model with
+        :type batch_size: list, optional
+        :param device: device used to run the models in the database
+        :type device: str, optional
+        :param num_devices: number of devices per compute node to use to run ResNet
+        :type num_devices: int, optional
+        :param net_ifname: network interface to use i.e. "ib0" for infiniband or
+                           "ipogif0" aries networks
+        :type net_ifname: str, optional
+        """
+        logger.info("Starting colocated inference scaling tests")
+
+        exp = Experiment(name=exp_name, launcher=launcher)
+        exp.generate()
+        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+
+        # create permutations of each input list and run each of the permutations
+        # as a single inference scaling test
+        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus))
+        for perm in perms:
+            c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
+
+            infer_session = create_colocated_inference_session(exp,
+                                                               c_nodes,
+                                                               cpn,
+                                                               pin_app,
+                                                               net_ifname,
+                                                               dbc,
+                                                               dbtpq,
+                                                               db_port,
+                                                               batch,
+                                                               device,
+                                                               num_devices)
+
+            exp.start(infer_session, block=True, summary=True)
+
+            # confirm scaling test run successfully
+            stat = exp.get_status(infer_session)
+            if stat[0] != status.STATUS_COMPLETED:
+                logger.error(f"One of the scaling tests failed {infer_session.name}")
+
+
+    def process_scaling_results(self, scaling_dir="inference-scaling", overwrite=True):
+        """Create a results directory with performance data and plots
+
+        With the overwrite flag turned off, this function can be used
+        to build up a single csv with the results of runs over a long
+        period of time.
+
+        :param scaling_dir: directory to create results from
+        :type scaling_dir: str, optional
+        :param overwrite: overwrite any existing results
+        :type overwrite: bool, optional
+        """
+
+        import pandas as pd
+        from process_results import create_run_csv
+
+        dataframes = []
+        result_dir = Path(scaling_dir) / "results"
+        runs = [d for d in os.listdir(scaling_dir) if d.startswith("infer-sess")]
 
         try:
-            # get the statistics from all post processing jobs
-            # and add to the experiment summary
-            stats_df = get_stats(data_locations)
-            summary_df = get_run_df()
-            final_df = pd.merge(summary_df, stats_df, on="Name")
+            # write csv each so this function is impodent
+            # csv's will not be written if they are already created
+            for run in tqdm(runs, desc="Processing scaling results...", ncols=80):
+                try:
+                    run_path = Path(scaling_dir) / run
+                    create_run_csv(run_path, delete_previous=overwrite)
+                # want to catch all exceptions and skip runs that may
+                # not have completed or finished b/c some reason i.e. node failure
+                except Exception as e:
+                    logger.warning(f"Skipping {run} could not process results")
+                    logger.error(e)
+                    continue
 
-            # save experiment info
-            print(final_df)
-            final_df.to_csv(exp.name + ".csv")
+            # collect all written csv into dataframes to concat
+            for run in tqdm(runs, desc="Collecting scaling results...", ncols=80):
+                try:
+                    results_path = os.path.join(result_dir, run, run + ".csv")
+                    run_df = pd.read_csv(str(results_path))
+                    dataframes.append(run_df)
+                # catch all and skip for reason listed above
+                except Exception as e:
+                    logger.warning(f"Skipping {run} could not read results csv")
+                    logger.error(e)
+                    continue
 
-        except Exception as e:
-            print("Could not preprocess results")
-            print(str(e))
+            final_df = pd.concat(dataframes, join="outer")
+            exp_name = os.path.basename(scaling_dir)
+            csv_path = result_dir / f"{exp_name}-{self.date}.csv"
+            final_df.to_csv(str(csv_path))
+
+        except Exception:
+            logger.error("Could not preprocess results")
+            raise
 
 
-def start_database(port, nodes, cpus, tpq):
-    """Create and start the Redis database for the scaling test
+def start_database(exp, port, nodes, cpus, tpq, net_ifname, run_as_batch, batch_args, hosts):
+    """Create and start the Orchestrator
 
-    This function launches the redis database instances as a
-    Sbatch script.
+    This function is only called if the scaling tests are
+    being executed in the standard deployment mode where
+    seperate computational resources are used for the app
+    and the database.
 
     :param port: port number of database
     :type port: int
@@ -161,22 +273,31 @@ def start_database(port, nodes, cpus, tpq):
     :type cpus: int
     :param tpq: number of threads per queue
     :type tpq: int
+    :param net_ifname: network interface name
+    :type net_ifname: str
     :return: orchestrator instance
     :rtype: Orchestrator
     """
     db = exp.create_database(port=port,
                             db_nodes=nodes,
-                            batch=True,
-                            interface="ipogif0",
-                            threads_per_queue=tpq)
-    db.set_batch_arg("exclusive", None)
-    db.set_batch_arg("C", "P100")
+                            batch=run_as_batch,
+                            interface=net_ifname,
+                            threads_per_queue=tpq,
+                            single_cmd=True)
+    if run_as_batch:
+        db.set_walltime("00:10:00")
+        for k, v in batch_args.items():
+            db.set_batch_arg(k, v)
+    if hosts:
+        db.set_hosts(hosts)
+
     db.set_cpus(cpus)
     exp.generate(db)
     exp.start(db)
+    logger.info("Orchestrator Database created and running")
     return db
 
-def setup_resnet(model, device, batch_size, address, cluster=True):
+def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     """Set and configure the PyTorch resnet50 model for inference
 
     :param model: path to serialized resnet model
@@ -188,28 +309,34 @@ def setup_resnet(model, device, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    client = Client(address=address, cluster=cluster)
-    client.set_model_from_file("resnet_model",
-                                model,
-                                "TORCH",
-                                device,
-                                batch_size)
-    client.set_script_from_file("resnet_script",
-                                "../imagenet/data_processing_script.txt",
-                                device)
+    devices = []
+    if num_devices > 0:
+        devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
+    else:
+        devices = [device.upper()]
+    for i, dev in enumerate(devices):
+        client = Client(address=address, cluster=cluster)
+        client.set_model_from_file(f"resnet_model_{str(i)}",
+                                    model,
+                                    "TORCH",
+                                    dev,
+                                    batch_size)
+        client.set_script_from_file(f"resnet_script_{str(i)}",
+                                    "../imagenet/data_processing_script.txt",
+                                    dev)
+        logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
 
-def create_inference_session(nodes, tasks, db_nodes, db_cpus=1, db_tpq=1):
-    """Create a inference session using the C++ driver with the SmartRedis client
 
-    :param nodes: number of nodes for the client driver
-    :type nodes: int
-    :param tasks: number of tasks for each client
-    :type tasks: int
-    :param db: number of database nodes
-    :type db: int
-    :return: created Model instance
-    :rtype: Model
-    """
+def create_inference_session(exp,
+                             nodes,
+                             tasks,
+                             db_nodes,
+                             db_cpus,
+                             db_tpq,
+                             batch_size,
+                             device,
+                             num_devices
+                             ):
     cluster = 1 if db_nodes > 1 else 0
     run_settings = exp.create_run_settings("./build/run_resnet_inference")
     run_settings.set_nodes(nodes)
@@ -232,21 +359,35 @@ def create_inference_session(nodes, tasks, db_nodes, db_cpus=1, db_tpq=1):
 
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["../imagenet/cat.raw",
-                                          "./process_results.py",
                                           "../imagenet/resnet50.pt",
                                           "../imagenet/data_processing_script.txt"])
     exp.generate(model, overwrite=True)
+    write_run_config(model.path,
+                     colocated=0,
+                     client_total=tasks*nodes,
+                     client_per_node=tasks,
+                     client_nodes=nodes,
+                     database_nodes=db_nodes,
+                     database_cpus=db_cpus,
+                     database_threads_per_queue=db_tpq,
+                     batch_size=batch_size,
+                     device=device,
+                     num_devices=num_devices)
+
     return model
 
 
-def create_colocated_inference_session(nodes,
+def create_colocated_inference_session(exp,
+                                       nodes,
                                        tasks,
-                                       db_nodes,
+                                       pin_app_cpus,
+                                       net_ifname,
                                        db_cpus,
                                        db_tpq,
                                        db_port,
                                        batch_size,
-                                       device):
+                                       device,
+                                       num_devices):
     run_settings = exp.create_run_settings("./build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks_per_node(tasks)
@@ -256,109 +397,63 @@ def create_colocated_inference_session(nodes,
         "SS_BATCH_SIZE": str(batch_size),
         "SS_DEVICE": device,
         "SS_CLIENT_COUNT": str(tasks),
-        "SS_NUM_DEVICES": "8"
+        "SS_NUM_DEVICES": str(num_devices)
     })
 
     name = "-".join((
         "infer-sess-colo",
         "N"+str(nodes),
         "T"+str(tasks),
-        "DBN"+str(db_nodes),
+        "DBN"+str(nodes),
         "DBC"+str(db_cpus),
         "DBTPQ"+str(db_tpq)
         ))
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["../imagenet/cat.raw",
-                                          "./process_results.py",
                                           "../imagenet/resnet50.pt",
                                           "../imagenet/data_processing_script.txt"])
 
     # add co-located database
     model.colocate_db(port=db_port,
                       db_cpus=db_cpus,
-                      limit_app_cpus=True,
-                      ifname="ib0",
+                      limit_app_cpus=pin_app_cpus,
+                      ifname=net_ifname,
                       threads_per_queue=db_tpq,
                       # turning this to true can result in performance loss
                       # on networked file systems(many writes to db log file)
                       debug=False,
                       loglevel="notice")
     exp.generate(model, overwrite=True)
+    write_run_config(model.path,
+                     colocated=1,
+                     pin_app_cpus=int(pin_app_cpus),
+                     client_total=tasks*nodes,
+                     client_per_node=tasks,
+                     client_nodes=nodes,
+                     database_nodes=nodes,
+                     database_cpus=db_cpus,
+                     database_threads_per_queue=db_tpq,
+                     batch_size=batch_size,
+                     device=device,
+                     num_devices=num_devices)
     return model
 
 
-def create_post_process(model_path, name):
-    """Create a Model to post process the inference results
+def write_run_config(path, **kwargs):
+    name = os.path.basename(path)
+    config = configparser.ConfigParser()
+    config["run"] = {
+        "name": name,
+        "path": path,
+        "smartsim_version": smartsim.__version__,
+        "smartredis_version": "0.3.0", # put in smartredis __version__
+        "date": str(datetime.datetime.now().strftime("%Y-%m-%d"))
+    }
+    config["attributes"] = kwargs
 
-    :param model_path: path to model output data
-    :type model_path: str
-    :param name: name of the model
-    :type name: str
-    :return: created post processing model
-    :rtype: Model
-    """
-
-    exe_args = f"process_results.py --path={model_path} --name={name}"
-    run_settings = exp.create_run_settings("python", exe_args=exe_args)
-    run_settings.set_nodes(1)
-    run_settings.set_tasks(1)
-
-    pp_name = "-".join(("post", name))
-    post_process = exp.create_model(pp_name, run_settings, path=model_path)
-    return post_process
-
-def get_stats(data_locations):
-    """Compile inference results into pandas dataframe
-
-    :param data_locations: path, name, (nodes, tasks, db nodes)
-    :type data_locations: tuple(str, str, tuple(int, int, int))
-    :return: dataframe
-    :rtype: pd.DataFrame
-    """
-    all_data = None
-    for data_path, name, job_info in data_locations:
-        data_path = osp.join(data_path, name + ".csv")
-        data = pd.read_csv(data_path)
-        data = data.drop("Unnamed: 0", axis=1)
-
-        # add node and task information
-        data["nodes"] = job_info[0]
-        data["tasks"] = job_info[1]
-        data["db_size"] = job_info[2]
-
-        if not isinstance(all_data, pd.DataFrame):
-            all_data = data
-        else:
-            all_data = pd.concat([all_data, data])
-    return all_data
-
-
-def get_run_df():
-    index = 0
-    df = pd.DataFrame(
-        columns=[
-            "Name",
-            "Entity-Type",
-            "JobID",
-            "RunID",
-            "Time",
-            "Status",
-            "Returncode",
-        ]
-    )
-    for job in exp._control.get_jobs().values():
-        for run in range(job.history.runs + 1):
-            df.loc[index] = [
-                job.entity.name,
-                job.entity.type,
-                job.history.jids[run],
-                run,
-                job.history.job_times[run],
-                job.history.statuses[run],
-                job.history.returns[run],
-            ]
-            index += 1
-    return df
+    config_path = Path(path) / "run.cfg"
+    with open(config_path, "w") as f:
+        config.write(f)
 
 
 if __name__ == "__main__":
