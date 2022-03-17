@@ -4,10 +4,12 @@ import datetime
 from pathlib import Path
 from itertools import product
 from tqdm import tqdm
+from typing import Type
 
 import smartsim
 from smartsim import Experiment, status
 from smartredis import Client
+
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -16,25 +18,25 @@ logger = get_logger("Scaling Tests")
 class SmartSimScalingTests:
 
     def __init__(self):
-        self.resnet_model = "../imagenet/resnet50.pt"
+        self.resnet_model = "./imagenet/resnet50.pt"
         self.date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
 
-    def resnet_standard(self,
-                        exp_name="inference-scaling",
-                        launcher="auto",
-                        run_db_as_batch=True,
-                        batch_args={},
-                        db_hosts=[],
-                        db_nodes=[12],
-                        db_cpus=[2],
-                        db_tpq=[1],
-                        db_port=6780,
-                        batch_size=[1000],
-                        device="GPU",
-                        num_devices=1,
-                        net_ifname="ipogif0",
-                        clients_per_node=[48],
-                        client_nodes=[12]):
+    def inference_standard(self,
+                           exp_name="inference-scaling",
+                           launcher="auto",
+                           run_db_as_batch=True,
+                           batch_args={},
+                           db_hosts=[],
+                           db_nodes=[12],
+                           db_cpus=[2],
+                           db_tpq=[1],
+                           db_port=6780,
+                           batch_size=[1000],
+                           device="GPU",
+                           num_devices=1,
+                           net_ifname="ipogif0",
+                           clients_per_node=[48],
+                           client_nodes=[12]):
         """Run ResNet50 inference tests with standard Orchestrator deployment
 
         :param exp_name: name of output dir
@@ -122,20 +124,20 @@ class SmartSimScalingTests:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
 
 
-    def resnet_colocated(self,
-                         exp_name="inference-scaling",
-                         launcher="auto",
-                         nodes=[12],
-                         clients_per_node=[18],
-                         db_cpus=[2],
-                         db_tpq=[1],
-                         db_port=6780,
-                         pin_app_cpus=[False],
-                         batch_size=[1],
-                         device="GPU",
-                         num_devices=1,
-                         net_ifname="ipogif0",
-                        ):
+    def inference_colocated(self,
+                            exp_name="inference-scaling",
+                            launcher="auto",
+                            nodes=[12],
+                            clients_per_node=[18],
+                            db_cpus=[2],
+                            db_tpq=[1],
+                            db_port=6780,
+                            pin_app_cpus=[False],
+                            batch_size=[1],
+                            device="GPU",
+                            num_devices=1,
+                            net_ifname="ipogif0",
+                            ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
 
         :param exp_name: name of output dir, defaults to "inference-scaling"
@@ -199,6 +201,92 @@ class SmartSimScalingTests:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
+
+
+    def throughput_scaling(self,
+                           exp_name="throughput-scaling",
+                           launcher="auto",
+                           run_db_as_batch=True,
+                           batch_args={},
+                           db_hosts=[],
+                           db_nodes=[12],
+                           db_cpus=[2],
+                           db_port=6780,
+                           net_ifname="ipogif0",
+                           clients_per_node=[32],
+                           client_nodes=[128, 256, 512],
+                           tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076,
+                                         262152, 524304, 1024000, 2048000, 4096000]):
+
+        """Run the throughput scaling tests
+
+        :param exp_name: name of output dir
+        :type exp_name: str, optional
+        :param launcher: workload manager i.e. "slurm", "pbs"
+        :type launcher: str, optional
+        :param run_db_as_batch: run database as seperate batch submission each iteration
+        :type run_db_as_batch: bool, optional
+        :param batch_args: additional batch args for the database
+        :type batch_args: dict, optional
+        :param db_hosts: optionally supply hosts to launch the database on
+        :type db_hosts: list, optional
+        :param db_nodes: number of compute hosts to use for the database
+        :type db_nodes: list, optional
+        :param db_cpus: number of cpus per compute host for the database
+        :type db_cpus: list, optional
+        :param db_port: port to use for the database
+        :type db_port: int, optional
+        :param net_ifname: network interface to use i.e. "ib0" for infiniband or
+                           "ipogif0" aries networks
+        :type net_ifname: str, optional
+        :param clients_per_node: client tasks per compute node for the synthetic scaling app
+        :type clients_per_node: list, optional
+        :param client_nodes: number of compute nodes to use for the synthetic scaling app
+        :type client_nodes: list, optional
+        :param tensor_bytes: list of tensor sizes in bytes
+        :type tensor_bytes: list[int], optional
+        """
+        logger.info("Starting throughput scaling tests")
+
+        exp = Experiment(name=exp_name, launcher=launcher)
+        exp.generate()
+        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+
+        for db_node_count in db_nodes:
+
+            # start the database only once per value in db_nodes so all permutations
+            # are executed with the same database size without bringin down the database
+            db = start_database(exp,
+                                db_port,
+                                db_node_count,
+                                db_cpus,
+                                None, # not setting threads per queue in throughput tests
+                                net_ifname,
+                                run_db_as_batch,
+                                batch_args,
+                                db_hosts)
+
+
+            perms = list(product(client_nodes, clients_per_node, tensor_bytes))
+            for perm in perms:
+                c_nodes, cpn, _bytes = perm
+
+                # setup a an instance of the C++ driver and start it
+                throughput_session = create_throughput_session(exp,
+                                                               c_nodes,
+                                                               cpn,
+                                                               db_node_count,
+                                                               db_cpus,
+                                                               _bytes)
+                exp.start(throughput_session, summary=True)
+
+                # confirm scaling test run successfully
+                status = exp.get_status(throughput_session)
+                if status[0] != status.STATUS_COMPLETED:
+                    logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
+
+            # stop database after this set of permutations have finished
+            exp.stop(db)
 
 
     def process_scaling_results(self, scaling_dir="inference-scaling", overwrite=True):
@@ -322,7 +410,7 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
                                     dev,
                                     batch_size)
         client.set_script_from_file(f"resnet_script_{str(i)}",
-                                    "../imagenet/data_processing_script.txt",
+                                    "./imagenet/data_processing_script.txt",
                                     dev)
         logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
 
@@ -338,7 +426,7 @@ def create_inference_session(exp,
                              num_devices
                              ):
     cluster = 1 if db_nodes > 1 else 0
-    run_settings = exp.create_run_settings("./build/run_resnet_inference")
+    run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks_per_node(tasks)
     # tell scaling application not to set the model from the application
@@ -358,9 +446,9 @@ def create_inference_session(exp,
         ))
 
     model = exp.create_model(name, run_settings)
-    model.attach_generator_files(to_copy=["../imagenet/cat.raw",
-                                          "../imagenet/resnet50.pt",
-                                          "../imagenet/data_processing_script.txt"])
+    model.attach_generator_files(to_copy=["./imagenet/cat.raw",
+                                          "./imagenet/resnet50.pt",
+                                          "./imagenet/data_processing_script.txt"])
     exp.generate(model, overwrite=True)
     write_run_config(model.path,
                      colocated=0,
@@ -388,7 +476,7 @@ def create_colocated_inference_session(exp,
                                        batch_size,
                                        device,
                                        num_devices):
-    run_settings = exp.create_run_settings("./build/run_resnet_inference")
+    run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks_per_node(tasks)
     run_settings.update_env({
@@ -409,9 +497,9 @@ def create_colocated_inference_session(exp,
         "DBTPQ"+str(db_tpq)
         ))
     model = exp.create_model(name, run_settings)
-    model.attach_generator_files(to_copy=["../imagenet/cat.raw",
-                                          "../imagenet/resnet50.pt",
-                                          "../imagenet/data_processing_script.txt"])
+    model.attach_generator_files(to_copy=["./imagenet/cat.raw",
+                                          "./imagenet/resnet50.pt",
+                                          "./imagenet/data_processing_script.txt"])
 
     # add co-located database
     model.colocate_db(port=db_port,
@@ -436,6 +524,51 @@ def create_colocated_inference_session(exp,
                      batch_size=batch_size,
                      device=device,
                      num_devices=num_devices)
+    return model
+
+
+def create_throughput_session(exp,
+                              nodes,
+                              tasks,
+                              db_nodes,
+                              db_cpus,
+                              _bytes):
+    """Create a Model to run a throughput scaling session
+
+    :param exp: Experiment object for this test
+    :type exp: Experiment
+    :param nodes: number of nodes for the synthetic throughput application
+    :type nodes: int
+    :param tasks: number of tasks per node for the throughput application
+    :type tasks: int
+    :param db_nodes: number of database nodes
+    :type db_nodes: int
+    :param db_cpus: number of cpus used on each database node
+    :type db_cpus: int
+    :param _bytes: size in bytes of tensors to use for thoughput scaling
+    :type _bytes: int
+    :return: Model reference to the throughput session to launch
+    :rtype: Model
+    """
+    settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes))
+    settings.set_tasks(nodes * tasks)
+    settings.set_tasks_per_node(tasks)
+
+    name = "-".join((
+        "thoughput-sess",
+        "N"+str(nodes),
+        "T"+str(tasks),
+        "DBN"+str(db_nodes)
+        ))
+
+    model = exp.create_model(name, settings)
+    exp.generate(model, overwrite=True)
+    write_run_config(model.path,
+                client_total=tasks*nodes,
+                client_per_node=tasks,
+                client_nodes=nodes,
+                database_nodes=db_nodes,
+                database_cpus=db_cpus)
     return model
 
 

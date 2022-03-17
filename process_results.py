@@ -38,16 +38,19 @@ def create_run_csv(run_path, delete_previous=True, verbose=False):
                 if verbose:
                     print(file)
 
-        num_run = len(function_times['run_model'])
         if verbose:
-            print(f'there are {num_run} values in the run_model entries')
-            print('Max {0}'.format(max(function_times['client()'])))
             print('Min {0}'.format(min(function_times['client()'])))
-
+            print('Max {0}'.format(max(function_times['client()'])))
         try:
+            # throughput tests do not have a 'run_model` or `run_script` timing
+            if "run_model" in function_times:
+                if verbose:
+                    num_run = len(function_times['run_model'])
+                    print(f'there are {num_run} values in the run_model entries')
+                _make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', result_dir)
+                _make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', result_dir)
+
             _make_hist_plot(function_times['client()'], 'client()', 'client_constructor_dist.pdf', result_dir)
-            _make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', result_dir)
-            _make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', result_dir)
             _make_hist_plot(function_times['put_tensor'], 'put_tensor()', 'put_tensor.pdf', result_dir)
             _make_hist_plot(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf', result_dir)
             _make_hist_plot(function_times['main()'], 'main()', 'main.pdf', result_dir)
