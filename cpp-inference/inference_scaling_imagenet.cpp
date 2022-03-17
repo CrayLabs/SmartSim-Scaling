@@ -165,7 +165,7 @@ void run_mnist(const std::string& model_name,
 
   double unpack_tensor_start = MPI_Wtime();
   client.unpack_tensor(out_key, result, {1,1000},
-		       SRTensorTypeFloat,
+		                   SRTensorTypeFloat,
                        SRMemLayoutNested);
   double unpack_tensor_end = MPI_Wtime();
   delta_t = unpack_tensor_end - unpack_tensor_start;

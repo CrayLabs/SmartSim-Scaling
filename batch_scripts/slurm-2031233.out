@@ -1,91 +1,0 @@
-18:47:57 nid00152 SmartSim[31312] INFO Starting colocated inference scaling tests
-18:47:57 nid00152 SmartSim[31312] INFO Working in previously created experiment
-18:47:58 nid00152 SmartSim[31312] DEBUG Configuring model infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2 with params {}
-18:47:58 nid00152 SmartSim[31312] INFO 
-
-=== Launch Summary ===
-Experiment: inference-scaling
-Experiment Path: /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling
-Launcher: slurm
-Models: 1
-Database Status: inactive
-
-=== Models ===
-infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2
-Executable: /lus/cls01029/spartee/poseidon/smartsim-scaling/cpp-inference/build/run_resnet_inference
-Executable Arguments: 
-Run Command: srun
-Run Arguments:
-	nodes = 16
-	ntasks-per-node = 24
-Co-located Database: True
-
-
-
-Launching in...:                                                       | ? 00:00Launching in...: █▌                                                | 00:09 00:00Launching in...: ███                                               | 00:09 00:00Launching in...: ████▌                                             | 00:09 00:00Launching in...: ██████                                            | 00:08 00:01Launching in...: ███████▌                                          | 00:08 00:01Launching in...: █████████                                         | 00:08 00:01Launching in...: ██████████▌                                       | 00:07 00:02Launching in...: ████████████                                      | 00:07 00:02Launching in...: █████████████▌                                    | 00:07 00:02Launching in...: ███████████████                                   | 00:07 00:03Launching in...: ████████████████▌                                 | 00:06 00:03Launching in...: ██████████████████                                | 00:06 00:03Launching in...: ███████████████████▌                              | 00:06 00:03Launching in...: █████████████████████                             | 00:05 00:04Launching in...: ██████████████████████▌                           | 00:05 00:04Launching in...: ████████████████████████                          | 00:05 00:04Launching in...: █████████████████████████▌                        | 00:04 00:05Launching in...: ███████████████████████████                       | 00:04 00:05Launching in...: ████████████████████████████▍                     | 00:04 00:05Launching in...: ██████████████████████████████                    | 00:04 00:06Launching in...: ███████████████████████████████▌                  | 00:03 00:06Launching in...: █████████████████████████████████                 | 00:03 00:06Launching in...: ██████████████████████████████████▌               | 00:03 00:06Launching in...: ████████████████████████████████████              | 00:02 00:07Launching in...: █████████████████████████████████████▌            | 00:02 00:07Launching in...: ███████████████████████████████████████           | 00:02 00:07Launching in...: ████████████████████████████████████████▌         | 00:01 00:08Launching in...: ██████████████████████████████████████████        | 00:01 00:08Launching in...: ███████████████████████████████████████████▌      | 00:01 00:08Launching in...: █████████████████████████████████████████████     | 00:01 00:09Launching in...: ██████████████████████████████████████████████▌   | 00:00 00:09Launching in...: ████████████████████████████████████████████████  | 00:00 00:09Launching in...: █████████████████████████████████████████████████▌| 00:00 00:09                                                                                18:48:08 nid00152 SmartSim[31312] DEBUG Running on allocation 2031233 gleaned from user environment
-18:48:08 nid00152 SmartSim[31312] DEBUG Starting Task Manager
-18:48:08 nid00152 SmartSim[31312] DEBUG Executing command: /opt/slurm/20.11.5/bin/srun --output /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling/infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2/infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2.out --error /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling/infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2/infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2.err --job-name infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2-CILOYRN8VSIA --jobid 2031233 --export PATH=/home/users/spartee/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/bin:/home/users/spartee/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/bin:/lus/scratch/spartee/miniconda3/envs/smartsim-0.4.0-pre/bin:/lus/scratch/spartee/miniconda3/condabin:/opt/cray/dws/3.0.36-7.0.4.0_65.30__g6985c90.ari/bin:/opt/cray/dws/3.0.36-7.0.4.0_65.30__g6985c90.ari/sbin:/opt/cray/pe/mpt/7.7.19/gni/bin:/opt/cray/pe/perftools/22.04.0/bin:/opt/cray/pe/papi/6.0.0.14/bin:/opt/cray/rca/2.2.20-7.0.4.0_24.39__g8e3fb5b.ari/bin:/opt/cray/pe/craype/2.7.13.3/bin:/opt/cray/pe/cce/13.0.2/binutils/x86_64/x86_64-pc-linux-gnu/bin:/opt/cray/pe/cce/13.0.2/binutils/cross/x86_64-aarch64/bin:/opt/cray/pe/cce/13.0.2/utils/x86_64/bin:/opt/cray/pe/cce/13.0.2/bin:/opt/slurm/20.11.5/bin:/opt/cray/cfgutils/bin:/opt/cray/nodehealth/5.6.30-7.0.4.0_77.1__g065188d.ari/bin:/opt/cray/llm/21.4.632-7.0.4.0_44.13__gf148da5.ari/bin:/opt/cray/sdb/3.3.821-7.0.4.0_27.18__g8c59c9d.ari/bin:/opt/cray/nodestat/2.3.89-7.0.4.0_33.22__g8645157.ari/bin:/opt/cray/pe/modules/3.2.11.4/bin:/home/users/spartee/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/cray/pe/bin:/lus/cls01029/spartee/num-models/lammps/cmake/build:/lus/cls01029/spartee/num-models/lammps/cmake/build:/lus/cls01029/spartee/num-models/lammps/cmake/build:/lus/cls01029/spartee/num-models/lammps/cmake/build,LD_LIBRARY_PATH=/lus/cls01029/spartee/cuda/lib64/:/opt/cray/pe/papi/6.0.0.14/lib64,PYTHONPATH=/opt/cray/llm/21.4.632-7.0.4.0_44.13__gf148da5.ari/lib64/python,SS_SET_MODEL=1,SS_CLUSTER=0,SS_BATCH_SIZE=1,SS_DEVICE=GPU,SS_CLIENT_COUNT=24,SS_NUM_DEVICES=1,SSDB=127.0.0.1:6780 --nodes=16 --ntasks-per-node=24 --cpu-bind=none /bin/bash /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling/infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2/.colocated_launcher.sh /lus/cls01029/spartee/poseidon/smartsim-scaling/cpp-inference/build/run_resnet_inference
-18:48:08 nid00152 SmartSim[31312] DEBUG Starting Task 31357
-18:48:10 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p --format=jobname,jobid
-18:48:11 nid00152 SmartSim[31312] DEBUG Launching infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2
-18:48:11 nid00152 SmartSim[31312] DEBUG Starting Job Manager
-18:48:16 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): New
-18:48:21 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.0
-18:48:21 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): Running
-18:48:26 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): Running
-18:48:31 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.0
-18:48:31 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): Running
-18:48:36 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): Running
-18:48:41 nid00152 SmartSim[31312] DEBUG Removing Task 31357
-18:48:41 nid00152 SmartSim[31312] DEBUG Sleeping, no tasks to monitor
-18:48:41 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.0
-18:48:41 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): Completed
-18:48:41 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T24-DBN16-DBC4-DBTPQ2(2031233.0): Completed
-18:48:41 nid00152 SmartSim[31312] DEBUG Sleeping, no jobs to monitor
-18:48:46 nid00152 SmartSim[31312] INFO Working in previously created experiment
-18:48:47 nid00152 SmartSim[31312] DEBUG Configuring model infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2 with params {}
-18:48:47 nid00152 SmartSim[31312] INFO 
-
-=== Launch Summary ===
-Experiment: inference-scaling
-Experiment Path: /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling
-Launcher: slurm
-Models: 1
-Database Status: inactive
-
-=== Models ===
-infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2
-Executable: /lus/cls01029/spartee/poseidon/smartsim-scaling/cpp-inference/build/run_resnet_inference
-Executable Arguments: 
-Run Command: srun
-Run Arguments:
-	nodes = 16
-	ntasks-per-node = 28
-Co-located Database: True
-
-
-
-Launching in...:                                                       | ? 00:00Launching in...: █▌                                                | 00:09 00:00Launching in...: ███                                               | 00:09 00:00Launching in...: ████▌                                             | 00:09 00:00Launching in...: ██████                                            | 00:08 00:01Launching in...: ███████▌                                          | 00:08 00:01Launching in...: █████████                                         | 00:08 00:01Launching in...: ██████████▌                                       | 00:07 00:02Launching in...: ████████████                                      | 00:07 00:02Launching in...: █████████████▌                                    | 00:07 00:02Launching in...: ███████████████                                   | 00:07 00:03Launching in...: ████████████████▌                                 | 00:06 00:03Launching in...: ██████████████████                                | 00:06 00:03Launching in...: ███████████████████▌                              | 00:06 00:03Launching in...: █████████████████████                             | 00:05 00:04Launching in...: ██████████████████████▌                           | 00:05 00:04Launching in...: ████████████████████████                          | 00:05 00:04Launching in...: █████████████████████████▌                        | 00:04 00:05Launching in...: ███████████████████████████                       | 00:04 00:05Launching in...: ████████████████████████████▍                     | 00:04 00:05Launching in...: ██████████████████████████████                    | 00:04 00:06Launching in...: ███████████████████████████████▌                  | 00:03 00:06Launching in...: █████████████████████████████████                 | 00:03 00:06Launching in...: ██████████████████████████████████▌               | 00:03 00:06Launching in...: ████████████████████████████████████              | 00:02 00:07Launching in...: █████████████████████████████████████▌            | 00:02 00:07Launching in...: ███████████████████████████████████████           | 00:02 00:07Launching in...: ████████████████████████████████████████▌         | 00:01 00:08Launching in...: ██████████████████████████████████████████        | 00:01 00:08Launching in...: ███████████████████████████████████████████▌      | 00:01 00:08Launching in...: █████████████████████████████████████████████     | 00:01 00:09Launching in...: ██████████████████████████████████████████████▌   | 00:00 00:09Launching in...: ████████████████████████████████████████████████  | 00:00 00:09Launching in...: █████████████████████████████████████████████████▌| 00:00 00:09                                                                                18:48:57 nid00152 SmartSim[31312] DEBUG Running on allocation 2031233 gleaned from user environment
-18:48:57 nid00152 SmartSim[31312] DEBUG Starting Task Manager
-18:48:57 nid00152 SmartSim[31312] DEBUG Executing command: /opt/slurm/20.11.5/bin/srun --output /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling/infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2/infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2.out --error /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling/infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2/infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2.err --job-name infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2-CILOZE1VZ3O2 --jobid 2031233 --export PATH=/home/users/spartee/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/bin:/home/users/spartee/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/bin:/lus/scratch/spartee/miniconda3/envs/smartsim-0.4.0-pre/bin:/lus/scratch/spartee/miniconda3/condabin:/opt/cray/dws/3.0.36-7.0.4.0_65.30__g6985c90.ari/bin:/opt/cray/dws/3.0.36-7.0.4.0_65.30__g6985c90.ari/sbin:/opt/cray/pe/mpt/7.7.19/gni/bin:/opt/cray/pe/perftools/22.04.0/bin:/opt/cray/pe/papi/6.0.0.14/bin:/opt/cray/rca/2.2.20-7.0.4.0_24.39__g8e3fb5b.ari/bin:/opt/cray/pe/craype/2.7.13.3/bin:/opt/cray/pe/cce/13.0.2/binutils/x86_64/x86_64-pc-linux-gnu/bin:/opt/cray/pe/cce/13.0.2/binutils/cross/x86_64-aarch64/bin:/opt/cray/pe/cce/13.0.2/utils/x86_64/bin:/opt/cray/pe/cce/13.0.2/bin:/opt/slurm/20.11.5/bin:/opt/cray/cfgutils/bin:/opt/cray/nodehealth/5.6.30-7.0.4.0_77.1__g065188d.ari/bin:/opt/cray/llm/21.4.632-7.0.4.0_44.13__gf148da5.ari/bin:/opt/cray/sdb/3.3.821-7.0.4.0_27.18__g8c59c9d.ari/bin:/opt/cray/nodestat/2.3.89-7.0.4.0_33.22__g8645157.ari/bin:/opt/cray/pe/modules/3.2.11.4/bin:/home/users/spartee/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/cray/pe/bin:/lus/cls01029/spartee/num-models/lammps/cmake/build:/lus/cls01029/spartee/num-models/lammps/cmake/build:/lus/cls01029/spartee/num-models/lammps/cmake/build:/lus/cls01029/spartee/num-models/lammps/cmake/build,LD_LIBRARY_PATH=/lus/cls01029/spartee/cuda/lib64/:/opt/cray/pe/papi/6.0.0.14/lib64,PYTHONPATH=/opt/cray/llm/21.4.632-7.0.4.0_44.13__gf148da5.ari/lib64/python,SS_SET_MODEL=1,SS_CLUSTER=0,SS_BATCH_SIZE=1,SS_DEVICE=GPU,SS_CLIENT_COUNT=28,SS_NUM_DEVICES=1,SSDB=127.0.0.1:6780 --nodes=16 --ntasks-per-node=28 --cpu-bind=none /bin/bash /lus/cls01029/spartee/poseidon/smartsim-scaling/inference-scaling/infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2/.colocated_launcher.sh /lus/cls01029/spartee/poseidon/smartsim-scaling/cpp-inference/build/run_resnet_inference
-18:48:57 nid00152 SmartSim[31312] DEBUG Starting Task 32410
-18:48:59 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p --format=jobname,jobid
-18:49:00 nid00152 SmartSim[31312] DEBUG Launching infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2
-18:49:00 nid00152 SmartSim[31312] DEBUG Starting Job Manager
-18:49:05 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): New
-18:49:10 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.1
-18:49:10 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Running
-18:49:15 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Running
-18:49:20 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.1
-18:49:20 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Running
-18:49:25 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Running
-18:49:30 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.1
-18:49:30 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Running
-18:49:31 nid00152 SmartSim[31312] DEBUG Removing Task 32410
-18:49:31 nid00152 SmartSim[31312] DEBUG Sleeping, no tasks to monitor
-18:49:35 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Running
-18:49:40 nid00152 SmartSim[31312] DEBUG Executing Popen cmd: /opt/slurm/20.11.5/bin/sacct --noheader -p -b --jobs 2031233.1
-18:49:40 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Completed
-18:49:40 nid00152 SmartSim[31312] INFO infer-sess-colo-N16-T28-DBN16-DBC4-DBTPQ2(2031233.1): Completed
-18:49:40 nid00152 SmartSim[31312] DEBUG Sleeping, no jobs to monitor
-

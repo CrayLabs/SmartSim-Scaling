@@ -109,6 +109,9 @@ def read_run_config(run_path):
     data = {
         "name": config["run"]["name"],
         "date": config["run"]["date"],
+        "db": config["run"]["db"],
+        "smartsim": config["run"]["smartsim_version"],
+        "smartredis": config["run"]["smartredis_version"]
     }
     for k, v in config["attributes"].items():
         data[k] = v

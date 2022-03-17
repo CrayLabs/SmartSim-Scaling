@@ -4,7 +4,7 @@ import datetime
 from pathlib import Path
 from itertools import product
 from tqdm import tqdm
-from typing import Type
+from uuid import uuid4
 
 import smartsim
 from smartsim import Experiment, status
@@ -72,6 +72,7 @@ class SmartSimScalingTests:
         :type client_nodes: list, optional
         """
         logger.info("Starting inference scaling tests")
+        logger.info(f"Running with database backend: {_get_db_backend()}")
 
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
@@ -172,6 +173,7 @@ class SmartSimScalingTests:
         :type net_ifname: str, optional
         """
         logger.info("Starting colocated inference scaling tests")
+        logger.info(f"Running with database backend: {_get_db_backend()}")
 
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
@@ -210,11 +212,12 @@ class SmartSimScalingTests:
                            batch_args={},
                            db_hosts=[],
                            db_nodes=[12],
-                           db_cpus=[2],
+                           db_cpus=36,
                            db_port=6780,
                            net_ifname="ipogif0",
                            clients_per_node=[32],
                            client_nodes=[128, 256, 512],
+                           iterations=100,
                            tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076,
                                          262152, 524304, 1024000, 2048000, 4096000]):
 
@@ -243,10 +246,13 @@ class SmartSimScalingTests:
         :type clients_per_node: list, optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
         :type client_nodes: list, optional
+        :param iterations: number of put/get loops run by the applications
+        :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
         """
         logger.info("Starting throughput scaling tests")
+        logger.info(f"Running with database backend: {_get_db_backend()}")
 
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
@@ -277,12 +283,13 @@ class SmartSimScalingTests:
                                                                cpn,
                                                                db_node_count,
                                                                db_cpus,
+                                                               iterations,
                                                                _bytes)
                 exp.start(throughput_session, summary=True)
 
                 # confirm scaling test run successfully
-                status = exp.get_status(throughput_session)
-                if status[0] != status.STATUS_COMPLETED:
+                stat = exp.get_status(throughput_session)
+                if stat[0] != status.STATUS_COMPLETED:
                     logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
 
             # stop database after this set of permutations have finished
@@ -307,7 +314,7 @@ class SmartSimScalingTests:
 
         dataframes = []
         result_dir = Path(scaling_dir) / "results"
-        runs = [d for d in os.listdir(scaling_dir) if d.startswith("infer-sess")]
+        runs = [d for d in os.listdir(scaling_dir) if "sess" in d]
 
         try:
             # write csv each so this function is impodent
@@ -442,7 +449,8 @@ def create_inference_session(exp,
         "T"+str(tasks),
         "DBN"+str(db_nodes),
         "DBC"+str(db_cpus),
-        "DBTPQ"+str(db_tpq)
+        "DBTPQ"+str(db_tpq),
+        _get_uuid()
         ))
 
     model = exp.create_model(name, run_settings)
@@ -494,7 +502,8 @@ def create_colocated_inference_session(exp,
         "T"+str(tasks),
         "DBN"+str(nodes),
         "DBC"+str(db_cpus),
-        "DBTPQ"+str(db_tpq)
+        "DBTPQ"+str(db_tpq),
+        _get_uuid()
         ))
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["./imagenet/cat.raw",
@@ -532,6 +541,7 @@ def create_throughput_session(exp,
                               tasks,
                               db_nodes,
                               db_cpus,
+                              iterations,
                               _bytes):
     """Create a Model to run a throughput scaling session
 
@@ -545,6 +555,8 @@ def create_throughput_session(exp,
     :type db_nodes: int
     :param db_cpus: number of cpus used on each database node
     :type db_cpus: int
+    :param iterations: number of put/get loops by the application
+    :type iterations: int
     :param _bytes: size in bytes of tensors to use for thoughput scaling
     :type _bytes: int
     :return: Model reference to the throughput session to launch
@@ -553,12 +565,21 @@ def create_throughput_session(exp,
     settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes))
     settings.set_tasks(nodes * tasks)
     settings.set_tasks_per_node(tasks)
+    settings.update_env({
+        "SS_ITERATIONS": str(iterations)
+    })
+    # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
+    if exp._launcher == "slurm":
+        settings.set_nodes(nodes)
 
     name = "-".join((
         "thoughput-sess",
         "N"+str(nodes),
         "T"+str(tasks),
-        "DBN"+str(db_nodes)
+        "DBN"+str(db_nodes),
+        "ITER"+str(iterations),
+        "TB"+str(_bytes),
+        _get_uuid()
         ))
 
     model = exp.create_model(name, settings)
@@ -568,7 +589,9 @@ def create_throughput_session(exp,
                 client_per_node=tasks,
                 client_nodes=nodes,
                 database_nodes=db_nodes,
-                database_cpus=db_cpus)
+                database_cpus=db_cpus,
+                iterations=iterations,
+                tensor_bytes=_bytes)
     return model
 
 
@@ -579,7 +602,8 @@ def write_run_config(path, **kwargs):
         "name": name,
         "path": path,
         "smartsim_version": smartsim.__version__,
-        "smartredis_version": "0.3.0", # put in smartredis __version__
+        "smartredis_version": "0.3.0", # TODO put in smartredis __version__
+        "db": _get_db_backend(),
         "date": str(datetime.datetime.now().strftime("%Y-%m-%d"))
     }
     config["attributes"] = kwargs
@@ -587,6 +611,14 @@ def write_run_config(path, **kwargs):
     config_path = Path(path) / "run.cfg"
     with open(config_path, "w") as f:
         config.write(f)
+
+def _get_uuid():
+    uid = str(uuid4())
+    return uid[:4]
+
+def _get_db_backend():
+    db_backend_path = smartsim._core.config.CONFIG.redis_exe
+    return os.path.basename(db_backend_path)
 
 
 if __name__ == "__main__":

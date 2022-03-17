@@ -8,4 +8,4 @@ cd ..
 module load slurm
 python driver.py inference_standard --client_nodes=[20,40,60] \
                                     --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[8, 16] --batch_args='{"C":"P100", "exclusive": None}'
+                                    --db_cpus=[8,16] --batch_args='{"C":"P100", "exclusive": None}'
