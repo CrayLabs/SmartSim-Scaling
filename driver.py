@@ -253,6 +253,7 @@ class SmartSimScalingTests:
         """
         logger.info("Starting throughput scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
+        logger.info(f"Running with launcher: {launcher}")
 
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
