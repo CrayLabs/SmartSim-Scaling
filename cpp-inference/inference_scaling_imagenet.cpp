@@ -2,6 +2,47 @@
 #include "client_test_utils.h"
 #include <mpi.h>
 
+
+
+// some helpers for handling model settings from the
+// driver script in colocated and non-colocated cases
+int get_batch_size() {
+  char* batch_setting = std::getenv("SS_BATCH_SIZE");
+  int batch_size = batch_setting ? std::stoi(batch_setting) : 1;
+  return batch_size;
+}
+
+std::string get_device() {
+  char* device = std::getenv("SS_DEVICE");
+  std::string device_str = device ? device : "GPU";
+  return device_str;
+}
+
+int get_num_devices() {
+  char* num_dev_setting = std::getenv("SS_NUM_DEVICES");
+  int num_devices = num_dev_setting ? std::stoi(num_dev_setting) : 1;
+  return num_devices;
+}
+
+bool get_set_flag() {
+  char* set_flag = std::getenv("SS_SET_MODEL");
+  bool should_set = set_flag ? std::stoi(set_flag) : false;
+  return should_set;
+}
+
+bool get_cluster_flag() {
+  char* cluster_flag = std::getenv("SS_CLUSTER");
+  bool use_cluster = cluster_flag ? std::stoi(cluster_flag) : false;
+  return use_cluster;
+}
+
+int get_client_count() {
+  char* client_count_flag = std::getenv("SS_CLIENT_COUNT");
+  int client_count = client_count_flag ? std::stoi(client_count_flag) : 18;
+  return client_count;
+}
+
+
 void load_mnist_image_to_array(float*& img)
 {
   std::string image_file = "./cat.raw";
@@ -27,12 +68,39 @@ void run_mnist(const std::string& model_name,
     std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
   double constructor_start = MPI_Wtime();
-  SmartRedis::Client client(true);
+  bool cluster = get_cluster_flag();
+  SmartRedis::Client client(cluster);
   double constructor_end = MPI_Wtime();
   double delta_t = constructor_end - constructor_start;
   timing_file << rank << "," << "client()" << ","
               << delta_t << std::endl << std::flush;
 
+  bool should_set = get_set_flag();
+  if (should_set) {
+
+    int n_clients = get_client_count();
+    if (rank % n_clients == 0) {
+
+      int batch_size = get_batch_size();
+      int num_devices = get_num_devices();
+      std::string device = get_device();
+
+      std::cout<<"Setting Resnet Model from scaling app"<<std::endl<<std::flush;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) <<std::endl<<std::flush;
+      std::cout<<"Setting on device: "<< device <<std::endl<<std::flush;
+      std::cout<<"Setting on "<< std::to_string(num_devices) << " devices" <<std::endl<<std::flush;
+
+      for (int i=0; i<num_devices; i++ ) {
+        std::string model_key = "resnet_model_" + std::to_string(i);
+        std::string script_key = "resnet_script_" + std::to_string(i);
+        std::string device_key = device + ":" + std::to_string(i);
+        std::cout<<"Device Key " <<device_key <<std::endl<<std::flush;
+
+        client.set_model_from_file(model_key, "./resnet50.pt", "TORCH", device_key, batch_size);
+        client.set_script_from_file(script_key, device_key, "./data_processing_script.txt");
+      }
+    }
+  }
   MPI_Barrier(MPI_COMM_WORLD);
 
   //Allocate a continugous memory to make bcast easier
@@ -52,12 +120,24 @@ void run_mnist(const std::string& model_name,
   //float**** array = allocate_4D_array<float>(1,1,28,28);
   float** result = allocate_2D_array<float>(1, 1000);
 
+  std::vector<double> put_tensor_times;
+  std::vector<double> run_script_times;
+  std::vector<double> run_model_times;
+  std::vector<double> unpack_tensor_times;
+
+  int num_devices = get_num_devices();
+
+  // create keys for models and scripts to split inferences accross mulitple
+  // GPU devices.
+  std::string model_key = "resnet_model_" + std::to_string(rank%num_devices);
+  std::string script_key = "resnet_script_" + std::to_string(rank%num_devices);
+
   MPI_Barrier(MPI_COMM_WORLD);
   if(!rank)
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
   double loop_start = MPI_Wtime();
-  for (int i=0; i<1; i++) {
+  for (int i=0; i<100; i++) {
 
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
@@ -65,38 +145,52 @@ void run_mnist(const std::string& model_name,
 
     double put_tensor_start = MPI_Wtime();
     client.put_tensor(in_key, array, {224, 224, 3},
-                      SmartRedis::TensorType::flt,
-                      SmartRedis::MemoryLayout::nested);
+                      SRTensorTypeFloat,
+                      SRMemLayoutNested);
     double put_tensor_end = MPI_Wtime();
     delta_t = put_tensor_end - put_tensor_start;
-    timing_file << rank << "," << "put_tensor" << ","
-                << delta_t << std::endl << std::flush;
+    put_tensor_times.push_back(delta_t);
 
     double run_script_start = MPI_Wtime();
-    client.run_script(script_name, "pre_process_3ch", {in_key}, {script_out_key});
+    client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
     double run_script_end = MPI_Wtime();
     delta_t = run_script_end - run_script_start;
-    timing_file << rank << "," << "run_script" << ","
-                << delta_t << std::endl << std::flush;
+    run_script_times.push_back(delta_t);
 
     double run_model_start = MPI_Wtime();
-    client.run_model(model_name, {script_out_key}, {out_key});
+    client.run_model(model_key, {script_out_key}, {out_key});
     double run_model_end = MPI_Wtime();
     delta_t = run_model_end - run_model_start;
-    timing_file << rank << "," << "run_model" << ","
-                << delta_t << std::endl << std::flush;
+    run_model_times.push_back(delta_t);
 
   double unpack_tensor_start = MPI_Wtime();
   client.unpack_tensor(out_key, result, {1,1000},
-                       SmartRedis::TensorType::flt,
-                       SmartRedis::MemoryLayout::nested);
+		                   SRTensorTypeFloat,
+                       SRMemLayoutNested);
   double unpack_tensor_end = MPI_Wtime();
   delta_t = unpack_tensor_end - unpack_tensor_start;
-  timing_file << rank << "," << "unpack_tensor" << ","
-              << delta_t << std::endl << std::flush;
+  unpack_tensor_times.push_back(delta_t);
+
   }
   double loop_end = MPI_Wtime();
   delta_t = loop_end - loop_start;
+
+  // write times to file
+  for (int i=0; i<100; i++) {
+
+    timing_file << rank << "," << "put_tensor" << ","
+                << put_tensor_times[i] << std::endl << std::flush;
+
+    timing_file << rank << "," << "run_script" << ","
+                << run_script_times[i] << std::endl << std::flush;
+
+    timing_file << rank << "," << "run_model" << ","
+                << run_model_times[i] << std::endl << std::flush;
+
+    timing_file << rank << "," << "unpack_tensor" << ","
+                << unpack_tensor_times[i] << std::endl << std::flush;
+
+  }
   timing_file << rank << "," << "loop_time" << ","
                 << delta_t << std::endl << std::flush;
 

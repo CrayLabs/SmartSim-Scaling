@@ -1,6 +1,13 @@
 #include "client.h"
 #include <mpi.h>
 
+
+int get_iterations() {
+  char* iterations = std::getenv("SS_ITERATIONS");
+  int iters = iterations ? std::stoi(iterations) : 100;
+  return iters;
+}
+
 void run_throughput(std::ofstream& timing_file,
                     size_t n_bytes)
 {
@@ -15,7 +22,7 @@ void run_throughput(std::ofstream& timing_file,
     double constructor_end = MPI_Wtime();
     double delta_t = constructor_end - constructor_start;
     timing_file << rank << "," << "client()" << ","
-                << delta_t << std::endl << std::flush;
+                << delta_t << "\n";
 
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -25,6 +32,13 @@ void run_throughput(std::ofstream& timing_file,
     for(size_t i=0; i<n_values; i++)
         array[i] = i;
 
+
+    // allocate arrays to hold timings
+    std::vector<double> put_tensor_times;
+    std::vector<double> unpack_tensor_times;
+
+    int iterations = get_iterations();
+
     MPI_Barrier(MPI_COMM_WORLD);
 
     double loop_start = MPI_Wtime();
@@ -32,35 +46,49 @@ void run_throughput(std::ofstream& timing_file,
     // Keys are overwritten in order to help
     // ensure that the database does not run out of memory
     // for large messages.
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<iterations; i++) {
 
         std::string key = "throughput_rank_" +
                           std::to_string(rank);
 
         double put_tensor_start = MPI_Wtime();
-        client.put_tensor(key, array.data(), {1, n_values},
-                          SmartRedis::TensorType::flt,
-                          SmartRedis::MemoryLayout::contiguous);
+        client.put_tensor(key,
+                          array.data(),
+                          {1, n_values},
+                          SRTensorTypeFloat,
+                          SRMemLayoutContiguous);
         double put_tensor_end = MPI_Wtime();
         delta_t = put_tensor_end - put_tensor_start;
-        timing_file << rank << "," << "put_tensor" << ","
-                    << delta_t << std::endl << std::flush;
+        put_tensor_times.push_back(delta_t);
 
         double unpack_tensor_start = MPI_Wtime();
-        client.unpack_tensor(key, result.data(), {n_values},
-                            SmartRedis::TensorType::flt,
-                            SmartRedis::MemoryLayout::contiguous);
+        client.unpack_tensor(key,
+                             result.data(),
+                             {n_values},
+                             SRTensorTypeFloat,
+                             SRMemLayoutContiguous);
         double unpack_tensor_end = MPI_Wtime();
         delta_t = unpack_tensor_end - unpack_tensor_start;
-        timing_file << rank << "," << "unpack_tensor" << ","
-                    << delta_t << std::endl << std::flush;
+        unpack_tensor_times.push_back(delta_t);
     }
 
     double loop_end = MPI_Wtime();
     delta_t = loop_end - loop_start;
-    timing_file << rank << "," << "loop_time" << ","
-                << delta_t << std::endl << std::flush;
 
+    // write times to file
+    for (int i=0; i<iterations; i++) {
+
+        timing_file << rank << "," << "put_tensor" << ","
+                    << put_tensor_times[i] << "\n";
+
+        timing_file << rank << "," << "unpack_tensor" << ","
+                    << unpack_tensor_times[i] << "\n";
+
+    }
+    timing_file << rank << "," << "loop_time" << ","
+                << delta_t << "\n";
+
+    timing_file << std::flush;
     return;
 }
 
