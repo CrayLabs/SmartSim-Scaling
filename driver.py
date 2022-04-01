@@ -5,6 +5,8 @@ from pathlib import Path
 from itertools import product
 from tqdm import tqdm
 from uuid import uuid4
+import pandas as pd
+from process_results import create_run_csv
 
 import smartsim
 from smartsim import Experiment, status
@@ -309,10 +311,7 @@ class SmartSimScalingTests:
         :param overwrite: overwrite any existing results
         :type overwrite: bool, optional
         """
-
-        import pandas as pd
-        from process_results import create_run_csv
-
+        
         dataframes = []
         result_dir = Path(scaling_dir) / "results"
         runs = [d for d in os.listdir(scaling_dir) if "sess" in d]
