@@ -218,8 +218,8 @@ class SmartSimScalingTests:
                            clients_per_node=[32],
                            client_nodes=[128, 256, 512],
                            iterations=100,
-                           tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076,
-                                         262152, 524304, 1024000, 2048000, 4096000]):
+                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000]):
 
         """Run the throughput scaling tests
 
