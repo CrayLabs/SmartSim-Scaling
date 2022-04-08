@@ -452,11 +452,10 @@ the SmartSim paper on arXiv
 
 ### Throughput
 
-The following are results from the throughput tests for Redis. See section below on KeyDB to see comparisons between Redis and
-KeyDB.
+The following are results from the throughput tests for Redis. For results obtained using KeyDB, see section below.
 
 All the throughput data listed here is based on the ``loop time`` which is the time to complete a single put and get. Each client
-in the test performs 10 loop iterations and the max, min, and mean are shown in the box-whisker plots.
+in the test performs 100 loop iterations and the aggregate throughput for all clients is displayed in the plots below.
 
 Each test has three lines for the three database sizes tested: 16, 32, 64. Each of the plots represents a different number of total clients
 the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256 nodes x 32 ranks per node) and lastly 16384 clients
@@ -480,13 +479,9 @@ KeyDB is a drop in replacement for Redis, it's fairly easy to test. If you are l
 extreme performance, especially in throughput for large data sizes,
 we recommend building SmartSim with KeyDB.
 
-In future releases, switching between Redis and KeyDB will be an ``Orchestrator`` parameter.
+In future releases, switching between Redis and KeyDB will be achieved by setting an environment variable specifying the backend.
 
-### KeyDB vs Redis
-
-Below we compare KeyDB and Redis for the general throughput tests. Each plot represents the same breakdown of clients as the
-above throughput tests, however, each plot is for a single database size (16 db nodes) and shows both Redis and KeyDB performance in
-terms of throughput.
+The following plots show the results for the same throughput tests of previous section, using KeyDB as a backend.
 
 <div align="center">
      <br />
@@ -501,6 +496,7 @@ terms of throughput.
     <br />
 </div>
 
+## KeyDB vs Redis
 
 A few interesting points:
 
