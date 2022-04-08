@@ -444,11 +444,19 @@ The following are scaling results from the cpp-inference scaling tests with ResN
 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on arXiv
 
+![Inference plots dark theme](/figures/all_in_one_violin_dark.png#gh-dark-mode-only "Standard inference")
 
-![Inference plots dark theme](/figures/all_in_one_violin_dark.png#gh-dark-mode-only)
+![Inference plots ligh theme](/figures/all_in_one_violin_light.png#gh-light-mode-only "Standard inference")
 
-![Inference plots ligh theme](/figures/all_in_one_violin_light.png#gh-light-mode-only)
+### Colocated Inference
 
+The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
+each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
+were run on 8 CPUs and 8 threads per queue.
+
+![Colocated nference plots dark theme](/figures/colo_dark.png#gh-dark-mode-only "Colocated inference")
+
+![Inference plots ligh theme](/figures/colo_light.png#gh-light-mode-only "Colocated inference")
 
 ### Throughput
 
@@ -472,7 +480,7 @@ the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256
     <br />
 </div>
 
-## Using KeyDB
+### Using KeyDB
 
 KeyDB is a multithreaded version of Redis with some strong performance claims. Luckily, since
 KeyDB is a drop in replacement for Redis, it's fairly easy to test. If you are looking for
