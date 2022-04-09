@@ -43,7 +43,7 @@ class SmartSimScalingTests:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param run_db_as_batch: run database as seperate batch submission each iteration
+        :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
         :param batch_args: additional batch args for the database
         :type batch_args: dict, optional
@@ -227,7 +227,7 @@ class SmartSimScalingTests:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param run_db_as_batch: run database as seperate batch submission each iteration
+        :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
         :param batch_args: additional batch args for the database
         :type batch_args: dict, optional
@@ -318,7 +318,7 @@ class SmartSimScalingTests:
         runs = [d for d in os.listdir(scaling_dir) if "sess" in d]
 
         try:
-            # write csv each so this function is impodent
+            # write csv each so this function is idempotent
             # csv's will not be written if they are already created
             for run in tqdm(runs, desc="Processing scaling results...", ncols=80):
                 try:
@@ -358,7 +358,7 @@ def start_database(exp, port, nodes, cpus, tpq, net_ifname, run_as_batch, batch_
 
     This function is only called if the scaling tests are
     being executed in the standard deployment mode where
-    seperate computational resources are used for the app
+    separate computational resources are used for the app
     and the database.
 
     :param port: port number of database
@@ -558,7 +558,7 @@ def create_throughput_session(exp,
     :type db_cpus: int
     :param iterations: number of put/get loops by the application
     :type iterations: int
-    :param _bytes: size in bytes of tensors to use for thoughput scaling
+    :param _bytes: size in bytes of tensors to use for throughput scaling
     :type _bytes: int
     :return: Model reference to the throughput session to launch
     :rtype: Model
@@ -574,7 +574,7 @@ def create_throughput_session(exp,
         settings.set_nodes(nodes)
 
     name = "-".join((
-        "thoughput-sess",
+        "throughput-sess",
         "N"+str(nodes),
         "T"+str(tasks),
         "DBN"+str(db_nodes),

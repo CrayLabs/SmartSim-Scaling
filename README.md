@@ -34,9 +34,9 @@ smart build --device gpu
 ```
 
 But please consult the documentation for other peices like specifying compilers,
-cuda, cudnn, and other build settings.
+CUDA, cuDNN, and other build settings.
 
-Once smartsim is installed, the python dependencies for the scaling test and
+Once SmartSim is installed, the Python dependencies for the scaling test and
 result processing/plotting can be installed with
 
 ```bash
@@ -44,7 +44,7 @@ cd SmartSim-Scaling
 pip install -r requirements.txt
 ```
 
-Lastly, the C++ applications themselves need to be built. One Cmake edit is required.
+Lastly, the C++ applications themselves need to be built. One CMake edit is required.
 Near the top of the CMake file, change the path to the ``SMARTREDIS`` variable to
 the top level of the directory where you built or installed the SmartRedis library.
 
@@ -229,7 +229,7 @@ FLAGS
         workload manager i.e. "slurm", "pbs"
     --run_db_as_batch=RUN_DB_AS_BATCH
         Default: True
-        run database as seperate batch submission each iteration
+        run database as separate batch submission each iteration
     --batch_args=BATCH_ARGS
         Default: {}
         additional batch args for the database
@@ -274,10 +274,10 @@ battery of tests chosen by the user. There are multiple ways to run this.
 1. Everything in the same interactive (or batch file) without caring about placement
 ```bash
 # alloc must contain at least 120 (max client_nodes) + 16 nodes (max db_nodes)
-python driver.py resnet_standard --client_nodes=[20,40,60,80,100,120] \
-                                 --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                 --db_cpus=[1,4,8,16] --run_db_as_batch=False
-                                 --net_ifname=ipogif0 --device=GPU
+python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
+                                    --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
+                                    --db_cpus=[1,4,8,16] --run_db_as_batch=False
+                                    --net_ifname=ipogif0 --device=GPU
 ```
 
 This option is recommended as it's easy to launch in interactive allocations and
@@ -294,31 +294,31 @@ based systems.
 #SBATCH --exclusive
 #SBATCH -t 10:00:00
 
-python driver.py resnet_standard --client_nodes=[20,40,60,80,100,120] \
-                                 --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                 --db_cpus=[1,4,8,16] --run_db_as_batch=False
-                                 --net_ifname=ipogif0 --device=CPU
+python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
+                                    --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
+                                    --db_cpus=[1,4,8,16] --run_db_as_batch=False
+                                    --net_ifname=ipogif0 --device=CPU
 ```
 
 2. Same as 1, but specify hosts for the database
 ```bash
 # alloc must contain at least 120 (max client_nodes) + 16 nodes (max db_nodes)
 # db nodes must be fixed if hostlist is specified
-python driver.py resnet_standard --client_nodes=[20,40,60,80,100,120] \
-                                 --db_nodes=[16] --db_tpq=[1,2,4] \
-                                 --db_cpus=[1,4,8,16] --db_hosts=[nid0001, ...]
-                                 --net_ifname=ipogif0 --device=CPU
+python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
+                                    --db_nodes=[16] --db_tpq=[1,2,4] \
+                                    --db_cpus=[1,4,8,16] --db_hosts=[nid0001, ...]
+                                    --net_ifname=ipogif0 --device=CPU
 
 ```
 
-3. Launch database as a seperate batch submission each time
+3. Launch database as a separate batch submission each time
 ```bash
-# must obtain seperate allocation for client driver through interactive or batch submission
+# must obtain separate allocation for client driver through interactive or batch submission
 # if batch submission, compute nodes must have access to slurm
-python driver.py resnet_standard --client_nodes=[20,40,60,80,100,120] \
-                                 --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                 --db_cpus=[1,4,8,16] --batch_args='{"C":"V100", "exclusive": None}'
-                                 --net_ifname=ipogif0 --device=GPU
+python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
+                                    --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
+                                    --db_cpus=[1,4,8,16] --batch_args='{"C":"V100", "exclusive": None}'
+                                    --net_ifname=ipogif0 --device=GPU
 ```
 
 All three options will conduct ``n`` scaling tests where ``n`` is the multiple of
@@ -358,7 +358,7 @@ FLAGS
         workload manager i.e. "slurm", "pbs"
     --run_db_as_batch=RUN_DB_AS_BATCH
         Default: True
-        run database as seperate batch submission each iteration
+        run database as separate batch submission each iteration
     --batch_args=BATCH_ARGS
         Default: {}
         additional batch args for the database
@@ -444,29 +444,26 @@ The following are scaling results from the cpp-inference scaling tests with ResN
 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on arXiv
 
+![Inference plots dark theme](/figures/all_in_one_violin_dark.png#gh-dark-mode-only "Standard inference")
 
-<div align="center">
-     <br />
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/put_tensor.png" width="60%"><img>
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/unpack_tensor.png" width="60%"><img>
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/run_model.png" width="60%"><img>
-    <br />
-     <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/run_script.png" width="60%"><img>
-    <br />
+![Inference plots ligh theme](/figures/all_in_one_violin_light.png#gh-light-mode-only "Standard inference")
 
-</div>
+### Colocated Inference
 
+The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
+each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
+were run on 8 CPUs and 8 threads per queue.
+
+![Colocated nference plots dark theme](/figures/colo_dark.png#gh-dark-mode-only "Colocated inference")
+
+![Inference plots ligh theme](/figures/colo_light.png#gh-light-mode-only "Colocated inference")
 
 ### Throughput
 
-The following are results from the throughput tests for Redis. See section below on KeyDB to see comparisons between Redis and
-KeyDB.
+The following are results from the throughput tests for Redis. For results obtained using KeyDB, see section below.
 
 All the throughput data listed here is based on the ``loop time`` which is the time to complete a single put and get. Each client
-in the test performs 10 loop iterations and the max, min, and mean are shown in the box-whisker plots.
+in the test performs 100 loop iterations and the aggregate throughput for all clients is displayed in the plots below.
 
 Each test has three lines for the three database sizes tested: 16, 32, 64. Each of the plots represents a different number of total clients
 the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256 nodes x 32 ranks per node) and lastly 16384 clients
@@ -483,20 +480,16 @@ the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256
     <br />
 </div>
 
-## Using KeyDB
+### Using KeyDB
 
 KeyDB is a multithreaded version of Redis with some strong performance claims. Luckily, since
 KeyDB is a drop in replacement for Redis, it's fairly easy to test. If you are looking for
 extreme performance, especially in throughput for large data sizes,
 we recommend building SmartSim with KeyDB.
 
-In future releases, switching between Redis and KeyDB will be an ``Orchestrator`` parameter.
+In future releases, switching between Redis and KeyDB will be achieved by setting an environment variable specifying the backend.
 
-### KeyDB vs Redis
-
-Below we compare KeyDB and Redis for the general throughput tests. Each plot represents the same breakdown of clients as the
-above throughput tests, however, each plot is for a single database size (16 db nodes) and shows both Redis and KeyDB performance in
-terms of throughput.
+The following plots show the results for the same throughput tests of previous section, using KeyDB as a backend.
 
 <div align="center">
      <br />
@@ -511,6 +504,7 @@ terms of throughput.
     <br />
 </div>
 
+## KeyDB vs Redis
 
 A few interesting points:
 

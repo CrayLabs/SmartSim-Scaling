@@ -1,0 +1,4 @@
+tqdm
+ipywidgets
+seaborn
+jupyterlab
