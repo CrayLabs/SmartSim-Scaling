@@ -22,7 +22,7 @@ nnodes_all = [128,256,512]
 
 for backend, nnodes in tqdm(product(backends, nnodes_all), total=len(backends)*len(nnodes_all), desc="Product loop"):
 
-    base_path = f"../scaling-results/throughput-scaling-{backend.lower()}-2"
+    base_path = f"./throughput-scaling-{backend.lower()}-2"
     #print(base_path)
 
     # nnodes = 128
