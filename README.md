@@ -445,7 +445,6 @@ and the imagenet dataset. For more information on these scaling tests, please se
 the SmartSim paper on arXiv
 
 ![Inference plots dark theme](/figures/all_in_one_violin_dark.png#gh-dark-mode-only "Standard inference")
-
 ![Inference plots ligh theme](/figures/all_in_one_violin_light.png#gh-light-mode-only "Standard inference")
 
 ### Colocated Inference
@@ -454,8 +453,7 @@ The following are scaling results for a colocated inference test, run on 12 36-c
 each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
 were run on 8 CPUs and 8 threads per queue.
 
-![Colocated nference plots dark theme](/figures/colo_dark.png#gh-dark-mode-only "Colocated inference")
-
+![Colocated inference plots dark theme](/figures/colo_dark.png#gh-dark-mode-only "Colocated inference")
 ![Inference plots ligh theme](/figures/colo_light.png#gh-light-mode-only "Colocated inference")
 
 ### Throughput
@@ -469,16 +467,14 @@ Each test has three lines for the three database sizes tested: 16, 32, 64. Each 
 the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256 nodes x 32 ranks per node) and lastly 16384 clients
 (512 nodes x 32 ranks per node)
 
-<div align="center">
-     <br />
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/loop_time-128.png" width="80%"><img>
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/loop_time-256.png" width="80%"><img>
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/loop_time-512.png" width="80%"><img>
-    <br />
-</div>
+![Throughput plots dark theme](/figures/loop_time-128-redis_dark.png#gh-dark-mode-only "Throughput scaling for 128 node Redis DB")
+![Throughput plots light theme](/figures/loop_time-128-redis_bright.png#gh-light-mode-only "Throughput scaling for 128 node Redis DB")
+
+![Throughput plots dark theme](/figures/loop_time-256-redis_dark.png#gh-dark-mode-only "Throughput scaling for 256 node Redis DB")
+![Throughput plots light theme](/figures/loop_time-256-redis_bright.png#gh-light-mode-only "Throughput scaling for 256 node Redis DB")
+
+![Throughput plots dark theme](/figures/loop_time-512-redis_dark.png#gh-dark-mode-only "Throughput scaling for 512 node Redis DB")
+![Throughput plots light theme](/figures/loop_time-512-redis_bright.png#gh-light-mode-only "Throughput scaling for 512 node Redis DB")
 
 ### Using KeyDB
 
@@ -491,18 +487,15 @@ In future releases, switching between Redis and KeyDB will be achieved by settin
 
 The following plots show the results for the same throughput tests of previous section, using KeyDB as a backend.
 
-<div align="center">
-     <br />
-    <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/KeyDB-128.png" width="80%"><img>
-    <br />
-      <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/KeyDB-256.png" width="80%"><img>
-    <br />
-      <br />
-    <img src="https://github.com/CrayLabs/SmartSim-Scaling/blob/56c640bf92dfc6d75bf39e0c931a5892157eb650/figures/KeyDB-512.png" width="80%"><img>
-    <br />
-</div>
+
+![Throughput plots dark theme](/figures/loop_time-128-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 128 node KeyDB DB")
+![Throughput plots light theme](/figures/loop_time-128-keydb_bright.png#gh-light-mode-only "Throughput scaling for 128 node KeyDB DB")
+
+![Throughput plots dark theme](/figures/loop_time-256-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 256 node KeyDB DB")
+![Throughput plots light theme](/figures/loop_time-256-keydb_bright.png#gh-light-mode-only "Throughput scaling for 256 node KeyDB DB")
+
+![Throughput plots dark theme](/figures/loop_time-128-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 512 node KeyDB DB")
+![Throughput plots light theme](/figures/loop_time-128-keydb_bright.png#gh-light-mode-only "Throughput scaling for 512 node KeyDB DB")
 
 ## KeyDB vs Redis
 
