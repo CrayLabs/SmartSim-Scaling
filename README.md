@@ -506,9 +506,8 @@ A few interesting points:
     clients in such a way that you will be disconnecting and reconnecting to the database, you
     should use KeyDB instead of Redis with SmartSim.
 
- 2. In general, according to the throughput scaling tests, KeyDB has roughly 2x the throughput
-    of Redis for data sizes over 1Mb. Redis seems to perform better than KeyDB for smaller data
-    sizes (2kiB - 256kiB)
+ 2. In general, according to the throughput scaling tests, KeyDB has roughly up to 2x the throughput
+    of Redis.
 
  3. KeyDB seems to handle higher numbers of clients better than Redis does.
 
