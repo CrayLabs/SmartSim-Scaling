@@ -618,7 +618,7 @@ def write_run_config(path, **kwargs):
         "name": name,
         "path": path,
         "smartsim_version": smartsim.__version__,
-        "smartredis_version": "0.4.0", # TODO put in smartredis __version__
+        "smartredis_version": "0.3.1", # TODO put in smartredis __version__
         "db": _get_db_backend(),
         "date": str(datetime.datetime.now().strftime("%Y-%m-%d"))
     }
