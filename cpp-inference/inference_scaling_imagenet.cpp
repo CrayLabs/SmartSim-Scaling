@@ -64,7 +64,7 @@ void run_mnist(const std::string& model_name,
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  if(!rank)
+  if (!rank)
     std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
   double constructor_start = MPI_Wtime();
@@ -74,16 +74,15 @@ void run_mnist(const std::string& model_name,
   double delta_t = constructor_end - constructor_start;
   timing_file << rank << "," << "client()" << ","
               << delta_t << std::endl << std::flush;
+  std::string device = get_device();
+  int num_devices = get_num_devices();
+  bool use_multi = (0 == device.compare("GPU")) && (num_devices > 1);
 
   bool should_set = get_set_flag();
   if (should_set) {
-
     int n_clients = get_client_count();
     if (rank % n_clients == 0) {
-
       int batch_size = get_batch_size();
-      int num_devices = get_num_devices();
-      std::string device = get_device();
 
       std::cout<<"Setting Resnet Model from scaling app"<<std::endl<<std::flush;
       std::cout<<"Setting with batch_size: " << std::to_string(batch_size) <<std::endl<<std::flush;
@@ -96,8 +95,14 @@ void run_mnist(const std::string& model_name,
         std::string device_key = device + ":" + std::to_string(i);
         std::cout<<"Device Key " <<device_key <<std::endl<<std::flush;
 
-        client.set_model_from_file(model_key, "./resnet50.pt", "TORCH", device_key, batch_size);
-        client.set_script_from_file(script_key, device_key, "./data_processing_script.txt");
+        if (use_multi) {
+          client.set_model_from_file(model_key, "./resnet50.pt", "TORCH", device_key, batch_size);
+          client.set_script_from_file(script_key, device_key, "./data_processing_script.txt");
+        }
+        else {
+          client.set_model_from_file_multigpu(model_key, "./resnet50.pt", "TORCH", num_devices, batch_size);
+          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", num_devices);
+	}
       }
     }
   }
@@ -125,20 +130,21 @@ void run_mnist(const std::string& model_name,
   std::vector<double> run_model_times;
   std::vector<double> unpack_tensor_times;
 
-  int num_devices = get_num_devices();
-
   // create keys for models and scripts to split inferences accross mulitple
   // GPU devices.
   std::string model_key = "resnet_model_" + std::to_string(rank%num_devices);
   std::string script_key = "resnet_script_" + std::to_string(rank%num_devices);
+  if (use_multi) {
+    model_key = "resnet_model";
+    script_key = "resnet_script";
+  }
 
   MPI_Barrier(MPI_COMM_WORLD);
-  if(!rank)
+  if (!rank)
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
   double loop_start = MPI_Wtime();
-  for (int i=0; i<100; i++) {
-
+  for (int i = 0; i < 101; i++) {
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);
@@ -152,32 +158,37 @@ void run_mnist(const std::string& model_name,
     put_tensor_times.push_back(delta_t);
 
     double run_script_start = MPI_Wtime();
-    client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
+    if (use_multi)
+      client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, num_devices);
+    else
+      client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
     double run_script_end = MPI_Wtime();
     delta_t = run_script_end - run_script_start;
     run_script_times.push_back(delta_t);
 
     double run_model_start = MPI_Wtime();
-    client.run_model(model_key, {script_out_key}, {out_key});
+    if (use_multi)
+      client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, num_devices);
+    else
+      client.run_model(model_key, {script_out_key}, {out_key});
     double run_model_end = MPI_Wtime();
     delta_t = run_model_end - run_model_start;
     run_model_times.push_back(delta_t);
 
-  double unpack_tensor_start = MPI_Wtime();
-  client.unpack_tensor(out_key, result, {1,1000},
-		                   SRTensorTypeFloat,
-                       SRMemLayoutNested);
-  double unpack_tensor_end = MPI_Wtime();
-  delta_t = unpack_tensor_end - unpack_tensor_start;
-  unpack_tensor_times.push_back(delta_t);
+    double unpack_tensor_start = MPI_Wtime();
+    client.unpack_tensor(out_key, result, {1,1000},
+			 SRTensorTypeFloat,
+			 SRMemLayoutNested);
+    double unpack_tensor_end = MPI_Wtime();
+    delta_t = unpack_tensor_end - unpack_tensor_start;
+    unpack_tensor_times.push_back(delta_t);
 
   }
   double loop_end = MPI_Wtime();
   delta_t = loop_end - loop_start;
 
   // write times to file
-  for (int i=0; i<100; i++) {
-
+  for (int i = 1; i < 101; i++) { // Skip first run as it's warmup
     timing_file << rank << "," << "put_tensor" << ","
                 << put_tensor_times[i] << std::endl << std::flush;
 
@@ -192,11 +203,10 @@ void run_mnist(const std::string& model_name,
 
   }
   timing_file << rank << "," << "loop_time" << ","
-                << delta_t << std::endl << std::flush;
+              << delta_t << std::endl << std::flush;
 
   free_3D_array(array, 3, 224);
   free_2D_array(result, 1);
-  return;
 }
 
 int main(int argc, char* argv[]) {
@@ -212,15 +222,15 @@ int main(int argc, char* argv[]) {
   std::ofstream timing_file;
   timing_file.open("rank_"+std::to_string(rank)+"_timing.csv");
 
+  // Run timing tests
   run_mnist("resnet_model", "resnet_script", timing_file);
-
   if(rank==0)
     std::cout<<"Finished Resnet test."<<std::endl;
 
   double main_end = MPI_Wtime();
   double delta_t = main_end - main_start;
   timing_file << rank << "," << "main()" << ","
-                << delta_t << std::endl << std::flush;
+              << delta_t << std::endl << std::flush;
 
   MPI_Finalize();
 
