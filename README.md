@@ -507,7 +507,8 @@ A few interesting points:
     should use KeyDB instead of Redis with SmartSim.
 
  2. In general, according to the throughput scaling tests, KeyDB has roughly up to 2x the throughput
-    of Redis.
+    of Redis and reaches a maximum throughput of ~125 Gb/s, whereas we could not get Redis to achieve
+    more than ~90 Gb/s.
 
  3. KeyDB seems to handle higher numbers of clients better than Redis does.
 
