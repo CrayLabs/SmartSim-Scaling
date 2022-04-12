@@ -489,13 +489,13 @@ The following plots show the results for the same throughput tests of previous s
 
 
 ![Throughput plots dark theme](/figures/loop_time-128-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 128 node KeyDB DB")
-![Throughput plots light theme](/figures/loop_time-128-keydb_bright.png#gh-light-mode-only "Throughput scaling for 128 node KeyDB DB")
+![Throughput plots light theme](/figures/loop_time-128-keydb_light.png#gh-light-mode-only "Throughput scaling for 128 node KeyDB DB")
 
 ![Throughput plots dark theme](/figures/loop_time-256-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 256 node KeyDB DB")
-![Throughput plots light theme](/figures/loop_time-256-keydb_bright.png#gh-light-mode-only "Throughput scaling for 256 node KeyDB DB")
+![Throughput plots light theme](/figures/loop_time-256-keydb_light.png#gh-light-mode-only "Throughput scaling for 256 node KeyDB DB")
 
-![Throughput plots dark theme](/figures/loop_time-128-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 512 node KeyDB DB")
-![Throughput plots light theme](/figures/loop_time-128-keydb_bright.png#gh-light-mode-only "Throughput scaling for 512 node KeyDB DB")
+![Throughput plots dark theme](/figures/loop_time-512-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 512 node KeyDB DB")
+![Throughput plots light theme](/figures/loop_time-512-keydb_light.png#gh-light-mode-only "Throughput scaling for 512 node KeyDB DB")
 
 ## KeyDB vs Redis
 
