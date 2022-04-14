@@ -139,9 +139,9 @@ void run_mnist(const std::string& model_name,
   double loop_start = MPI_Wtime();
   for (int i=0; i<100; i++) {
 
-    std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
-    std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
-    std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);
+    std::string in_key = "resnet_input_rank_" + std::to_string(rank);
+    std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank);
+    std::string out_key = "resnet_output_rank_" + std::to_string(rank);
 
     double put_tensor_start = MPI_Wtime();
     client.put_tensor(in_key, array, {224, 224, 3},
