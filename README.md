@@ -1,5 +1,5 @@
 
-## SmartSim Scaling
+# SmartSim Scaling
 
 This repository holds all of the scripts and materials for testing
 the scaling of SmartSim and the SmartRedis clients.
@@ -451,7 +451,11 @@ the SmartSim paper on arXiv
 
 The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
 each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue.
+were run on 8 CPUs and 8 threads per queue. 
+
+Note that the first iteration can take longer (up to several seconds) than the rest of the execution. This
+is due to the DB loading libraries when the first RedisAI call is made. In the following plots, we excluded
+the first iteration time.
 
 ![Colocated inference plots dark theme](/figures/colo_dark.png#gh-dark-mode-only "Colocated inference")
 ![Inference plots ligh theme](/figures/colo_light.png#gh-light-mode-only "Colocated inference")
@@ -497,7 +501,11 @@ The following plots show the results for the same throughput tests of previous s
 ![Throughput plots dark theme](/figures/loop_time-512-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 512 node KeyDB DB")
 ![Throughput plots light theme](/figures/loop_time-512-keydb_light.png#gh-light-mode-only "Throughput scaling for 512 node KeyDB DB")
 
-## KeyDB vs Redis
+### Result analysis
+
+> :warning: from the above plots, it is clear that there is a performance decrease at 64 and 128 KiB, which is visible in all cases,
+but is most relevant for large DB node counts and for KeyDB. We are currently investigating this behavior, as we are not exactly
+sure of what the root cause could be.
 
 A few interesting points:
 
@@ -512,6 +520,7 @@ A few interesting points:
 
  3. KeyDB seems to handle higher numbers of clients better than Redis does.
 
+ 4. There is an evident bottleneck on throughput around 128 kiB
 
 
 ## Advanced Performance Tips
@@ -530,13 +539,15 @@ a few settings that can be tuned
 The database (Redis or KeyDB) has a number of different settings that can increase
 performance.
 
-For Redis:
-  - ``io-threads`` - we set to 4 by default in SmartSim
-  - ``io-use-threaded-reads`` - We set to yes (doesn't usually help much)
+For both Redis and KeyDB:
   - ``maxclients`` - This should be raised to well above what you think the max number of clients will be for each DB shard
   - ``threads-per-queue`` - can be set in ``Orchestrator()`` init. Helps with GPU inference performance (set to 4 or greater)
   - ``inter-op-threads`` - can be set in ``Orchestrator()`` init. helps with CPU inference performance
   - ``intra-op-threads`` - can be set in ``Orchestrator()`` init. helps with CPU inference performance
+
+For Redis:
+  - ``io-threads`` - we set to 4 by default in SmartSim
+  - ``io-use-threaded-reads`` - We set to yes (doesn't usually help much)
 
 For KeyDB:
   - ``server-threads`` - Makes a big difference. We use 8 on HPC hardware. Set to 4 by default.
