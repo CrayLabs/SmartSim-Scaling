@@ -83,6 +83,7 @@ class SmartSimScalingTests:
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
+        logger.info(f"Executing {len(perms)} permutations")
         for perm in perms:
             c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
 
@@ -409,11 +410,11 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
         client.set_model_from_file_multigpu("resnet_model",
                                             model,
                                             "TORCH",
-                                            num_devices,
+                                            0, num_devices,
                                             batch_size)
         client.set_script_from_file_multigpu("resnet_script",
                                              "./imagenet/data_processing_script.txt",
-                                             num_devices)
+                                             0, num_devices)
         logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
     else:
         devices = []
@@ -448,6 +449,7 @@ def create_inference_session(exp,
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks_per_node(tasks)
+    run_settings.set_tasks(tasks*nodes)
     # tell scaling application not to set the model from the application
     # as we will do that from the driver in non-converged deployments
     run_settings.update_env({

@@ -100,8 +100,8 @@ void run_mnist(const std::string& model_name,
           client.set_script_from_file(script_key, device_key, "./data_processing_script.txt");
         }
         else {
-          client.set_model_from_file_multigpu(model_key, "./resnet50.pt", "TORCH", num_devices, batch_size);
-          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", num_devices);
+          client.set_model_from_file_multigpu(model_key, "./resnet50.pt", "TORCH", 0, num_devices, batch_size);
+          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
 	}
       }
     }
@@ -159,7 +159,7 @@ void run_mnist(const std::string& model_name,
 
     double run_script_start = MPI_Wtime();
     if (use_multi)
-      client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, num_devices);
+      client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
     else
       client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
     double run_script_end = MPI_Wtime();
@@ -168,7 +168,7 @@ void run_mnist(const std::string& model_name,
 
     double run_model_start = MPI_Wtime();
     if (use_multi)
-      client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, num_devices);
+      client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
     else
       client.run_model(model_key, {script_out_key}, {out_key});
     double run_model_end = MPI_Wtime();

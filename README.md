@@ -94,7 +94,8 @@ Currently supported inference tests
 
   1) Resnet50 CNN with ImageNet dataset
 
-Each client performs 10 executions of the following commands
+Each client performs 101 executions of the following commands. The first iteration is a warmup;
+the next 100 are measured for inference throughput. 
 
   1) ``put_tensor``     (send image to database)
   2) ``run_script``     (preprocess image)
