@@ -83,6 +83,7 @@ class SmartSimScalingTests:
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
+        logger.info(f"Executing {len(perms)} permutations")
         for perm in perms:
             c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
 
@@ -404,22 +405,34 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    devices = []
-    if num_devices > 0:
-        devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
-    else:
-        devices = [device.upper()]
-    for i, dev in enumerate(devices):
+    if (device == "GPU") and (num_devices > 1):
         client = Client(address=address, cluster=cluster)
-        client.set_model_from_file(f"resnet_model_{str(i)}",
-                                    model,
-                                    "TORCH",
-                                    dev,
-                                    batch_size)
-        client.set_script_from_file(f"resnet_script_{str(i)}",
-                                    "./imagenet/data_processing_script.txt",
-                                    dev)
-        logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
+        client.set_model_from_file_multigpu("resnet_model",
+                                            model,
+                                            "TORCH",
+                                            0, num_devices,
+                                            batch_size)
+        client.set_script_from_file_multigpu("resnet_script",
+                                             "./imagenet/data_processing_script.txt",
+                                             0, num_devices)
+        logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
+    else:
+        devices = []
+        if num_devices > 0:
+            devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
+        else:
+            devices = [device.upper()]
+            for i, dev in enumerate(devices):
+                client = Client(address=address, cluster=cluster)
+                client.set_model_from_file(f"resnet_model_{str(i)}",
+                                           model,
+                                           "TORCH",
+                                           dev,
+                                           batch_size)
+                client.set_script_from_file(f"resnet_script_{str(i)}",
+                                            "./imagenet/data_processing_script.txt",
+                                            dev)
+                logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
 
 
 def create_inference_session(exp,
@@ -436,13 +449,18 @@ def create_inference_session(exp,
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks_per_node(tasks)
+    run_settings.set_tasks(tasks*nodes)
     # tell scaling application not to set the model from the application
     # as we will do that from the driver in non-converged deployments
     run_settings.update_env({
         "SS_SET_MODEL": 0,
-        "SS_CLUSTER": cluster
+        "SS_CLUSTER": cluster,
+        "SS_NUM_DEVICES": str(num_devices),
+        "SS_BATCH_SIZE": str(batch_size),
+        "SS_DEVICE": device,
+        "SS_CLIENT_COUNT": str(tasks)
     })
-
+    
     name = "-".join((
         "infer-sess",
         "N"+str(nodes),
@@ -602,7 +620,7 @@ def write_run_config(path, **kwargs):
         "name": name,
         "path": path,
         "smartsim_version": smartsim.__version__,
-        "smartredis_version": "0.3.0", # TODO put in smartredis __version__
+        "smartredis_version": "0.3.1", # TODO put in smartredis __version__
         "db": _get_db_backend(),
         "date": str(datetime.datetime.now().strftime("%Y-%m-%d"))
     }
