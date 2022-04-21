@@ -473,13 +473,13 @@ the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256
 (512 nodes x 32 ranks per node)
 
 ![Throughput plots dark theme](/figures/loop_time-128-redis_dark.png#gh-dark-mode-only "Throughput scaling for 128 node Redis DB")
-![Throughput plots light theme](/figures/loop_time-128-redis_bright.png#gh-light-mode-only "Throughput scaling for 128 node Redis DB")
+![Throughput plots light theme](/figures/loop_time-128-redis_light.png#gh-light-mode-only "Throughput scaling for 128 node Redis DB")
 
 ![Throughput plots dark theme](/figures/loop_time-256-redis_dark.png#gh-dark-mode-only "Throughput scaling for 256 node Redis DB")
-![Throughput plots light theme](/figures/loop_time-256-redis_bright.png#gh-light-mode-only "Throughput scaling for 256 node Redis DB")
+![Throughput plots light theme](/figures/loop_time-256-redis_light.png#gh-light-mode-only "Throughput scaling for 256 node Redis DB")
 
 ![Throughput plots dark theme](/figures/loop_time-512-redis_dark.png#gh-dark-mode-only "Throughput scaling for 512 node Redis DB")
-![Throughput plots light theme](/figures/loop_time-512-redis_bright.png#gh-light-mode-only "Throughput scaling for 512 node Redis DB")
+![Throughput plots light theme](/figures/loop_time-512-redis_light.png#gh-light-mode-only "Throughput scaling for 512 node Redis DB")
 
 ### Using KeyDB
 
