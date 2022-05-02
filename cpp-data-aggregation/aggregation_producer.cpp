@@ -64,7 +64,8 @@ void run_aggregation_production(size_t n_bytes,
         // This poll invocation syncs the producer to wait for the
         // consumer to finish the previous iteration aggregation
         if (rank == 0 && i != 0) {
-            while (client.get_list_length(list_name) != 0) {
+            std::string last_list_name = "iteration_" + std::to_string(i-1);
+            while (client.get_list_length(last_list_name) != 0) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             }
         }

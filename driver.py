@@ -347,7 +347,7 @@ class SmartSimScalingTests:
         :type tensor_bytes: list[int], optional
         :param tensors_per_dataset: list of number of tensors per dataset
         :type tensor_bytes: list[int], optional
-        :param client_threads: the number of client threads used for data aggregation
+        :param client_threads: list of the number of client threads used for data aggregation
         :type client_threads: list[int], optional
         """
         logger.info("Starting dataset aggregation scaling tests")
