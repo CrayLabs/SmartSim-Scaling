@@ -56,7 +56,7 @@ void run_aggregation_production(size_t n_bytes,
 
     // A new list is created for each iteration
     // to measure dataset aggregation throughput
-    for (int i=0; i<iterations; i++) {
+    for (int i = 0; i < iterations; i++) {
 
         // Set the list name (not MPI rank dependent)
         std::string list_name = "iteration_" + std::to_string(i);
@@ -64,13 +64,19 @@ void run_aggregation_production(size_t n_bytes,
         // This poll invocation syncs the producer to wait for the
         // consumer to finish the previous iteration aggregation
         if (rank == 0 && i != 0) {
-            std::string last_list_name = "iteration_" + std::to_string(i-1);
+            std::string last_list_name = "iteration_" + std::to_string(i - 1);
+            std::cout << "Checking that last list " << last_list_name << " is empty." << std::endl;
             while (client.get_list_length(last_list_name) != 0) {
+                std::cout << "List length = " << client.get_list_length(last_list_name) << std::endl;
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             }
         }
 
         MPI_Barrier(MPI_COMM_WORLD);
+
+        if (rank == 0) {
+            std::cout << "Creating list " << i << std::endl;
+        }
 
         // Append to the aggregation list
         client.append_to_list(list_name, dataset);

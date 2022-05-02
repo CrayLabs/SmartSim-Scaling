@@ -43,6 +43,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         std::cout << "Consuming list " << i << std::endl;
 
         if(rank == 0) {
+            std::cout << "Checking if " << list_name << " has length " << list_length << std::endl;
             bool list_is_ready = client.poll_list_length(list_name, list_length,
                                                          5, 100000);
             if(!list_is_ready)
@@ -64,6 +65,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         MPI_Barrier(MPI_COMM_WORLD);
 
         if (rank == 0) {
+            std::cout << "Deleting " << list_name << std::endl;
             client.delete_list(list_name);
         }
     }
@@ -99,11 +101,8 @@ int main(int argc, char* argv[]) {
         throw std::runtime_error("The expected list length must be "
                                  "passed in.");
 
-    std::string s_bytes(argv[1]);
-    int n_bytes = std::stoi(s_bytes);
-
-
-    int list_length = 0;
+    std::string s_list_length(argv[1]);
+    int list_length = std::stoi(s_list_length);
 
     if(rank==0)
         std::cout << "Running aggregate scaling test consumer." << std::endl;
