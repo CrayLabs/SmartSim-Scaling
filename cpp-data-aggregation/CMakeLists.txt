@@ -20,10 +20,18 @@ include_directories(SYSTEM
 # tests need MPI
 find_package(MPI)
 
-add_executable(aggregation
-	 aggregation_scaling.cpp
+add_executable(aggregation_producer
+	 aggregation_producer.cpp
 )
-target_link_libraries(aggregation
+target_link_libraries(aggregation_producer
+	MPI::MPI_CXX
+	${SR_LIB}
+)
+
+add_executable(aggregation_consumer
+	 aggregation_consumer.cpp
+)
+target_link_libraries(aggregation_consumer
 	MPI::MPI_CXX
 	${SR_LIB}
 )

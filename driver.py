@@ -313,7 +313,8 @@ class SmartSimScalingTests:
                             iterations=100,
                             tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076,
                                           262152, 524304, 1024000, 2048000, 4096000],
-                            tensors_per_dataset=[1,2,4]):
+                            tensors_per_dataset=[1,2,4],
+                            client_threads=[1,2,4,8]):
 
         """Run the data aggregation scaling tests
 
@@ -321,7 +322,7 @@ class SmartSimScalingTests:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param run_db_as_batch: run database as seperate batch submission each iteration
+        :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
         :param batch_args: additional batch args for the database
         :type batch_args: dict, optional
@@ -346,8 +347,10 @@ class SmartSimScalingTests:
         :type tensor_bytes: list[int], optional
         :param tensors_per_dataset: list of number of tensors per dataset
         :type tensor_bytes: list[int], optional
+        :param client_threads: the number of client threads used for data aggregation
+        :type client_threads: list[int], optional
         """
-        logger.info("Starting dataset aggregion scaling tests")
+        logger.info("Starting dataset aggregation scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
@@ -370,25 +373,38 @@ class SmartSimScalingTests:
                                 db_hosts)
 
 
-            perms = list(product(client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset))
+            perms = list(product(client_nodes, clients_per_node, tensor_bytes,tensors_per_dataset, client_threads))
             for perm in perms:
-                c_nodes, cpn, _bytes, t_per_dataset = perm
+                c_nodes, cpn, _bytes, t_per_dataset, c_threads = perm
+                logger.info(f"Running with threads: {c_threads}")
+                # setup a an instance of the C++ driver and start it
+                aggregation_producer_sessions = create_aggregation_prod_session(exp, c_nodes, cpn,
+                                                                                db_node_count,
+                                                                                db_cpus, iterations,
+                                                                                _bytes, t_per_dataset)
 
                 # setup a an instance of the C++ driver and start it
-                aggregation_session = create_aggregation_session(exp,
-                                                                 c_nodes,
-                                                                 cpn,
-                                                                 db_node_count,
-                                                                 db_cpus,
-                                                                 iterations,
-                                                                 _bytes,
-                                                                 t_per_dataset)
-                exp.start(aggregation_session, summary=True)
+                aggregation_consumer_sessions = create_aggregation_cons_session(exp,
+                                                                           c_nodes,
+                                                                           cpn,
+                                                                           db_node_count,
+                                                                           db_cpus,
+                                                                           iterations,
+                                                                           _bytes,
+                                                                           t_per_dataset,
+                                                                           c_threads)
+
+                exp.start(aggregation_producer_sessions,
+                          aggregation_consumer_sessions,
+                           summary=True)
 
                 # confirm scaling test run successfully
-                stat = exp.get_status(aggregation_session)
+                stat = exp.get_status(aggregation_producer_sessions)
                 if stat[0] != status.STATUS_COMPLETED:
-                    logger.error(f"ERROR: One of the scaling tests failed {aggregation_session.name}")
+                    logger.error(f"ERROR: One of the scaling tests failed {aggregation_producer_sessions.name}")
+                stat = exp.get_status(aggregation_consumer_sessions)
+                if stat[0] != status.STATUS_COMPLETED:
+                    logger.error(f"ERROR: One of the scaling tests failed {aggregation_consumer_sessions.name}")
 
             # stop database after this set of permutations have finished
             exp.stop(db)
@@ -688,14 +704,14 @@ def create_throughput_session(exp,
                 tensor_bytes=_bytes)
     return model
 
-def create_aggregation_session(exp,
-                               nodes,
-                               tasks,
-                               db_nodes,
-                               db_cpus,
-                               iterations,
-                               _bytes,
-                               t_per_dataset):
+def create_aggregation_prod_session(exp,
+                                    nodes,
+                                    tasks,
+                                    db_nodes,
+                                    db_cpus,
+                                    iterations,
+                                   _bytes,
+                                   t_per_dataset):
     """Create a Model to run a throughput scaling session
 
     :param exp: Experiment object for this test
@@ -712,12 +728,12 @@ def create_aggregation_session(exp,
     :type iterations: int
     :param _bytes: size in bytes of tensors to use for thoughput scaling
     :type _bytes: int
-    :return: Model reference to the throughput session to launch
     :param t_per_dataset: the number of tensors per dataset
     :type t_per_dataset: int
+    :return: Model reference to the throughput session to launch
     :rtype: Model
     """
-    settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation",
+    settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation_producer",
                                        [str(_bytes), str(t_per_dataset)])
     settings.set_tasks(nodes * tasks)
     settings.set_tasks_per_node(tasks)
@@ -729,7 +745,7 @@ def create_aggregation_session(exp,
         settings.set_nodes(nodes)
 
     name = "-".join((
-        "aggregate-sess",
+        "aggregate-sess-prod",
         "N"+str(nodes),
         "T"+str(tasks),
         "DBN"+str(db_nodes),
@@ -750,6 +766,80 @@ def create_aggregation_session(exp,
                 iterations=iterations,
                 tensor_bytes=_bytes,
                 t_per_dataset=t_per_dataset)
+    return model
+
+def create_aggregation_cons_session(exp,
+                                    nodes,
+                                    tasks,
+                                    db_nodes,
+                                    db_cpus,
+                                    iterations,
+                                    _bytes,
+                                    t_per_dataset,
+                                    c_threads):
+    """Create a Model to run a throughput scaling session
+
+    :param exp: Experiment object for this test
+    :type exp: Experiment
+    :param nodes: number of nodes for the synthetic throughput application
+    :type nodes: int
+    :param tasks: number of tasks per node for the throughput application
+    :type tasks: int
+    :param db_nodes: number of database nodes
+    :type db_nodes: int
+    :param db_cpus: number of cpus used on each database node
+    :type db_cpus: int
+    :param iterations: number of put/get loops by the application
+    :type iterations: int
+    :param _bytes: size in bytes of tensors to use for thoughput scaling
+    :type _bytes: int
+    :param t_per_dataset: the number of tensors per dataset
+    :type t_per_dataset: int
+    :param c_threads:  the number of client threads to use inside of SR client
+    :rtype c_threads: int
+    :type t_per_dataset: int
+    :rtype: Model
+    """
+    settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation_consumer",
+                                       [str(nodes*tasks)])
+    #settings.set_tasks(1)
+    settings.set_tasks_per_node(1)
+    settings.set_cpus_per_task(c_threads*2)
+    settings.run_args['cpu-bind'] = 'v'
+    settings.update_env({
+        "SS_ITERATIONS": str(iterations),
+        "SR_THREAD_COUNT": str(c_threads)
+    })
+    # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
+    if exp._launcher == "slurm":
+        settings.set_nodes(1)
+
+
+
+    name = "-".join((
+        "aggregate-sess-cons",
+        "N"+str(nodes),
+        "T"+str(tasks),
+        "DBN"+str(db_nodes),
+        "ITER"+str(iterations),
+        "TB"+str(_bytes),
+        "TPD"+str(t_per_dataset),
+        "CT"+str(c_threads),
+        _get_uuid()
+        ))
+
+    model = exp.create_model(name, settings)
+    exp.generate(model, overwrite=True)
+    write_run_config(model.path,
+                client_total=tasks*nodes,
+                client_per_node=tasks,
+                client_nodes=nodes,
+                database_nodes=db_nodes,
+                database_cpus=db_cpus,
+                iterations=iterations,
+                tensor_bytes=_bytes,
+                t_per_dataset=t_per_dataset,
+                client_threads=c_threads)
     return model
 
 def write_run_config(path, **kwargs):
@@ -774,7 +864,7 @@ def _get_uuid():
     return uid[:4]
 
 def _get_db_backend():
-    db_backend_path = smartsim._core.config.CONFIG.redis_exe
+    db_backend_path = smartsim._core.config.CONFIG.database_exe
     return os.path.basename(db_backend_path)
 
 

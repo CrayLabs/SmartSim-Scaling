@@ -2,7 +2,7 @@
 
 #SBATCH -N 92
 #SBATCH --exclusive
-#SBATCH -t 10:00:00
+#SBATCH -t 2:00:00
 #SBATCH -C SK48
 #SBATCH --oversubscribe
 
