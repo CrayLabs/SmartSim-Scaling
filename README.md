@@ -394,10 +394,11 @@ The data aggregation tests run two applications.  The first application
 is an MPI application that produces datasets that are added to an aggregation list.
 In the producer application, each MPI rank has a single-threaded client.  The second
 application is a consumer application.  This application consumes the aggregation
-lists that are produced by the first application.  The producer and consumer
+lists that are produced by the first application.  The consumer application
+can be configured to use multiple threads for data aggregation.  The producer and consumer
 applications are running at the same time.
 
-Each client in the producer application performs 100 executions of the following command:
+By default, the clients in the producer application perform 20 executions of the following command:
 
   1) ``append_to_list`` (add dataset to the aggregation list)
 
@@ -419,24 +420,24 @@ of tests with varying configurations.
 ```text
 
 NAME
-    driver.py throughput_scaling - Run the throughput scaling tests
+    driver.py aggregation-scaling - Run the data aggregation scaling tests
 
 SYNOPSIS
-    driver.py throughput_scaling <flags>
+    driver.py aggregation-scaling <flags>
 
 DESCRIPTION
-    Run the throughput scaling tests
+    Run the data aggregation scaling tests
 
 FLAGS
     --exp_name=EXP_NAME
-        Default: 'throughput-scaling'
+        Default: 'aggregation-scaling'
         name of output dir
     --launcher=LAUNCHER
         Default: 'auto'
         workload manager i.e. "slurm", "pbs"
     --run_db_as_batch=RUN_DB_AS_BATCH
         Default: True
-        run database as seperate batch submission each iteration
+        run database as separate batch submission each iteration
     --batch_args=BATCH_ARGS
         Default: {}
         additional batch args for the database
@@ -447,7 +448,7 @@ FLAGS
         Default: [12]
         number of compute hosts to use for the database
     --db_cpus=DB_CPUS
-        Default: [2]
+        Default: 36
         number of cpus per compute host for the database
     --db_port=DB_PORT
         Default: 6780
@@ -459,8 +460,11 @@ FLAGS
         Default: [32]
         client tasks per compute node for the synthetic scaling app
     --client_nodes=CLIENT_NODES
-        Default: [128, 256, 512]
+      Default: [128, 256, 512]
         number of compute nodes to use for the synthetic scaling app
+    --iterations=ITERATIONS
+        Default: 20
+        number of append/retrieve loops run by the applications
     --tensor_bytes=TENSOR_BYTES
         Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
         list of tensor sizes in bytes
@@ -468,7 +472,7 @@ FLAGS
         Default: [1, 2, 4]
         list of number of tensors per dataset
     --client_threads=CLIENT_THREADS
-        Default: [1, 2, 4, 8]
+        Default: [1, 2, 4, 8, 16, 32]
         list of the number of client threads used for data aggregation
 ```
 

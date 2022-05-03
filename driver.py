@@ -341,7 +341,7 @@ class SmartSimScalingTests:
         :type clients_per_node: list, optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
         :type client_nodes: list, optional
-        :param iterations: number of put/get loops run by the applications
+        :param iterations: number of append/retrieve loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
@@ -712,25 +712,25 @@ def create_aggregation_prod_session(exp,
                                     iterations,
                                    _bytes,
                                    t_per_dataset):
-    """Create a Model to run a throughput scaling session
+    """Create a Model to run a producer for the aggregation scaling session
 
     :param exp: Experiment object for this test
     :type exp: Experiment
-    :param nodes: number of nodes for the synthetic throughput application
+    :param nodes: number of nodes for the synthetic aggregation application
     :type nodes: int
-    :param tasks: number of tasks per node for the throughput application
+    :param tasks: number of tasks per node for the aggregation application
     :type tasks: int
     :param db_nodes: number of database nodes
     :type db_nodes: int
     :param db_cpus: number of cpus used on each database node
     :type db_cpus: int
-    :param iterations: number of put/get loops by the application
+    :param iterations: number of append/retrieve loops by the application
     :type iterations: int
-    :param _bytes: size in bytes of tensors to use for thoughput scaling
+    :param _bytes: size in bytes of tensors to use for aggregation scaling
     :type _bytes: int
     :param t_per_dataset: the number of tensors per dataset
     :type t_per_dataset: int
-    :return: Model reference to the throughput session to launch
+    :return: Model reference to the aggregation session to launch
     :rtype: Model
     """
     settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation_producer",
@@ -777,21 +777,21 @@ def create_aggregation_cons_session(exp,
                                     _bytes,
                                     t_per_dataset,
                                     c_threads):
-    """Create a Model to run a throughput scaling session
+    """Create a Model to run a consumer for the aggregation scaling session
 
     :param exp: Experiment object for this test
     :type exp: Experiment
-    :param nodes: number of nodes for the synthetic throughput application
+    :param nodes: number of nodes for the synthetic aggregation application
     :type nodes: int
-    :param tasks: number of tasks per node for the throughput application
+    :param tasks: number of tasks per node for the aggregation application
     :type tasks: int
     :param db_nodes: number of database nodes
     :type db_nodes: int
     :param db_cpus: number of cpus used on each database node
     :type db_cpus: int
-    :param iterations: number of put/get loops by the application
+    :param iterations: number of append/retrieve loops by the application
     :type iterations: int
-    :param _bytes: size in bytes of tensors to use for thoughput scaling
+    :param _bytes: size in bytes of tensors to use for aggregation scaling
     :type _bytes: int
     :param t_per_dataset: the number of tensors per dataset
     :type t_per_dataset: int

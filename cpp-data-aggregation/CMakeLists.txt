@@ -1,4 +1,4 @@
-project(CppInferenceTests)
+project(CppAggregationTests)
 
 cmake_minimum_required(VERSION 3.10)
 

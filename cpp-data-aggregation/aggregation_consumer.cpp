@@ -40,7 +40,9 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
         std::string list_name = "iteration_" + std::to_string(i);
 
-        std::cout << "Consuming list " << i << std::endl;
+        if (rank == 0) {
+            std::cout << "Consuming list " << i << std::endl;
+        }
 
         if(rank == 0) {
             std::cout << "Checking if " << list_name << " has length " << list_length << std::endl;
