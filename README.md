@@ -379,10 +379,10 @@ FLAGS
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
     --clients_per_node=CLIENTS_PER_NODE
         Default: [32]
-        client tasks per compute node for the synthetic scaling app
+        client tasks per compute node for the synthetic scaling producer app
     --client_nodes=CLIENT_NODES
         Default: [128, 256, 512]
-        number of compute nodes to use for the synthetic scaling app
+        number of compute nodes to use for the synthetic scaling producer app
     --tensor_bytes=TENSOR_BYTES
         Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
         list of tensor sizes in bytes
@@ -390,15 +390,17 @@ FLAGS
 
 ### Data aggregation
 
-The data aggregation tests run two applications.  The first application
+The data aggregation scaling test runs two applications.  The first application
 is an MPI application that produces datasets that are added to an aggregation list.
-In the producer application, each MPI rank has a single-threaded client.  The second
+In this producer application, each MPI rank has a single-threaded client.  The second
 application is a consumer application.  This application consumes the aggregation
 lists that are produced by the first application.  The consumer application
 can be configured to use multiple threads for data aggregation.  The producer and consumer
-applications are running at the same time.
+applications are running at the same time, but the producer application waits for the
+consumer application to finish an aggregation list before starting to produce
+the next aggregation list.
 
-By default, the clients in the producer application perform 20 executions of the following command:
+By default, the clients in the producer application perform 100 executions of the following command:
 
   1) ``append_to_list`` (add dataset to the aggregation list)
 
