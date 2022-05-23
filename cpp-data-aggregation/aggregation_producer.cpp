@@ -14,9 +14,6 @@ void run_aggregation_production(size_t n_bytes,
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    int n_rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &n_rank);
-
     if (rank == 0)
         std::cout << "Connecting clients" << std::endl;
 
@@ -36,6 +33,7 @@ void run_aggregation_production(size_t n_bytes,
     // dataset data can be re-used between iterations
     // because a new list is created for each iteration
     // We re-use datasets so we don't run out of memory.
+
     // Set the dataset name (MPI rank dependent)
     std::string name = "aggregation_rank_" +
                         std::to_string(rank);
@@ -45,10 +43,10 @@ void run_aggregation_production(size_t n_bytes,
     for (size_t j = 0; j < tensors_per_dataset; j++) {
         std::string tensor_name = "tensor_" + std::to_string(j);
         dataset.add_tensor(tensor_name,
-                            array.data(),
-                            {1, n_values},
-                            SRTensorTypeFloat,
-                            SRMemLayoutContiguous);
+                           array.data(),
+                           {1, n_values},
+                           SRTensorTypeFloat,
+                           SRMemLayoutContiguous);
     }
 
     // Put the dataset into the database
@@ -65,18 +63,12 @@ void run_aggregation_production(size_t n_bytes,
         // consumer to finish the previous iteration aggregation
         if (rank == 0 && i != 0) {
             std::string last_list_name = "iteration_" + std::to_string(i - 1);
-            std::cout << "Checking that last list " << last_list_name << " is empty." << std::endl;
             while (client.get_list_length(last_list_name) != 0) {
-                std::cout << "List length = " << client.get_list_length(last_list_name) << std::endl;
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             }
         }
 
         MPI_Barrier(MPI_COMM_WORLD);
-
-        if (rank == 0) {
-            std::cout << "Creating list " << i << std::endl;
-        }
 
         // Append to the aggregation list
         client.append_to_list(list_name, dataset);

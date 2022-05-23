@@ -14,9 +14,6 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    int n_rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &n_rank);
-
     if (rank == 0)
         std::cout << "Connecting clients" << std::endl;
 
@@ -45,7 +42,6 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         }
 
         if(rank == 0) {
-            std::cout << "Checking if " << list_name << " has length " << list_length << std::endl;
             bool list_is_ready = client.poll_list_length(list_name, list_length,
                                                          5, 100000);
             if(!list_is_ready)
@@ -67,7 +63,6 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         MPI_Barrier(MPI_COMM_WORLD);
 
         if (rank == 0) {
-            std::cout << "Deleting " << list_name << std::endl;
             client.delete_list(list_name);
         }
     }
@@ -76,7 +71,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     delta_t = loop_end - loop_start;
 
     // write times to file
-    for (int i=0; i<iterations; i++) {
+    for (int i = 0; i < iterations; i++) {
         timing_file << rank << "," << "get_list" << ","
                     << get_list_times[i] << "\n";
     }
@@ -85,7 +80,6 @@ void run_aggregation_consumer(std::ofstream& timing_file,
                 << delta_t << "\n";
 
     timing_file << std::flush;
-
 
     return;
 }
