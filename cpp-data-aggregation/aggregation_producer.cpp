@@ -17,16 +17,20 @@ void run_aggregation_production(size_t n_bytes,
     if (rank == 0)
         std::cout << "Connecting clients" << std::endl;
 
+    // Connect a client for each MPI rank
     SmartRedis::Client client(true);
 
+    // Block for all clients to be connected
     MPI_Barrier(MPI_COMM_WORLD);
 
+    // Create tensors for the dataset
     size_t n_values = n_bytes / sizeof(float);
     std::vector<float> array(n_values, 0);
     std::vector<float> result(n_values, 0);
     for(size_t i = 0; i < n_values; i++)
         array[i] = i;
 
+    // Get the number of iterations to perform
     int iterations = get_iterations();
 
     // Put the datasets into the database. The raw
@@ -68,6 +72,7 @@ void run_aggregation_production(size_t n_bytes,
             }
         }
 
+        // Block until the consumer has deleted the pervious iteration list
         MPI_Barrier(MPI_COMM_WORLD);
 
         // Append to the aggregation list
@@ -82,6 +87,7 @@ int main(int argc, char* argv[]) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    // Get command line arguments
     if(argc==1)
         throw std::runtime_error("The number tensor size in "\
                                  "bytes must be provided as "\
@@ -104,6 +110,7 @@ int main(int argc, char* argv[]) {
                      " bytes and "<< tensors_per_dataset <<
                      " tensors per dataset." << std::endl;
 
+    // Run the dataset and aggregation list production
     run_aggregation_production(n_bytes, tensors_per_dataset);
 
     if(rank==0)

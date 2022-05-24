@@ -311,8 +311,9 @@ class SmartSimScalingTests:
                             clients_per_node=[32],
                             client_nodes=[128, 256, 512],
                             iterations=20,
-                            tensor_bytes=[1024, 8192, 16384, 32769, 65538, 131076,
-                                          262152, 524304, 1024000, 2048000],
+                            tensor_bytes=[1024, 8192, 16384, 32769, 65538,
+                                          131076, 262152, 524304, 1024000,
+                                          2048000],
                             tensors_per_dataset=[1,2,4],
                             client_threads=[1,2,4,8,16,32]):
 
@@ -322,7 +323,8 @@ class SmartSimScalingTests:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param run_db_as_batch: run database as separate batch submission each iteration
+        :param run_db_as_batch: run database as separate batch submission
+                                each iteration
         :type run_db_as_batch: bool, optional
         :param batch_args: additional batch args for the database
         :type batch_args: dict, optional
@@ -337,9 +339,11 @@ class SmartSimScalingTests:
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
-        :param clients_per_node: client tasks per compute node for the synthetic scaling app
+        :param clients_per_node: client tasks per compute node for the aggregation
+                                 producer app
         :type clients_per_node: list, optional
-        :param client_nodes: number of compute nodes to use for the synthetic scaling app
+        :param client_nodes: number of compute nodes to use for the aggregation
+                             producer app
         :type client_nodes: list, optional
         :param iterations: number of append/retrieve loops run by the applications
         :type iterations: int
@@ -347,7 +351,8 @@ class SmartSimScalingTests:
         :type tensor_bytes: list[int], optional
         :param tensors_per_dataset: list of number of tensors per dataset
         :type tensor_bytes: list[int], optional
-        :param client_threads: list of the number of client threads used for data aggregation
+        :param client_threads: list of the number of client threads used for data
+                               aggregation
         :type client_threads: list[int], optional
         """
         logger.info("Starting dataset aggregation scaling tests")
@@ -373,26 +378,24 @@ class SmartSimScalingTests:
                                 db_hosts)
 
 
-            perms = list(product(client_nodes, clients_per_node, tensor_bytes,tensors_per_dataset, client_threads))
+            perms = list(product(client_nodes, clients_per_node,
+                                 tensor_bytes,tensors_per_dataset, client_threads))
             for perm in perms:
                 c_nodes, cpn, _bytes, t_per_dataset, c_threads = perm
                 logger.info(f"Running with threads: {c_threads}")
                 # setup a an instance of the C++ driver and start it
-                aggregation_producer_sessions = create_aggregation_prod_session(exp, c_nodes, cpn,
-                                                                                db_node_count,
-                                                                                db_cpus, iterations,
-                                                                                _bytes, t_per_dataset)
+                aggregation_producer_sessions = \
+                    create_aggregation_prod_session(exp, c_nodes, cpn,
+                                                    db_node_count,
+                                                    db_cpus, iterations,
+                                                    _bytes, t_per_dataset)
 
                 # setup a an instance of the C++ driver and start it
-                aggregation_consumer_sessions = create_aggregation_cons_session(exp,
-                                                                           c_nodes,
-                                                                           cpn,
-                                                                           db_node_count,
-                                                                           db_cpus,
-                                                                           iterations,
-                                                                           _bytes,
-                                                                           t_per_dataset,
-                                                                           c_threads)
+                aggregation_consumer_sessions = \
+                    create_aggregation_cons_session(exp, c_nodes, cpn,
+                                                    db_node_count, db_cpus,
+                                                    iterations, _bytes, t_per_dataset,
+                                                    c_threads)
 
                 exp.start(aggregation_producer_sessions,
                           aggregation_consumer_sessions,
@@ -401,10 +404,12 @@ class SmartSimScalingTests:
                 # confirm scaling test run successfully
                 stat = exp.get_status(aggregation_producer_sessions)
                 if stat[0] != status.STATUS_COMPLETED:
-                    logger.error(f"ERROR: One of the scaling tests failed {aggregation_producer_sessions.name}")
+                    logger.error(f"ERROR: One of the scaling tests failed \
+                                  {aggregation_producer_sessions.name}")
                 stat = exp.get_status(aggregation_consumer_sessions)
                 if stat[0] != status.STATUS_COMPLETED:
-                    logger.error(f"ERROR: One of the scaling tests failed {aggregation_consumer_sessions.name}")
+                    logger.error(f"ERROR: One of the scaling tests failed \
+                                  {aggregation_consumer_sessions.name}")
 
             # stop database after this set of permutations have finished
             exp.stop(db)
