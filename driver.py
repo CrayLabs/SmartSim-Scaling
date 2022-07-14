@@ -315,9 +315,12 @@ class SmartSimScalingTests:
                                           131076, 262152, 524304, 1024000,
                                           2048000],
                             tensors_per_dataset=[1,2,4],
-                            client_threads=[1,2,4,8,16,32]):
+                            client_threads=[1,2,4,8,16,32],
+                            cpu_hyperthreads=2):
 
-        """Run the data aggregation scaling tests
+        """Run the data aggregation scaling tests.  Permutations of the test
+        include client_nodes, clients_per_node, tensor_bytes,
+        tensors_per_dataset, and client_threads.
 
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -354,6 +357,10 @@ class SmartSimScalingTests:
         :param client_threads: list of the number of client threads used for data
                                aggregation
         :type client_threads: list[int], optional
+        :param cpu_hyperthreads: the number of hyperthreads per cpu.  This is done
+                                 to request that the consumer application utilizes
+                                 all physical cores for each client thread.
+        :type cpu_hyperthreads: int, optional
         """
         logger.info("Starting dataset aggregation scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
@@ -385,17 +392,17 @@ class SmartSimScalingTests:
                 logger.info(f"Running with threads: {c_threads}")
                 # setup a an instance of the C++ driver and start it
                 aggregation_producer_sessions = \
-                    create_aggregation_prod_session(exp, c_nodes, cpn,
-                                                    db_node_count,
-                                                    db_cpus, iterations,
-                                                    _bytes, t_per_dataset)
+                    create_aggregation_producer_session(exp, c_nodes, cpn,
+                                                        db_node_count,
+                                                        db_cpus, iterations,
+                                                        _bytes, t_per_dataset)
 
                 # setup a an instance of the C++ driver and start it
                 aggregation_consumer_sessions = \
-                    create_aggregation_cons_session(exp, c_nodes, cpn,
-                                                    db_node_count, db_cpus,
-                                                    iterations, _bytes, t_per_dataset,
-                                                    c_threads)
+                    create_aggregation_consumer_session(exp, c_nodes, cpn,
+                                                        db_node_count, db_cpus,
+                                                        iterations, _bytes, t_per_dataset,
+                                                        c_threads, cpu_hyperthreads)
 
                 exp.start(aggregation_producer_sessions,
                           aggregation_consumer_sessions,
@@ -709,14 +716,14 @@ def create_throughput_session(exp,
                 tensor_bytes=_bytes)
     return model
 
-def create_aggregation_prod_session(exp,
-                                    nodes,
-                                    tasks,
-                                    db_nodes,
-                                    db_cpus,
-                                    iterations,
-                                   _bytes,
-                                   t_per_dataset):
+def create_aggregation_producer_session(exp,
+                                        nodes,
+                                        tasks,
+                                        db_nodes,
+                                        db_cpus,
+                                        iterations,
+                                        _bytes,
+                                        t_per_dataset):
     """Create a Model to run a producer for the aggregation scaling session
 
     :param exp: Experiment object for this test
@@ -773,15 +780,16 @@ def create_aggregation_prod_session(exp,
                 t_per_dataset=t_per_dataset)
     return model
 
-def create_aggregation_cons_session(exp,
-                                    nodes,
-                                    tasks,
-                                    db_nodes,
-                                    db_cpus,
-                                    iterations,
-                                    _bytes,
-                                    t_per_dataset,
-                                    c_threads):
+def create_aggregation_consumer_session(exp,
+                                        nodes,
+                                        tasks,
+                                        db_nodes,
+                                        db_cpus,
+                                        iterations,
+                                        _bytes,
+                                        t_per_dataset,
+                                        c_threads,
+                                        cpu_hyperthreads):
     """Create a Model to run a consumer for the aggregation scaling session
 
     :param exp: Experiment object for this test
@@ -804,12 +812,16 @@ def create_aggregation_cons_session(exp,
     :rtype c_threads: int
     :type t_per_dataset: int
     :rtype: Model
+    :param cpu_hyperthreads: the number of hyperthreads per cpu.  This is done
+                             to request that the consumer application utilizes
+                             all physical cores for each client thread.
+    :type cpu_hyperthreads: int, optional
     """
     settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation_consumer",
                                        [str(nodes*tasks)])
     #settings.set_tasks(1)
     settings.set_tasks_per_node(1)
-    settings.set_cpus_per_task(c_threads*2)
+    settings.set_cpus_per_task(c_threads * cpu_hyperthreads)
     settings.run_args['cpu-bind'] = 'v'
     settings.update_env({
         "SS_ITERATIONS": str(iterations),

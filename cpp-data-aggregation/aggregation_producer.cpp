@@ -4,7 +4,7 @@
 
 int get_iterations() {
   char* iterations = std::getenv("SS_ITERATIONS");
-  int iters = iterations ? std::stoi(iterations) : 100;
+  int iters = iterations ? std::stoi(iterations) : 20;
   return iters;
 }
 
