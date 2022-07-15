@@ -51,8 +51,16 @@ def create_run_csv(run_path, delete_previous=True, verbose=False):
                 _make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', result_dir)
 
             _make_hist_plot(function_times['client()'], 'client()', 'client_constructor_dist.pdf', result_dir)
-            _make_hist_plot(function_times['put_tensor'], 'put_tensor()', 'put_tensor.pdf', result_dir)
-            _make_hist_plot(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf', result_dir)
+
+            if "put_tensor" in function_times:
+                _make_hist_plot(function_times['put_tensor'], 'put_tensor()', 'put_tensor.pdf', result_dir)
+
+            if "unpack_tensor" in function_times:
+                _make_hist_plot(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf', result_dir)
+
+            if "get_list" in function_times:
+                _make_hist_plot(function_times['get_list'], 'get_list()', 'get_list.pdf', result_dir)
+
             _make_hist_plot(function_times['main()'], 'main()', 'main.pdf', result_dir)
         except KeyError as e:
             raise KeyError(f'{e} not found in function_times for run {run_name}')
