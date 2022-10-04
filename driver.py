@@ -1,4 +1,5 @@
 import os
+import sys
 import configparser
 import datetime
 from pathlib import Path
@@ -422,6 +423,83 @@ class SmartSimScalingTests:
             # stop database after this set of permutations have finished
             exp.stop(db)
 
+    def aggregation_scaling_python(self,
+                            exp_name="aggregation-scaling-py",
+                            launcher="auto",
+                            run_db_as_batch=True,
+                            batch_args={},
+                            db_hosts=[],
+                            db_nodes=[12],
+                            db_cpus=36,
+                            db_port=6780,
+                            net_ifname="ipogif0",
+                            clients_per_node=[32],
+                            client_nodes=[128, 256, 512],
+                            iterations=20,
+                            tensor_bytes=[1024, 8192, 16384, 32769, 65538,
+                                          131076, 262152, 524304, 1024000,
+                                          2048000],
+                            tensors_per_dataset=[1,2,4],
+                            client_threads=[1,2,4,8,16,32],
+                            cpu_hyperthreads=2):
+        logger.info("Starting dataset aggregation scaling with python tests")
+        logger.info(f"Running with database backend: {_get_db_backend()}")
+        logger.info(f"Running with launcher: {launcher}")
+
+        exp = Experiment(name=exp_name, launcher=launcher)
+        exp.generate()
+        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+
+        for db_node_count in db_nodes:
+
+            # start the database only once per value in db_nodes so all permutations
+            # are executed with the same database size without bringin down the database
+            db = start_database(exp,
+                                db_port,
+                                db_node_count,
+                                db_cpus,
+                                None, # not setting threads per queue in throughput tests
+                                net_ifname,
+                                run_db_as_batch,
+                                batch_args,
+                                db_hosts)
+
+            for c_nodes, cpn, bytes_, t_per_dataset, c_threads in product(
+                client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads
+            ):
+                logger.info(f"Running with threads: {c_threads}")
+                # setup a an instance of the C++ producer and start it
+                aggregation_producer_sessions = \
+                    create_aggregation_producer_session_python(exp, c_nodes, cpn,
+                                                               db_node_count,
+                                                               db_cpus, iterations,
+                                                               bytes_, t_per_dataset)
+
+                # setup a an instance of the python consumer and start it
+                aggregation_consumer_sessions = \
+                    create_aggregation_consumer_session_python(exp, c_nodes, cpn,
+                                                               db_node_count, db_cpus,
+                                                               iterations, bytes_,
+                                                               t_per_dataset, c_threads,
+                                                               cpu_hyperthreads)
+
+                exp.start(aggregation_producer_sessions,
+                          aggregation_consumer_sessions,
+                          summary=True)
+
+                # confirm scaling test run successfully
+                stat = exp.get_status(aggregation_producer_sessions)
+                if stat[0] != status.STATUS_COMPLETED:
+                    logger.error(f"ERROR: One of the scaling tests failed \
+                                  {aggregation_producer_sessions.name}")
+                stat = exp.get_status(aggregation_consumer_sessions)
+                if stat[0] != status.STATUS_COMPLETED:
+                    logger.error(f"ERROR: One of the scaling tests failed \
+                                  {aggregation_consumer_sessions.name}")
+
+            # stop database after this set of permutations have finished
+            exp.stop(db)
+
     def process_scaling_results(self, scaling_dir="inference-scaling", overwrite=True):
         """Create a results directory with performance data and plots
 
@@ -503,7 +581,7 @@ def start_database(exp, port, nodes, cpus, tpq, net_ifname, run_as_batch, batch_
                             threads_per_queue=tpq,
                             single_cmd=True)
     if run_as_batch:
-        db.set_walltime("00:10:00")
+        db.set_walltime("48:00:00")
         for k, v in batch_args.items():
             db.set_batch_arg(k, v)
     if hosts:
@@ -734,14 +812,38 @@ def create_throughput_session(exp,
                 tensor_bytes=_bytes)
     return model
 
-def create_aggregation_producer_session(exp,
-                                        nodes,
-                                        tasks,
-                                        db_nodes,
-                                        db_cpus,
-                                        iterations,
-                                        _bytes,
-                                        t_per_dataset):
+
+def create_aggregation_producer_session(exp, nodes, tasks, db_nodes, db_cpus,
+                                        iterations, _bytes, t_per_dataset):
+    return _create_aggregation_producer_session(
+        name="aggregate-sess-prod",
+        exe="./cpp-data-aggregation/build/aggregation_producer",
+        exe_args=[str(_bytes), str(t_per_dataset)],
+        exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
+        iterations=iterations, bytes_=_bytes, t_per_dataset=t_per_dataset)
+
+
+def create_aggregation_producer_session_python(exp, nodes, tasks, db_nodes, db_cpus,
+                                               iterations, _bytes, t_per_dataset):
+    return _create_aggregation_producer_session(
+        name="aggregate-sess-prod-for-python-consumer",
+        exe="./py-data-aggregation/db/build/aggregation_producer",
+        exe_args=[str(_bytes), str(t_per_dataset)],
+        exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
+        iterations=iterations, bytes_=_bytes, t_per_dataset=t_per_dataset)
+
+
+def _create_aggregation_producer_session(name,
+                                         exe,
+                                         exe_args,
+                                         exp,
+                                         nodes,
+                                         tasks,
+                                         db_nodes,
+                                         db_cpus,
+                                         iterations,
+                                         bytes_,
+                                         t_per_dataset):
     """Create a Model to run a producer for the aggregation scaling session
 
     :param exp: Experiment object for this test
@@ -763,8 +865,7 @@ def create_aggregation_producer_session(exp,
     :return: Model reference to the aggregation session to launch
     :rtype: Model
     """
-    settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation_producer",
-                                       [str(_bytes), str(t_per_dataset)])
+    settings = exp.create_run_settings(exe, exe_args)
     settings.set_tasks(nodes * tasks)
     settings.set_tasks_per_node(tasks)
     settings.update_env({
@@ -775,12 +876,12 @@ def create_aggregation_producer_session(exp,
         settings.set_nodes(nodes)
 
     name = "-".join((
-        "aggregate-sess-prod",
+        name,
         "N"+str(nodes),
         "T"+str(tasks),
         "DBN"+str(db_nodes),
         "ITER"+str(iterations),
-        "TB"+str(_bytes),
+        "TB"+str(bytes_),
         "TPD"+str(t_per_dataset),
         _get_uuid()
         ))
@@ -794,20 +895,44 @@ def create_aggregation_producer_session(exp,
                 database_nodes=db_nodes,
                 database_cpus=db_cpus,
                 iterations=iterations,
-                tensor_bytes=_bytes,
+                tensor_bytes=bytes_,
                 t_per_dataset=t_per_dataset)
     return model
 
-def create_aggregation_consumer_session(exp,
-                                        nodes,
-                                        tasks,
-                                        db_nodes,
-                                        db_cpus,
-                                        iterations,
-                                        _bytes,
-                                        t_per_dataset,
-                                        c_threads,
-                                        cpu_hyperthreads):
+def create_aggregation_consumer_session(exp, nodes, tasks, db_nodes, db_cpus,
+                                        iterations, bytes_, t_per_dataset,
+                                        c_threads, cpu_hyperthreads):
+    return _create_aggregation_consumer_session(
+        name="aggregate-sess-cons",
+        exe="./cpp-data-aggregation/build/aggregation_consumer",
+        exe_args=[str(nodes*tasks)], exp=exp, nodes=nodes, tasks=tasks,
+        db_nodes=db_nodes, db_cpus=db_cpus, iterations=iterations, bytes_=bytes_,
+        t_per_dataset=t_per_dataset, c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
+
+def create_aggregation_consumer_session_python(exp, nodes, tasks, db_nodes, db_cpus,
+                                               iterations, bytes_, t_per_dataset,
+                                               c_threads, cpu_hyperthreads):
+    return _create_aggregation_consumer_session(
+        name="aggregate-sess-cons-python",
+        exe=sys.executable,
+        exe_args=["./py-data-aggregation/aggregation_consumer.py", str(nodes*tasks)],
+        exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
+        iterations=iterations, bytes_=bytes_, t_per_dataset=t_per_dataset,
+        c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
+    
+def _create_aggregation_consumer_session(name, 
+                                         exe,
+                                         exe_args,
+                                         exp,
+                                         nodes,
+                                         tasks,
+                                         db_nodes,
+                                         db_cpus,
+                                         iterations,
+                                         bytes_,
+                                         t_per_dataset,
+                                         c_threads,
+                                         cpu_hyperthreads):
     """Create a Model to run a consumer for the aggregation scaling session
 
     :param exp: Experiment object for this test
@@ -835,8 +960,7 @@ def create_aggregation_consumer_session(exp,
                              all physical cores for each client thread.
     :type cpu_hyperthreads: int, optional
     """
-    settings = exp.create_run_settings("./cpp-data-aggregation/build/aggregation_consumer",
-                                       [str(nodes*tasks)])
+    settings = exp.create_run_settings(exe, exe_args)
     #settings.set_tasks(1)
     settings.set_tasks_per_node(1)
     settings.set_cpus_per_task(c_threads * cpu_hyperthreads)
@@ -852,12 +976,12 @@ def create_aggregation_consumer_session(exp,
 
 
     name = "-".join((
-        "aggregate-sess-cons",
+        name,
         "N"+str(nodes),
         "T"+str(tasks),
         "DBN"+str(db_nodes),
         "ITER"+str(iterations),
-        "TB"+str(_bytes),
+        "TB"+str(bytes_),
         "TPD"+str(t_per_dataset),
         "CT"+str(c_threads),
         _get_uuid()
@@ -872,7 +996,7 @@ def create_aggregation_consumer_session(exp,
                 database_nodes=db_nodes,
                 database_cpus=db_cpus,
                 iterations=iterations,
-                tensor_bytes=_bytes,
+                tensor_bytes=bytes_,
                 t_per_dataset=t_per_dataset,
                 client_threads=c_threads)
     return model
