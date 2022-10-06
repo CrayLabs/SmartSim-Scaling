@@ -6,7 +6,7 @@
 
 cd ..
 module load slurm
-python driver.py aggregation_scaling_fs_python --exp_name='aggregation-scaling-py-fs-batch' \
+python driver.py aggregation_scaling_python_fs --exp_name='aggregation-scaling-py-fs-batch' \
                                                --client_nodes=[60] \
                                                --clients_per_node=[48] \
                                                --tensors_per_dataset=[1,4] \
