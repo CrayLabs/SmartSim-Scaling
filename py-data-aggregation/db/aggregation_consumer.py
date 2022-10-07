@@ -16,7 +16,7 @@ def get_iterations() -> int:
         return 20
 
 
-def run_aggergation_consumer(timing_file: t.TextIO, list_length: int) -> None:
+def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
 
@@ -88,7 +88,7 @@ def main() -> int:
     list_length = int(sys.argv[1])
 
     with open(f"rank_{rank}_timing.csv", "w") as timing_file:
-        run_aggergation_consumer(timing_file, list_length)
+        run_aggregation_consumer(timing_file, list_length)
         if rank == 0:
             print("Finished aggregation scaling consumer.\n")
 

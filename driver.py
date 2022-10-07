@@ -1038,14 +1038,14 @@ def _create_aggregation_producer_session(name,
     model = exp.create_model(name, settings)
     exp.generate(model, overwrite=True)
     write_run_config(model.path,
-                client_total=tasks*nodes,
-                client_per_node=tasks,
-                client_nodes=nodes,
-                database_nodes=db_nodes,
-                database_cpus=db_cpus,
-                iterations=iterations,
-                tensor_bytes=bytes_,
-                t_per_dataset=t_per_dataset)
+                     client_total=tasks*nodes,
+                     client_per_node=tasks,
+                     client_nodes=nodes,
+                     database_nodes=db_nodes,
+                     database_cpus=db_cpus,
+                     iterations=iterations,
+                     tensor_bytes=bytes_,
+                     t_per_dataset=t_per_dataset)
     return model
 
 def create_aggregation_consumer_session(exp, nodes, tasks, db_nodes, db_cpus,
@@ -1072,6 +1072,16 @@ def create_aggregation_consumer_session_python(exp, nodes, tasks, db_nodes, db_c
         c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
     model.attach_generator_files(to_copy=[py_script_dir + py_script])
     exp.generate(model, overwrite=True)
+    write_run_config(model.path,
+                     client_total=tasks*nodes,
+                     client_per_node=tasks,
+                     client_nodes=nodes,
+                     database_nodes=db_nodes,
+                     database_cpus=db_cpus,
+                     iterations=iterations,
+                     tensor_bytes=bytes_,
+                     t_per_dataset=t_per_dataset,
+                     client_threads=c_threads)
     return model
 
 def create_aggregation_consumer_session_python_fs(exp, nodes, tasks, iterations,
@@ -1088,6 +1098,16 @@ def create_aggregation_consumer_session_python_fs(exp, nodes, tasks, iterations,
         c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
     model.attach_generator_files(to_copy=[py_script_dir + py_script])
     exp.generate(model, overwrite=True)
+    write_run_config(model.path,
+                     client_total=tasks*nodes,
+                     client_per_node=tasks,
+                     client_nodes=nodes,
+                     database_nodes=0,
+                     database_cpus=0,
+                     iterations=iterations,
+                     tensor_bytes=bytes_,
+                     t_per_dataset=t_per_dataset,
+                     client_threads=c_threads)
     return model
     
 def _create_aggregation_consumer_session(name, 
