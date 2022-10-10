@@ -13,7 +13,7 @@ import typing as t
 
 
 # New datatypes
-TDataSet = tuple[str, dict[str, np.ndarray]]
+TDataset = tuple[str, dict[str, np.ndarray]]
 
 # Consts
 SIZEOF_FLOAT: t.Final[int] = 4
@@ -47,7 +47,7 @@ def poll_list_length(
     return True
 
 
-def get_datasets_from_list(list_name: str) -> list[TDataSet]:
+def get_datasets_from_list(list_name: str) -> list[TDataset]:
     if sr_thread_count := os.getenv("SR_THREAD_COUNT"):
         num_workers = int(sr_thread_count)
     else:
@@ -65,8 +65,8 @@ def get_datasets_from_list(list_name: str) -> list[TDataSet]:
 
 
 # Keep top level in case of ``mp.set_start_method("spawn")``
-def _read_datasets_from_files(filenames: list[str]) -> list[TDataSet]:
-    datasets: list[TDataSet] = []
+def _read_datasets_from_files(filenames: list[str]) -> list[TDataset]:
+    datasets: list[TDataset] = []
     for filename in filenames:
         with open(filename, "rb") as file:
             next_ = file.read(SIZEOF_SIZE_T)

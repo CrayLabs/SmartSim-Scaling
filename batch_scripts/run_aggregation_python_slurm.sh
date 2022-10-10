@@ -6,10 +6,10 @@
 
 cd ..
 module load slurm
-python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-key-batch-larger' \
+python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \
                                             --client_nodes=[60] \
                                             --clients_per_node=[48] \
-                                            --db_nodes=[32] \
+                                            --db_nodes=[16] \
                                             --db_cpus=32 \
                                             --net_ifname=ipogif0 \
                                             --run_db_as_batch=False \
