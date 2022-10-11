@@ -48,10 +48,10 @@ def poll_list_length(
 
 
 def get_datasets_from_list(list_name: str) -> list[TDataset]:
-    if sr_thread_count := os.getenv("SR_THREAD_COUNT"):
-        num_workers = int(sr_thread_count)
-    else:
-        raise RuntimeError("env var SR_THREAD_COUNT is not set")
+    try:
+        num_workers = int(os.getenv("SR_THREAD_COUNT", "4"))
+    except ValueError:
+        num_workers = 4
     list_path = os.path.join(get_read_from_dir(), list_name)
     dataset_files = [os.path.join(list_path, file) for file in os.listdir(list_path)]
     chunked_dataset_files = [dataset_files[i::num_workers] for i in range(num_workers)]

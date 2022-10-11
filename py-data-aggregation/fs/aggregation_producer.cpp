@@ -40,15 +40,15 @@ void run_aggregation_production(size_t n_bytes,
     for(size_t i = 0; i < n_values; i++)
         array[i] = i;
 
-    // fds for writing to buffer file
-    std::ofstream fout;
 
     // Get the number of iterations to perform
-    int iterations = get_iterations();
 
     // Set the dataset name (MPI rank dependent)
-    std::string name = "aggregation_rank_" +
-                        std::to_string(rank);
+    std::string name = "aggregation_rank_" + std::to_string(rank);
+
+    // fds for writing to buffer file
+    std::ofstream fout(get_write_to_dir() / (name + ".dat"), std::ios::out | std::ios::binary);
+    fout.open();
 
     // Create the dataset and add specified number of tensors
     std::unordered_map< std::string, std::vector<float> > dataset = {};
@@ -58,29 +58,17 @@ void run_aggregation_production(size_t n_bytes,
     }
 
     // Write the dataset to the file system
-    fout.open(get_write_to_dir() / (name + ".dat"), std::ios::out | std::ios::binary);
     size_t num = name.size();
-    fout.write(
-        reinterpret_cast<const char *>(&num),
-        sizeof(size_t));
-    fout.write(
-        reinterpret_cast<const char *>(name.c_str()),
-        num * sizeof(char));
+    fout.write(reinterpret_cast<const char *>(&num), sizeof(size_t));
+    fout.write(name.c_str(), num * sizeof(char));
     for (const auto& [name, tensor] : dataset) {
         num = name.size();
-        fout.write(
-            reinterpret_cast<const char *>(&num),
-            sizeof(size_t));
-        fout.write(
-            reinterpret_cast<const char *>(name.c_str()),
-            num * sizeof(char));
+        fout.write(reinterpret_cast<const char *>(&num), sizeof(size_t));
+        fout.write(name.c_str(), num * sizeof(char));
+        
         num = tensor.size();
-        fout.write(
-            reinterpret_cast<const char *>(&num),
-            sizeof(size_t));
-        fout.write(
-            reinterpret_cast<const char *>(tensor.data()),
-            num * sizeof(float));
+        fout.write(reinterpret_cast<const char *>(&num), sizeof(size_t));
+        fout.write(tensor.data(), num * sizeof(float));
     }
     fout.close();
     

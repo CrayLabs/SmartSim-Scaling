@@ -46,7 +46,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
                 name=list_name,
                 list_length=list_length,
                 poll_frequency_ms=5,
-                num_tries=100000,
+                num_tries=100_000,
             )
             if not list_is_ready:
                 raise RuntimeError(
