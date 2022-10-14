@@ -29,23 +29,25 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     delta_t = constructor_stop - constructor_start
     timing_file.write(f"{rank},client(),{delta_t}\n")
 
+    poll_list_times: list[float] = []
     get_list_times: list[float] = []
     iterations = get_iterations()
 
     comm.Barrier()
 
-    loop_start: float = MPI.Wtime()
+    loop_start = MPI.Wtime()
 
     for i in range(iterations):
         list_name = f"iteration_{i}"
         if rank == 0:
             print(f"Consuming list {i}")
 
+        poll_time_start = MPI.Wtime()
         if rank == 0:
             list_is_ready: bool = client.poll_list_length(
                 name=list_name,
                 list_length=list_length,
-                poll_frequency_ms=5,
+                poll_frequency_ms=50,
                 num_tries=100_000,
             )
             if not list_is_ready:
@@ -55,6 +57,9 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
                 )
 
         comm.Barrier()
+        poll_time_end = MPI.Wtime()
+        delta_t = poll_time_end - poll_time_start
+        poll_list_times.append(delta_t)
 
         get_list_start = MPI.Wtime()
         _result = client.get_datasets_from_list(list_name)
@@ -70,8 +75,9 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     loop_end = MPI.Wtime()
     delta_t = loop_end - loop_start
 
-    for time in get_list_times:
-        timing_file.write(f"{rank},get_list,{time}\n")
+    for poll_time, get_time in zip(poll_list_times, get_list_times):
+        timing_file.write(f"{rank},poll_list,{poll_time}\n")
+        timing_file.write(f"{rank},get_list,{get_time}\n")
 
     timing_file.write(f"{rank},loop_time,{delta_t}\n")
     timing_file.flush()

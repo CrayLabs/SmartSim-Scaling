@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 import os
-import struct
+import io
 import sys
+import struct
 import shutil
 import time
-import itertools
 import numpy as np
-import multiprocessing as mp
+from multiprocessing.pool import ThreadPool
 from mpi4py import MPI
 import typing as t
 
+if t.TYPE_CHECKING:
+    import numpy.typing as npt
 
-# New datatypes
-TDataset = tuple[str, dict[str, np.ndarray]]
 
 # Consts
 SIZEOF_FLOAT: t.Final[int] = 4
@@ -47,46 +47,43 @@ def poll_list_length(
     return True
 
 
-def get_datasets_from_list(list_name: str) -> list[TDataset]:
+def get_datasets_from_list(list_name: str) -> list[bytes]:
     try:
         num_workers = int(os.getenv("SR_THREAD_COUNT", "4"))
     except ValueError:
         num_workers = 4
     list_path = os.path.join(get_read_from_dir(), list_name)
     dataset_files = [os.path.join(list_path, file) for file in os.listdir(list_path)]
-    chunked_dataset_files = [dataset_files[i::num_workers] for i in range(num_workers)]
 
-    with mp.Pool(num_workers) as pool:
+    with ThreadPool(num_workers) as pool:
         return list(
-            itertools.chain.from_iterable(
-                pool.map(_read_datasets_from_files, chunked_dataset_files)
-            )
+            pool.imap_unordered(_read_dataset_from_file, dataset_files, chunksize=100)
         )
 
 
 # Keep top level in case of ``mp.set_start_method("spawn")``
-def _read_datasets_from_files(filenames: list[str]) -> list[TDataset]:
-    datasets: list[TDataset] = []
-    for filename in filenames:
-        with open(filename, "rb") as file:
+def _read_dataset_from_file(filename: str) -> bytes:
+    with open(filename, "rb") as file:
+        file_contents = file.read()
+    return file_contents
+
+
+def parse_dataset_bytes(
+    dataset_bytes: bytes,
+) -> tuple[str, dict[str, npt.NDArray[np.float64]]]:
+    with io.BytesIO(dataset_bytes) as file:
+        next_ = file.read(SIZEOF_SIZE_T)
+        dataset_name = file.read(int.from_bytes(next_, "little")).decode("utf-8")
+        dataset: dict[str, npt.NDArray[np.float64]] = {}
+        while next_ := file.read(SIZEOF_SIZE_T):
+            tensor_name = file.read(int.from_bytes(next_, "little")).decode("utf-8")
             next_ = file.read(SIZEOF_SIZE_T)
-            dataset_name = file.read(int.from_bytes(next_, "little")).decode("utf-8")
-            dataset = {}
-            while next_ := file.read(SIZEOF_SIZE_T):
-                tensor_name = file.read(int.from_bytes(next_, "little")).decode("utf-8")
-                next_ = file.read(SIZEOF_SIZE_T)
-                tensor_data_b = file.read(
-                    int.from_bytes(next_, "little") * SIZEOF_FLOAT
-                )
-                tensor_data = np.array(
-                    struct.unpack(
-                        "f" * (len(tensor_data_b) // SIZEOF_FLOAT), tensor_data_b
-                    )
-                )
-                dataset[tensor_name] = tensor_data
-            datasets.append((dataset_name, dataset))
-    assert len(filenames) == len(datasets)
-    return datasets
+            tensor_data_b = file.read(int.from_bytes(next_, "little") * SIZEOF_FLOAT)
+            tensor_data = np.array(
+                struct.unpack("f" * (len(tensor_data_b) // SIZEOF_FLOAT), tensor_data_b)
+            )
+            dataset[tensor_name] = tensor_data
+    return dataset_name, dataset
 
 
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
@@ -100,6 +97,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     timing_file.write(f"{rank},client(),{delta_t}\n")
 
     get_list_times: list[float] = []
+    poll_list_times: list[float] = []
     iterations = get_iterations()
 
     comm.Barrier()
@@ -111,11 +109,12 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
         if rank == 0:
             print(f"Consuming list {i}")
 
+        poll_time_start = MPI.Wtime()
         if rank == 0:
             list_is_ready = poll_list_length(
                 name=list_name,
                 length=list_length,
-                poll_frequency_ms=5,
+                poll_frequency_ms=50,
                 num_tries=100000,
             )
             if not list_is_ready:
@@ -125,6 +124,9 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
                 )
 
         comm.Barrier()
+        poll_list_end = MPI.Wtime()
+        delta_t = poll_list_end - poll_time_start
+        poll_list_times.append(delta_t)
 
         get_list_start = MPI.Wtime()
         _result = get_datasets_from_list(list_name)
@@ -140,8 +142,9 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     loop_end = MPI.Wtime()
     delta_t = loop_end - loop_start
 
-    for time in get_list_times:
-        timing_file.write(f"{rank},get_list,{time}\n")
+    for write_time, read_time in zip(poll_list_times, get_list_times):
+        timing_file.write(f"{rank},poll_list,{write_time}\n")
+        timing_file.write(f"{rank},get_list,{read_time}\n")
 
     timing_file.write(f"{rank},loop_time,{delta_t}\n")
     timing_file.flush()

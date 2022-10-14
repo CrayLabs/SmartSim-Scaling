@@ -75,7 +75,8 @@ void run_aggregation_production(size_t n_bytes,
         // Block until the consumer has deleted the pervious iteration list
         MPI_Barrier(MPI_COMM_WORLD);
 
-        // Append to the aggregation list
+        // Put and Append to the aggregation list
+        client.put_dataset(dataset);
         client.append_to_list(list_name, dataset);
     }
 }
