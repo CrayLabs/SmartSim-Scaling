@@ -995,6 +995,12 @@ def _create_aggregation_producer_session(name,
                                          t_per_dataset):
     """Create a Model to run a producer for the aggregation scaling session
 
+    :param name: The name of the model being created
+    :type name: str
+    :param exe: The path to the executable used by the model
+    :type exe: str
+    :param exe_args: The arguments passed to the executable
+    :type exe_args: list[str]
     :param exp: Experiment object for this test
     :type exp: Experiment
     :param nodes: number of nodes for the synthetic aggregation application
@@ -1125,6 +1131,12 @@ def _create_aggregation_consumer_session(name,
                                          cpu_hyperthreads):
     """Create a Model to run a consumer for the aggregation scaling session
 
+    :param name: The name of the model being created
+    :type name: str
+    :param exe: The path to the executable used by the model
+    :type exe: str
+    :param exe_args: The arguments passed to the executable
+    :type exe_args: list[str]
     :param exp: Experiment object for this test
     :type exp: Experiment
     :param nodes: number of nodes for the synthetic aggregation application
@@ -1137,8 +1149,8 @@ def _create_aggregation_consumer_session(name,
     :type db_cpus: int
     :param iterations: number of append/retrieve loops by the application
     :type iterations: int
-    :param _bytes: size in bytes of tensors to use for aggregation scaling
-    :type _bytes: int
+    :param bytes_: size in bytes of tensors to use for aggregation scaling
+    :type bytes_: int
     :param t_per_dataset: the number of tensors per dataset
     :type t_per_dataset: int
     :param c_threads:  the number of client threads to use inside of SR client
