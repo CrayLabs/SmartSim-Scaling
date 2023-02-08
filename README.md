@@ -170,7 +170,7 @@ tests in the same allocation
 ```bash
 python driver.py inference_colocated --clients_per_node=[24,28] \
                                      --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
                                      --device=GPU
 ```
 
@@ -277,7 +277,7 @@ battery of tests chosen by the user. There are multiple ways to run this.
 # alloc must contain at least 120 (max client_nodes) + 16 nodes (max db_nodes)
 python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
                                     --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --run_db_as_batch=False
+                                    --db_cpus=[1,4,8,16] --run_db_as_batch=False \
                                     --net_ifname=ipogif0 --device=GPU
 ```
 
@@ -307,7 +307,7 @@ python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
 # db nodes must be fixed if hostlist is specified
 python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
                                     --db_nodes=[16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --db_hosts=[nid0001, ...]
+                                    --db_cpus=[1,4,8,16] --db_hosts=[nid0001, ...] \
                                     --net_ifname=ipogif0 --device=CPU
 
 ```
@@ -318,7 +318,7 @@ python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
 # if batch submission, compute nodes must have access to slurm
 python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
                                     --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --batch_args='{"C":"V100", "exclusive": None}'
+                                    --db_cpus=[1,4,8,16] --batch_args='{"C":"V100", "exclusive": None}' \
                                     --net_ifname=ipogif0 --device=GPU
 ```
 
