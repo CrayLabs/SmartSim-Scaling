@@ -95,14 +95,15 @@ void run_mnist(const std::string& model_name,
         std::string device_key = device + ":" + std::to_string(i);
         std::cout<<"Device Key " <<device_key <<std::endl<<std::flush;
 
-        if (!use_multi) {
+        if (use_multi) {
+          client.set_model_from_file_multigpu(model_key, "./resnet50.pt", "TORCH", 0, num_devices, batch_size);
+          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
+	      }  
+        else {
           client.set_model_from_file(model_key, "./resnet50.pt", "TORCH", device_key, batch_size);
           client.set_script_from_file(script_key, device_key, "./data_processing_script.txt");
         }
-        else {
-          client.set_model_from_file_multigpu(model_key, "./resnet50.pt", "TORCH", 0, num_devices, batch_size);
-          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-	}
+        
       }
     }
   }
