@@ -761,17 +761,17 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
             devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
         else:
             devices = [device.upper()]
-            for i, dev in enumerate(devices):
-                client = Client(address=address, cluster=cluster)
-                client.set_model_from_file(f"resnet_model_{str(i)}",
-                                           model,
-                                           "TORCH",
-                                           dev,
-                                           batch_size)
-                client.set_script_from_file(f"resnet_script_{str(i)}",
-                                            "./imagenet/data_processing_script.txt",
-                                            dev)
-                logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
+        for i, dev in enumerate(devices):
+            client = Client(address=address, cluster=cluster)
+            client.set_model_from_file(f"resnet_model_{str(i)}",
+                                       model,
+                                       "TORCH",
+                                       dev,
+                                       batch_size)
+            client.set_script_from_file(f"resnet_script_{str(i)}",
+                                        "./imagenet/data_processing_script.txt",
+                                        dev)
+            logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
 
 
 def create_inference_session(exp,
