@@ -757,7 +757,7 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
         logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
     else:
         devices = []
-        if num_devices > 0:
+        if num_devices > 1:
             devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
         else:
             devices = [device.upper()]
