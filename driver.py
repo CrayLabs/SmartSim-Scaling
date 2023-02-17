@@ -11,6 +11,7 @@ import pandas as pd
 from process_results import create_run_csv
 from imagenet.model_saver import save_model
 
+
 import smartsim
 from smartsim import Experiment, status
 from smartredis import Client
@@ -32,6 +33,17 @@ class SmartSimScalingTests:
             save_model(device)
 
         logger.info(f"Using model {self.resnet_model}")
+
+    def _check_model(self, device):
+        if device.startswith("GPU") and not Path("./imagenet/resnet50.GPU.pt").exists():
+            from torch.cuda import is_available
+            if not is_available():
+                message = "resnet50.GPU.pt model missing in ./imagenet directory. \n"
+                message += "Since CUDA is not available on this node, the model cannot be created. \n"
+                message += "Please run 'python imagenet/model_saver.py --GPU' on a node with an available CUDA device."
+                logger.error(message)
+                sys.exit(1)
+
 
     def inference_standard(self,
                            exp_name="inference-scaling",
@@ -85,6 +97,8 @@ class SmartSimScalingTests:
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
+
+        self._check_model(device)
 
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
@@ -190,6 +204,8 @@ class SmartSimScalingTests:
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
 
+        self._check_model(device)
+        
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
         log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
