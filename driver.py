@@ -9,6 +9,7 @@ from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
 from process_results import create_run_csv
+from imagenet.model_saver import save_model
 
 import smartsim
 from smartsim import Experiment, status
@@ -22,8 +23,15 @@ logger = get_logger("Scaling Tests")
 class SmartSimScalingTests:
 
     def __init__(self):
-        self.resnet_model = "./imagenet/resnet50.pt"
         self.date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+
+    def set_resnet_model(self, device="GPU"):
+        self.resnet_model = f"./imagenet/resnet50.{device}.pt"
+        if not Path(self.resnet_model).exists():
+            logger.info(f"AI Model {self.resnet_model} does not exist, it will be created")
+            save_model(device)
+
+        logger.info(f"Using model {self.resnet_model}")
 
     def inference_standard(self,
                            exp_name="inference-scaling",
@@ -100,7 +108,8 @@ class SmartSimScalingTests:
                                 db_hosts)
 
             # setup a an instance of the synthetic C++ app and start it
-            infer_session = create_inference_session(exp,
+            infer_session = create_inference_session(self,
+                                                     exp,
                                                      c_nodes,
                                                      cpn,
                                                      dbn,
@@ -113,11 +122,12 @@ class SmartSimScalingTests:
             # only need 1 address to set model
             address = db.get_address()[0]
             setup_resnet(self.resnet_model,
-                         device,
-                         num_devices,
-                         batch,
-                         address,
-                         cluster=bool(dbn>1))
+                        device,
+                        num_devices,
+                        batch,
+                        address,
+                        cluster=bool(dbn>1))
+
 
             exp.start(infer_session, block=True, summary=True)
 
@@ -190,7 +200,8 @@ class SmartSimScalingTests:
         for perm in perms:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
 
-            infer_session = create_colocated_inference_session(exp,
+            infer_session = create_colocated_inference_session(self,
+                                                               exp,
                                                                c_nodes,
                                                                cpn,
                                                                pin_app,
@@ -758,6 +769,7 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     else:
         devices = []
         if num_devices > 1:
+        if num_devices > 1:
             devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
         else:
             devices = [device.upper()]
@@ -774,7 +786,8 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
             logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
 
 
-def create_inference_session(exp,
+def create_inference_session(self,
+                             exp,
                              nodes,
                              tasks,
                              db_nodes,
@@ -784,6 +797,9 @@ def create_inference_session(exp,
                              device,
                              num_devices
                              ):
+
+    self.set_resnet_model(device)
+
     cluster = 1 if db_nodes > 1 else 0
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
@@ -797,7 +813,9 @@ def create_inference_session(exp,
         "SS_NUM_DEVICES": str(num_devices),
         "SS_BATCH_SIZE": str(batch_size),
         "SS_DEVICE": device,
-        "SS_CLIENT_COUNT": str(tasks)
+        "SS_CLIENT_COUNT": str(tasks),
+        "SR_LOG_FILE": "srlog.out",
+        "SR_LOG_LEVEL": "INFO"
     })
     
     name = "-".join((
@@ -812,7 +830,7 @@ def create_inference_session(exp,
 
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          "./imagenet/resnet50.pt",
+                                          self.resnet_model,
                                           "./imagenet/data_processing_script.txt"])
     exp.generate(model, overwrite=True)
     write_run_config(model.path,
@@ -830,7 +848,8 @@ def create_inference_session(exp,
     return model
 
 
-def create_colocated_inference_session(exp,
+def create_colocated_inference_session(self,
+                                       exp,
                                        nodes,
                                        tasks,
                                        pin_app_cpus,
@@ -841,6 +860,7 @@ def create_colocated_inference_session(exp,
                                        batch_size,
                                        device,
                                        num_devices):
+    self.set_resnet_model(device)
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks_per_node(tasks)
@@ -850,7 +870,9 @@ def create_colocated_inference_session(exp,
         "SS_BATCH_SIZE": str(batch_size),
         "SS_DEVICE": device,
         "SS_CLIENT_COUNT": str(tasks),
-        "SS_NUM_DEVICES": str(num_devices)
+        "SS_NUM_DEVICES": str(num_devices),
+        "SR_LOG_FILE": "srlog.out",
+        "SR_LOG_LEVEL": "info"
     })
 
     name = "-".join((
@@ -864,7 +886,7 @@ def create_colocated_inference_session(exp,
         ))
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          "./imagenet/resnet50.pt",
+                                          self.resnet_model,
                                           "./imagenet/data_processing_script.txt"])
 
     # add co-located database
