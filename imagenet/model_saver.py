@@ -25,3 +25,4 @@ def save_model(device: str = "GPU"):
 if __name__ == '__main__':
     print("Welcome to model saver!")
     fire.Fire(save_model)
+    
