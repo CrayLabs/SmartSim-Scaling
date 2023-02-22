@@ -116,7 +116,7 @@ python model_saver.py
 to generate the model for CPU, or with
 
 ```bash
-python model_saver.py --device=CPU
+python model_saver.py --device=GPU
 ```
 
 for the GPU model. If the benchmark driver is executed and
