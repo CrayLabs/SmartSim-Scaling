@@ -26,21 +26,21 @@ class SmartSimScalingTests:
     def __init__(self):
         self.date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
 
-    def set_resnet_model(self, device="GPU"):
+    def set_resnet_model(self, device="GPU", force_rebuild=False):
         self.resnet_model = f"./imagenet/resnet50.{device}.pt"
-        if not Path(self.resnet_model).exists():
+        if not Path(self.resnet_model).exists() or force_rebuild:
             logger.info(f"AI Model {self.resnet_model} does not exist, it will be created")
             save_model(device)
 
         logger.info(f"Using model {self.resnet_model}")
 
-    def _check_model(self, device):
-        if device.startswith("GPU") and not Path("./imagenet/resnet50.GPU.pt").exists():
+    def _check_model(self, device, force_rebuild=False):
+        if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
             from torch.cuda import is_available
             if not is_available():
                 message = "resnet50.GPU.pt model missing in ./imagenet directory. \n"
                 message += "Since CUDA is not available on this node, the model cannot be created. \n"
-                message += "Please run 'python imagenet/model_saver.py --GPU' on a node with an available CUDA device."
+                message += "Please run 'python imagenet/model_saver.py --device GPU' on a node with an available CUDA device."
                 logger.error(message)
                 sys.exit(1)
 
@@ -60,7 +60,8 @@ class SmartSimScalingTests:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[48],
-                           client_nodes=[12]):
+                           client_nodes=[12],
+                           rebuild_model=False):
         """Run ResNet50 inference tests with standard Orchestrator deployment
 
         :param exp_name: name of output dir
@@ -94,11 +95,13 @@ class SmartSimScalingTests:
         :type clients_per_node: list, optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
         :type client_nodes: list, optional
+        :param rebuild_model: force rebuild of PyTorch model even if it is available
+        :type rebuild_model: bool
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
 
-        self._check_model(device)
+        self._check_model(device, force_rebuild=rebuild_model)
 
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
@@ -131,7 +134,8 @@ class SmartSimScalingTests:
                                                      dbtpq,
                                                      batch,
                                                      device,
-                                                     num_devices)
+                                                     num_devices,
+                                                     rebuild_model)
 
             # only need 1 address to set model
             address = db.get_address()[0]
@@ -167,6 +171,7 @@ class SmartSimScalingTests:
                             device="GPU",
                             num_devices=1,
                             net_ifname="ipogif0",
+                            rebuild_model=False
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
 
@@ -200,11 +205,13 @@ class SmartSimScalingTests:
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
+        :param rebuild_model: force rebuild of PyTorch model even if it is available
+        :type rebuild_model: bool
         """
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
 
-        self._check_model(device)
+        self._check_model(device, force_rebuild=rebuild_model)
         
         exp = Experiment(name=exp_name, launcher=launcher)
         exp.generate()
@@ -810,10 +817,11 @@ def create_inference_session(self,
                              db_tpq,
                              batch_size,
                              device,
-                             num_devices
+                             num_devices,
+                             rebuild_model
                              ):
 
-    self.set_resnet_model(device)
+    self.set_resnet_model(device, force_rebuild=rebuild_model)
 
     cluster = 1 if db_nodes > 1 else 0
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
@@ -863,7 +871,7 @@ def create_inference_session(self,
     return model
 
 
-def create_colocated_inference_session(self,
+def create_colocated_inference_session(scaling_test,
                                        exp,
                                        nodes,
                                        tasks,
@@ -875,9 +883,10 @@ def create_colocated_inference_session(self,
                                        batch_size,
                                        device,
                                        num_devices):
-    self.set_resnet_model(device)
+    scaling_test.set_resnet_model(device)
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
+    run_settings.set_tasks(nodes*tasks)
     run_settings.set_tasks_per_node(tasks)
     run_settings.update_env({
         "SS_SET_MODEL": "1",  # set the model from the scaling application
@@ -901,7 +910,7 @@ def create_colocated_inference_session(self,
         ))
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          self.resnet_model,
+                                          scaling_test.resnet_model,
                                           "./imagenet/data_processing_script.txt"])
 
     # add co-located database

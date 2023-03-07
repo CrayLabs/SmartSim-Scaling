@@ -1,5 +1,6 @@
 #include "client.h"
 #include "client_test_utils.h"
+#include <algorithm>
 #include <mpi.h>
 
 
@@ -15,6 +16,7 @@ int get_batch_size() {
 std::string get_device() {
   char* device = std::getenv("SS_DEVICE");
   std::string device_str = device ? device : "GPU";
+  std::transform(device_str.begin(), device_str.end(), device_str.begin(), ::toupper);
   return device_str;
 }
 
@@ -89,20 +91,18 @@ void run_mnist(const std::string& model_name,
       std::cout<<"Setting on device: "<< device <<std::endl<<std::flush;
       std::cout<<"Setting on "<< std::to_string(num_devices) << " devices" <<std::endl<<std::flush;
 
-      for (int i=0; i<num_devices; i++ ) {
-        std::string model_key = "resnet_model_" + std::to_string(i);
-        std::string script_key = "resnet_script_" + std::to_string(i);
-        std::string model_name = "./resnet50." + device + ".pt";
-        if (use_multi) {
-          client.set_model_from_file_multigpu(model_key, model_name, "TORCH", 0, num_devices, batch_size);
-          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-	      }  
-        else {
-          client.set_model_from_file(model_key, model_name, "TORCH", device, batch_size);
-          client.set_script_from_file(script_key, device, "./data_processing_script.txt");
-        }
-        
+      std::string model_key = "resnet_model";
+      std::string script_key = "resnet_script";
+      std::string model_name = "./resnet50." + device + ".pt";
+      if (use_multi) {
+        client.set_model_from_file_multigpu(model_key, model_name, "TORCH", 0, num_devices, batch_size);
+        client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
+      }  
+      else {
+        client.set_model_from_file(model_key, model_name, "TORCH", device, batch_size);
+        client.set_script_from_file(script_key, device, "./data_processing_script.txt");
       }
+        
     }
   }
   MPI_Barrier(MPI_COMM_WORLD);
@@ -131,12 +131,9 @@ void run_mnist(const std::string& model_name,
 
   // create keys for models and scripts to split inferences accross mulitple
   // GPU devices.
-  std::string model_key = "resnet_model_" + std::to_string(rank%num_devices);
-  std::string script_key = "resnet_script_" + std::to_string(rank%num_devices);
-  if (use_multi) {
-    model_key = "resnet_model";
-    script_key = "resnet_script";
-  }
+
+  std::string model_key = "resnet_model";
+  std::string script_key = "resnet_script";
 
   MPI_Barrier(MPI_COMM_WORLD);
   if (!rank)
