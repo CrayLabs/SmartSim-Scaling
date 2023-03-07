@@ -29,7 +29,7 @@ class SmartSimScalingTests:
     def set_resnet_model(self, device="GPU", force_rebuild=False):
         self.resnet_model = f"./imagenet/resnet50.{device}.pt"
         if not Path(self.resnet_model).exists() or force_rebuild:
-            logger.info(f"AI Model {self.resnet_model} does not exist, it will be created")
+            logger.info(f"AI Model {self.resnet_model} does not exist or rebuild was asked, it will be created")
             save_model(device)
 
         logger.info(f"Using model {self.resnet_model}")
@@ -234,7 +234,8 @@ class SmartSimScalingTests:
                                                                db_port,
                                                                batch,
                                                                device,
-                                                               num_devices)
+                                                               num_devices,
+                                                               rebuild_model)
 
             exp.start(infer_session, block=True, summary=True)
 
@@ -752,7 +753,8 @@ def start_database(exp, port, nodes, cpus, tpq, net_ifname, run_as_batch, batch_
                             batch=run_as_batch,
                             interface=net_ifname,
                             threads_per_queue=tpq,
-                            single_cmd=True)
+                            single_cmd=True,
+                            hosts=hosts)
     if run_as_batch:
         db.set_walltime("48:00:00")
         for k, v in batch_args.items():
@@ -778,8 +780,9 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
+    client = Client(address=address, cluster=cluster)
+    device = device.upper()
     if (device == "GPU") and (num_devices > 1):
-        client = Client(address=address, cluster=cluster)
         client.set_model_from_file_multigpu("resnet_model",
                                             model,
                                             "TORCH",
@@ -790,22 +793,15 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
                                              0, num_devices)
         logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
     else:
-        devices = []
-        if num_devices > 1:
-            devices = [f"{device.upper()}:{str(i)}" for i in range(num_devices)]
-        else:
-            devices = [device.upper()]
-        for i, dev in enumerate(devices):
-            client = Client(address=address, cluster=cluster)
-            client.set_model_from_file(f"resnet_model_{str(i)}",
-                                       model,
-                                       "TORCH",
-                                       dev,
-                                       batch_size)
-            client.set_script_from_file(f"resnet_script_{str(i)}",
-                                        "./imagenet/data_processing_script.txt",
-                                        dev)
-            logger.info(f"Resnet Model and Script in Orchestrator on device {dev}")
+        client.set_model_from_file("resnet_model",
+                                    model,
+                                    "TORCH",
+                                    device,
+                                    batch_size)
+        client.set_script_from_file("resnet_script",
+                                    "./imagenet/data_processing_script.txt",
+                                    device)
+        logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 
 def create_inference_session(self,
@@ -882,8 +878,9 @@ def create_colocated_inference_session(scaling_test,
                                        db_port,
                                        batch_size,
                                        device,
-                                       num_devices):
-    scaling_test.set_resnet_model(device)
+                                       num_devices,
+                                       rebuild_model):
+    scaling_test.set_resnet_model(device, force_rebuild=rebuild_model)
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
     run_settings.set_nodes(nodes)
     run_settings.set_tasks(nodes*tasks)
