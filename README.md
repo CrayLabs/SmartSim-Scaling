@@ -107,7 +107,7 @@ of tests with varying configurations.
 
 ### The model
 As Neural Network, we use Pytorch's implementation of Resnet50. The script `imagenet/model_saver.py`
-can be used to generate the model for CPU or GPU. It can be invoked with
+can be used to generate the model for CPU or GPU. 'By navigating to the imagenet folder, it can be invoked with
 
 ```bash
 python model_saver.py
@@ -122,7 +122,7 @@ python model_saver.py --device=GPU
 for the GPU model. If the benchmark driver is executed and
 no model exists, an attempt is made to generate the model on the fly. In both cases,
 the specified device must be available on the node where the script is called (this
-means that it could be required to run the script through the worload manager launcher
+means that it could be required to run the script through the workload manager launcher
 to execute it on a node with a GPU, for example).
 
 ### Co-located inference
