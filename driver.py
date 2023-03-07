@@ -30,7 +30,7 @@ class SmartSimScalingTests:
         self.resnet_model = f"./imagenet/resnet50.{device}.pt"
         if not Path(self.resnet_model).exists() or force_rebuild:
             logger.info(f"AI Model {self.resnet_model} does not exist or rebuild was asked, it will be created")
-            save_model(device)
+            save_model(device=device)
 
         logger.info(f"Using model {self.resnet_model}")
 
@@ -144,7 +144,7 @@ class SmartSimScalingTests:
                         num_devices,
                         batch,
                         address,
-                        cluster=bool(dbn>1))
+                        cluster=dbn>1)
 
 
             exp.start(infer_session, block=True, summary=True)
@@ -781,28 +781,32 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     client = Client(address=address, cluster=cluster)
     device = device.upper()
     if (device == "GPU") and (num_devices > 1):
-        client.set_model_from_file_multigpu("resnet_model",
+        client.set_model_from_file_multigpu("resnet_model_0",
                                             model,
                                             "TORCH",
                                             0, num_devices,
                                             batch_size)
-        client.set_script_from_file_multigpu("resnet_script",
+        client.set_script_from_file_multigpu("resnet_script_0",
                                              "./imagenet/data_processing_script.txt",
                                              0, num_devices)
         logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
     else:
-        client.set_model_from_file("resnet_model",
-                                    model,
-                                    "TORCH",
-                                    device,
-                                    batch_size)
-        client.set_script_from_file("resnet_script",
-                                    "./imagenet/data_processing_script.txt",
-                                    device)
-        logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
+        # Redis does not accept CPU:<n>. We are either
+        # setting (possibly multiple copies of) the model and script on CPU, or one
+        # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
+        for i in range (num_devices):
+            client.set_model_from_file(f"resnet_model_{i}",
+                                       model,
+                                       "TORCH",
+                                       device,
+                                       batch_size)
+            client.set_script_from_file(f"resnet_script_{i}",
+                                        "./imagenet/data_processing_script.txt",
+                                        device)
+            logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
 
 
-def create_inference_session(self,
+def create_inference_session(test: SmartSimScalingTests,
                              exp,
                              nodes,
                              tasks,
@@ -815,7 +819,7 @@ def create_inference_session(self,
                              rebuild_model
                              ):
 
-    self.set_resnet_model(device, force_rebuild=rebuild_model)
+    test.set_resnet_model(device, force_rebuild=rebuild_model)
 
     cluster = 1 if db_nodes > 1 else 0
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
@@ -847,7 +851,7 @@ def create_inference_session(self,
 
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          self.resnet_model,
+                                          test.resnet_model,
                                           "./imagenet/data_processing_script.txt"])
     exp.generate(model, overwrite=True)
     write_run_config(model.path,
