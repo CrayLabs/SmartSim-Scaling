@@ -9,6 +9,7 @@ from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
 from process_results import create_run_csv
+from utils import create_folder
 
 import smartsim
 from smartsim import Experiment, status
@@ -260,9 +261,7 @@ class SmartSimScalingTests:
         logger.info(f"Running with database backend: {_get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+        exp = create_folder(self, exp_name, launcher)
 
         for db_node_count in db_nodes:
 
@@ -369,9 +368,7 @@ class SmartSimScalingTests:
         logger.info(f"Running with database backend: {_get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+        create_folder(exp_name, launcher)
 
         for db_node_count in db_nodes:
 
