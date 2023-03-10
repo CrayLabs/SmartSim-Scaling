@@ -3,7 +3,7 @@ import torch
 import fire
 import os
 
-def save_model(device: str = "GPU"):
+def save_model(device: str = "CPU"):
     print(f"Saving model for {device}")
     if device.startswith("GPU"):
         if not torch.cuda.is_available():
