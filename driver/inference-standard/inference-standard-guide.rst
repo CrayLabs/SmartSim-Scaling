@@ -28,6 +28,7 @@ DESCRIPTION
 FLAGS
     --exp_name=EXP_NAME
         Default: 'inference-scaling'
+        :raw-html:`<br />`
         name of output dir
     --launcher=LAUNCHER
         Default: 'auto'
