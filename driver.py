@@ -27,7 +27,7 @@ class SmartSimScalingTests:
         self.date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
 
     def inference_standard(self,
-                           exp_name="inference-scaling",
+                           exp_name="standard-inference-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            batch_args={},
@@ -79,9 +79,7 @@ class SmartSimScalingTests:
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+        exp = create_folder(self, exp_name, launcher)
 
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
@@ -132,7 +130,7 @@ class SmartSimScalingTests:
 
 
     def inference_colocated(self,
-                            exp_name="inference-scaling",
+                            exp_name="colocated-inference-scaling",
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],
@@ -181,9 +179,7 @@ class SmartSimScalingTests:
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {_get_db_backend()}")
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+        exp = create_folder(self, exp_name, launcher)
 
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
@@ -212,7 +208,7 @@ class SmartSimScalingTests:
 
 
     def throughput_scaling(self,
-                           exp_name="throughput-scaling",
+                           exp_name="standard-throughput-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            batch_args={},
@@ -368,7 +364,7 @@ class SmartSimScalingTests:
         logger.info(f"Running with database backend: {_get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        create_folder(exp_name, launcher)
+        exp = create_folder(self, exp_name, launcher)
 
         for db_node_count in db_nodes:
 
@@ -422,7 +418,7 @@ class SmartSimScalingTests:
             exp.stop(db)
 
     def aggregation_scaling_python(self,
-                            exp_name="aggregation-scaling-py",
+                            exp_name="aggregation-scaling-py-db",
                             launcher="auto",
                             run_db_as_batch=True,
                             batch_args={},
@@ -488,9 +484,7 @@ class SmartSimScalingTests:
         logger.info(f"Running with database backend: {_get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+        exp = create_folder(self, exp_name, launcher)
 
         for db_node_count in db_nodes:
 
@@ -587,9 +581,7 @@ class SmartSimScalingTests:
         logger.info(f"Running with database backend: None (data to file system)")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+        exp = create_folder(self, exp_name, launcher)
 
         for c_nodes, cpn, bytes_, t_per_dataset, c_threads in product(
             client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads
