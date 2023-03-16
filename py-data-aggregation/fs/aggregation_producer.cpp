@@ -47,8 +47,8 @@ void run_aggregation_production(size_t n_bytes,
     std::string name = "aggregation_rank_" + std::to_string(rank);
 
     // fds for writing to buffer file
-    std::ofstream fout(get_write_to_dir() / (name + ".dat"), std::ios::out | std::ios::binary);
-    fout.open();
+    std::ofstream fout;
+    fout.open(get_write_to_dir() / (name + ".dat"), std::ios::out | std::ios::binary);
 
     // Create the dataset and add specified number of tensors
     std::unordered_map< std::string, std::vector<float> > dataset = {};
@@ -68,10 +68,11 @@ void run_aggregation_production(size_t n_bytes,
         
         num = tensor.size();
         fout.write(reinterpret_cast<const char *>(&num), sizeof(size_t));
-        fout.write(tensor.data(), num * sizeof(float));
+        fout.write(reinterpret_cast<const char *> (tensor.data()), num * sizeof(float));
     }
     fout.close();
     
+    int iterations = get_iterations();
 
     // A new list (dir of datasets) is created for each iteration
     // to measure dataset aggregation throughput

@@ -105,6 +105,28 @@ the next 100 are measured for inference throughput.
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
+### The model
+As Neural Network, we use Pytorch's implementation of Resnet50. The script `imagenet/model_saver.py`
+can be used to generate the model for CPU or GPU. By navigating to the `imagenet` folder, the CPU model
+can be created running 
+
+```bash
+python model_saver.py
+```
+
+and the GPU model can be created running
+
+```bash
+python model_saver.py --device=GPU
+```
+
+
+If the benchmark driver is executed and
+no model exists, an attempt is made to generate the model on the fly. In both cases,
+the specified device must be available on the node where the script is called (this
+means that it could be required to run the script through the workload manager launcher
+to execute it on a node with a GPU, for example).
+
 ### Co-located inference
 
 Co-located Orchestrators are deployed on the same nodes as the
@@ -162,6 +184,9 @@ FLAGS
     --net_ifname=NET_IFNAME
         Default: 'ipogif0'
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
+    --rebuild_model=FORCE_REBUILD
+        Default: False
+        force rebuild of PyTorch model even if it is available
 ```
 
 So for example, the following command could be run to execute a battery of
@@ -267,6 +292,9 @@ FLAGS
     --client_nodes=CLIENT_NODES
         Default: [12]
         number of compute nodes to use for the synthetic scaling app
+    --rebuild_model=FORCE_REBUILD
+        Default: False
+        force rebuild of PyTorch model even if it is available
 ```
 
 The standard inference tests will spin up a database for each iteration in the

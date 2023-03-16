@@ -1,5 +1,6 @@
 #include "client.h"
 #include "client_test_utils.h"
+#include <algorithm>
 #include <mpi.h>
 
 
@@ -15,6 +16,7 @@ int get_batch_size() {
 std::string get_device() {
   char* device = std::getenv("SS_DEVICE");
   std::string device_str = device ? device : "GPU";
+  std::transform(device_str.begin(), device_str.end(), device_str.begin(), ::toupper);
   return device_str;
 }
 
@@ -76,34 +78,32 @@ void run_mnist(const std::string& model_name,
               << delta_t << std::endl << std::flush;
   std::string device = get_device();
   int num_devices = get_num_devices();
-  bool use_multi = (0 == device.compare("GPU")) && (num_devices > 1);
-
+  bool use_multigpu = (0 == device.compare("GPU")) && num_devices > 1;
   bool should_set = get_set_flag();
   if (should_set) {
+    int batch_size = get_batch_size();
     int n_clients = get_client_count();
     if (rank % n_clients == 0) {
-      int batch_size = get_batch_size();
+      std::cout<<"Setting Resnet Model from scaling app" << std::endl << std::flush;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl << std::flush;
+      std::cout<<"Setting on device: " << device << std::endl << std::flush;
+      std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
+      std::string model_filename = "./resnet50." + device + ".pt";
 
-      std::cout<<"Setting Resnet Model from scaling app"<<std::endl<<std::flush;
-      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) <<std::endl<<std::flush;
-      std::cout<<"Setting on device: "<< device <<std::endl<<std::flush;
-      std::cout<<"Setting on "<< std::to_string(num_devices) << " devices" <<std::endl<<std::flush;
-
-      for (int i=0; i<num_devices; i++ ) {
-        std::string model_key = "resnet_model_" + std::to_string(i);
-        std::string script_key = "resnet_script_" + std::to_string(i);
-        std::string device_key = device + ":" + std::to_string(i);
-        std::cout<<"Device Key " <<device_key <<std::endl<<std::flush;
-
-        if (use_multi) {
-          client.set_model_from_file_multigpu(model_key, "./resnet50.pt", "TORCH", 0, num_devices, batch_size);
-          client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-	      }  
-        else {
-          client.set_model_from_file(model_key, "./resnet50.pt", "TORCH", device_key, batch_size);
-          client.set_script_from_file(script_key, device_key, "./data_processing_script.txt");
-        }
+      if (use_multigpu) {
+        std::string model_key = "resnet_model_0";
+        std::string script_key = "resnet_script_0";
+        client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
+        client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
+      }
+      else {
+        for (int i=0; i<num_devices; i++ ) {
+          std::string model_key = "resnet_model_" + std::to_string(i);
+          std::string script_key = "resnet_script_" + std::to_string(i);
+          client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
+          client.set_script_from_file(script_key, device, "./data_processing_script.txt");
         
+        }
       }
     }
   }
@@ -132,12 +132,13 @@ void run_mnist(const std::string& model_name,
   std::vector<double> unpack_tensor_times;
 
   // create keys for models and scripts to split inferences accross mulitple
-  // GPU devices.
+  // CPU threads. This also covers the case for one GPU as rank%1 == 0
   std::string model_key = "resnet_model_" + std::to_string(rank%num_devices);
   std::string script_key = "resnet_script_" + std::to_string(rank%num_devices);
-  if (use_multi) {
-    model_key = "resnet_model";
-    script_key = "resnet_script";
+  // On GPU, we have the multigpu support, we don't need multiple names
+  if (use_multigpu) {
+    model_key = "resnet_model_0";
+    script_key = "resnet_script_0";
   }
 
   MPI_Barrier(MPI_COMM_WORLD);
@@ -159,7 +160,7 @@ void run_mnist(const std::string& model_name,
     put_tensor_times.push_back(delta_t);
 
     double run_script_start = MPI_Wtime();
-    if (use_multi)
+    if (use_multigpu)
       client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
     else
       client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
@@ -168,7 +169,7 @@ void run_mnist(const std::string& model_name,
     run_script_times.push_back(delta_t);
 
     double run_model_start = MPI_Wtime();
-    if (use_multi)
+    if (use_multigpu)
       client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
     else
       client.run_model(model_key, {script_out_key}, {out_key});
