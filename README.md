@@ -184,6 +184,9 @@ FLAGS
     --net_ifname=NET_IFNAME
         Default: 'ipogif0'
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
+    --rebuild_model=FORCE_REBUILD
+        Default: False
+        force rebuild of PyTorch model even if it is available
 ```
 
 So for example, the following command could be run to execute a battery of
@@ -289,6 +292,9 @@ FLAGS
     --client_nodes=CLIENT_NODES
         Default: [12]
         number of compute nodes to use for the synthetic scaling app
+    --rebuild_model=FORCE_REBUILD
+        Default: False
+        force rebuild of PyTorch model even if it is available
 ```
 
 The standard inference tests will spin up a database for each iteration in the
