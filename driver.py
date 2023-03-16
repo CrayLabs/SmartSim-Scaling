@@ -30,7 +30,11 @@ class SmartSimScalingTests:
         self.resnet_model = f"./imagenet/resnet50.{device}.pt"
         if not Path(self.resnet_model).exists():
             logger.info(f"AI Model {self.resnet_model} does not exist, it will be created")
-            save_model(device)
+            try:
+                save_model(device)
+            except:
+                logger.error(f"Could not save {self.resnet_model} for {device}.")
+                sys.exit(1)
 
         logger.info(f"Using model {self.resnet_model}")
 
