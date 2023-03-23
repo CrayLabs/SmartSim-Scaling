@@ -135,7 +135,7 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
             logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
 
 
-def create_inference_session(self,
+def create_inference_session(test: "SmartSimScalingTests",
                              exp,
                              nodes,
                              tasks,

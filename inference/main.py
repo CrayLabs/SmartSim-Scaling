@@ -1,5 +1,5 @@
 import fire
-from utils import *
+import utils
 
 
 from smartsim.log import get_logger, log_to_file
@@ -61,7 +61,7 @@ class Inference():
         :type rebuild_model: bool
         """
         logger.info("Starting inference scaling tests")
-        logger.info(f"Running with database backend: {_get_db_backend()}")
+        logger.info(f"Running with database backend: {utils._get_db_backend()}")
 
         self._check_model(device, force_rebuild=rebuild_model)
         
