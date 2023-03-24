@@ -20,22 +20,24 @@ from smartredis import Client
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
-def __init__(self):
-    self.date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+def __init__():
+    date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+    return date
 
-def set_resnet_model(self, device="GPU", force_rebuild=False):
-    self.resnet_model = f"./imagenet/resnet50.{device}.pt"
-    if not Path(self.resnet_model).exists() or force_rebuild:
-        logger.info(f"AI Model {self.resnet_model} does not exist or rebuild was asked, it will be created")
+def set_resnet_model(device="GPU", force_rebuild=False):
+    resnet_model = f"./imagenet/resnet50.{device}.pt"
+    if not Path(resnet_model).exists() or force_rebuild:
+        logger.info(f"AI Model {resnet_model} does not exist or rebuild was asked, it will be created")
         try:
             save_model(device)
         except:
-            logger.error(f"Could not save {self.resnet_model} for {device}.")
+            logger.error(f"Could not save {resnet_model} for {device}.")
             sys.exit(1)
 
-    logger.info(f"Using model {self.resnet_model}")
+    logger.info(f"Using model {resnet_model}")
+    return resnet_model
 
-def _check_model(self, device, force_rebuild=False):
+def _check_model(device, force_rebuild=False):
     if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
         from torch.cuda import is_available
         if not is_available():
@@ -45,7 +47,7 @@ def _check_model(self, device, force_rebuild=False):
             logger.error(message)
             sys.exit(1)
 
-def create_folder(self, exp_name, launcher): 
+def create_folder(exp_name, launcher): 
     i = 0
     while os.path.exists("results/"+exp_name+"/run" + str(i)):
         i += 1
@@ -53,7 +55,7 @@ def create_folder(self, exp_name, launcher):
     os.makedirs(path2)
     exp = Experiment(name="results/"+exp_name+"/run" + str(i), launcher=launcher)
     exp.generate()
-    log_to_file(f"{exp.exp_path}/scaling-{self.date}.log")
+    log_to_file(f"{exp.exp_path}/scaling-{__init__()}.log")
     return exp
 
 def start_database(exp, port, nodes, cpus, tpq, net_ifname, run_as_batch, batch_args, hosts):
@@ -135,8 +137,7 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
             logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
 
 
-def create_inference_session(test: "SmartSimScalingTests",
-                             exp,
+def create_inference_session(exp,
                              nodes,
                              tasks,
                              db_nodes,
@@ -148,7 +149,7 @@ def create_inference_session(test: "SmartSimScalingTests",
                              rebuild_model
                              ):
 
-    test.set_resnet_model(device, force_rebuild=rebuild_model)
+    resnet_model = set_resnet_model(device, force_rebuild=rebuild_model)
 
     cluster = 1 if db_nodes > 1 else 0
     run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
@@ -180,7 +181,7 @@ def create_inference_session(test: "SmartSimScalingTests",
 
     model = exp.create_model(name, run_settings)
     model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          test.resnet_model,
+                                          resnet_model,
                                           "./imagenet/data_processing_script.txt"])
     exp.generate(model, overwrite=True)
     write_run_config(model.path,
@@ -195,7 +196,7 @@ def create_inference_session(test: "SmartSimScalingTests",
                      device=device,
                      num_devices=num_devices)
 
-    return model
+    return model, resnet_model
 
 
 def create_colocated_inference_session(scaling_test,

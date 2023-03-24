@@ -1,6 +1,7 @@
 import fire
-import utils
-
+from utils import *
+from utils import _get_db_backend
+from utils import _check_model
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -61,11 +62,11 @@ class Inference():
         :type rebuild_model: bool
         """
         logger.info("Starting inference scaling tests")
-        logger.info(f"Running with database backend: {utils._get_db_backend()}")
+        logger.info(f"Running with database backend: {_get_db_backend()}")
 
-        self._check_model(device, force_rebuild=rebuild_model)
+        _check_model(device, force_rebuild=rebuild_model)
         
-        exp = create_folder(self, exp_name, launcher)
+        exp = create_folder(exp_name, launcher)
 
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
@@ -85,8 +86,7 @@ class Inference():
                                 db_hosts)
 
             # setup a an instance of the synthetic C++ app and start it
-            infer_session = create_inference_session(self,
-                                                        exp,
+            infer_session, resnet_model = create_inference_session(exp,
                                                         c_nodes,
                                                         cpn,
                                                         dbn,
@@ -99,7 +99,7 @@ class Inference():
 
             # only need 1 address to set model
             address = db.get_address()[0]
-            setup_resnet(self.resnet_model,
+            setup_resnet(resnet_model,
                         device,
                         num_devices,
                         batch,
