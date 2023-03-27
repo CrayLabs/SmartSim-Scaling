@@ -20,22 +20,9 @@ from smartredis import Client
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
-def __init__():
+def get_date():
     date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
     return date
-
-def set_resnet_model(device="GPU", force_rebuild=False):
-    resnet_model = f"./imagenet/resnet50.{device}.pt"
-    if not Path(resnet_model).exists() or force_rebuild:
-        logger.info(f"AI Model {resnet_model} does not exist or rebuild was asked, it will be created")
-        try:
-            save_model(device)
-        except:
-            logger.error(f"Could not save {resnet_model} for {device}.")
-            sys.exit(1)
-
-    logger.info(f"Using model {resnet_model}")
-    return resnet_model
 
 def _check_model(device, force_rebuild=False):
     if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
@@ -55,7 +42,7 @@ def create_folder(exp_name, launcher):
     os.makedirs(path2)
     exp = Experiment(name="results/"+exp_name+"/run" + str(i), launcher=launcher)
     exp.generate()
-    log_to_file(f"{exp.exp_path}/scaling-{__init__()}.log")
+    log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
     return exp
 
 def start_database(exp, port, nodes, cpus, tpq, net_ifname, run_as_batch, batch_args, hosts):
@@ -135,196 +122,6 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
                                         "./imagenet/data_processing_script.txt",
                                         device)
             logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
-
-
-def create_inference_session(exp,
-                             nodes,
-                             tasks,
-                             db_nodes,
-                             db_cpus,
-                             db_tpq,
-                             batch_size,
-                             device,
-                             num_devices,
-                             rebuild_model
-                             ):
-
-    resnet_model = set_resnet_model(device, force_rebuild=rebuild_model)
-
-    cluster = 1 if db_nodes > 1 else 0
-    run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
-    run_settings.set_nodes(nodes)
-    run_settings.set_tasks_per_node(tasks)
-    run_settings.set_tasks(tasks*nodes)
-    # tell scaling application not to set the model from the application
-    # as we will do that from the driver in non-converged deployments
-    run_settings.update_env({
-        "SS_SET_MODEL": 0,
-        "SS_CLUSTER": cluster,
-        "SS_NUM_DEVICES": str(num_devices),
-        "SS_BATCH_SIZE": str(batch_size),
-        "SS_DEVICE": device,
-        "SS_CLIENT_COUNT": str(tasks),
-        "SR_LOG_FILE": "srlog.out",
-        "SR_LOG_LEVEL": "INFO"
-    })
-    
-    name = "-".join((
-        "infer-sess",
-        "N"+str(nodes),
-        "T"+str(tasks),
-        "DBN"+str(db_nodes),
-        "DBC"+str(db_cpus),
-        "DBTPQ"+str(db_tpq),
-        _get_uuid()
-        ))
-
-    model = exp.create_model(name, run_settings)
-    model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          resnet_model,
-                                          "./imagenet/data_processing_script.txt"])
-    exp.generate(model, overwrite=True)
-    write_run_config(model.path,
-                     colocated=0,
-                     client_total=tasks*nodes,
-                     client_per_node=tasks,
-                     client_nodes=nodes,
-                     database_nodes=db_nodes,
-                     database_cpus=db_cpus,
-                     database_threads_per_queue=db_tpq,
-                     batch_size=batch_size,
-                     device=device,
-                     num_devices=num_devices)
-
-    return model, resnet_model
-
-
-def create_colocated_inference_session(scaling_test,
-                                       exp,
-                                       nodes,
-                                       tasks,
-                                       pin_app_cpus,
-                                       net_ifname,
-                                       db_cpus,
-                                       db_tpq,
-                                       db_port,
-                                       batch_size,
-                                       device,
-                                       num_devices,
-                                       rebuild_model):
-    scaling_test.set_resnet_model(device, force_rebuild=rebuild_model)
-    run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
-    run_settings.set_nodes(nodes)
-    run_settings.set_tasks(nodes*tasks)
-    run_settings.set_tasks_per_node(tasks)
-    run_settings.update_env({
-        "SS_SET_MODEL": "1",  # set the model from the scaling application
-        "SS_CLUSTER": "0",     # never cluster for colocated db
-        "SS_BATCH_SIZE": str(batch_size),
-        "SS_DEVICE": device,
-        "SS_CLIENT_COUNT": str(tasks),
-        "SS_NUM_DEVICES": str(num_devices),
-        "SR_LOG_FILE": "srlog.out",
-        "SR_LOG_LEVEL": "info"
-    })
-
-    name = "-".join((
-        "infer-sess-colo",
-        "N"+str(nodes),
-        "T"+str(tasks),
-        "DBN"+str(nodes),
-        "DBC"+str(db_cpus),
-        "DBTPQ"+str(db_tpq),
-        _get_uuid()
-        ))
-    model = exp.create_model(name, run_settings)
-    model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                          scaling_test.resnet_model,
-                                          "./imagenet/data_processing_script.txt"])
-
-    # add co-located database
-    model.colocate_db(port=db_port,
-                      db_cpus=db_cpus,
-                      limit_app_cpus=pin_app_cpus,
-                      ifname=net_ifname,
-                      threads_per_queue=db_tpq,
-                      # turning this to true can result in performance loss
-                      # on networked file systems(many writes to db log file)
-                      debug=False,
-                      loglevel="notice")
-    exp.generate(model, overwrite=True)
-    write_run_config(model.path,
-                     colocated=1,
-                     pin_app_cpus=int(pin_app_cpus),
-                     client_total=tasks*nodes,
-                     client_per_node=tasks,
-                     client_nodes=nodes,
-                     database_nodes=nodes,
-                     database_cpus=db_cpus,
-                     database_threads_per_queue=db_tpq,
-                     batch_size=batch_size,
-                     device=device,
-                     num_devices=num_devices)
-    return model
-
-
-def create_throughput_session(exp,
-                              nodes,
-                              tasks,
-                              db_nodes,
-                              db_cpus,
-                              iterations,
-                              _bytes):
-    """Create a Model to run a throughput scaling session
-
-    :param exp: Experiment object for this test
-    :type exp: Experiment
-    :param nodes: number of nodes for the synthetic throughput application
-    :type nodes: int
-    :param tasks: number of tasks per node for the throughput application
-    :type tasks: int
-    :param db_nodes: number of database nodes
-    :type db_nodes: int
-    :param db_cpus: number of cpus used on each database node
-    :type db_cpus: int
-    :param iterations: number of put/get loops by the application
-    :type iterations: int
-    :param _bytes: size in bytes of tensors to use for throughput scaling
-    :type _bytes: int
-    :return: Model reference to the throughput session to launch
-    :rtype: Model
-    """
-    settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes))
-    settings.set_tasks(nodes * tasks)
-    settings.set_tasks_per_node(tasks)
-    settings.update_env({
-        "SS_ITERATIONS": str(iterations)
-    })
-    # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
-    if exp._launcher == "slurm":
-        settings.set_nodes(nodes)
-
-    name = "-".join((
-        "throughput-sess",
-        "N"+str(nodes),
-        "T"+str(tasks),
-        "DBN"+str(db_nodes),
-        "ITER"+str(iterations),
-        "TB"+str(_bytes),
-        _get_uuid()
-        ))
-
-    model = exp.create_model(name, settings)
-    exp.generate(model, overwrite=True)
-    write_run_config(model.path,
-                client_total=tasks*nodes,
-                client_per_node=tasks,
-                client_nodes=nodes,
-                database_nodes=db_nodes,
-                database_cpus=db_cpus,
-                iterations=iterations,
-                tensor_bytes=_bytes)
-    return model
 
 
 def create_aggregation_producer_session(exp, nodes, tasks, db_nodes, db_cpus,
