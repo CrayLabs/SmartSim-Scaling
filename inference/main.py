@@ -67,9 +67,7 @@ class Inference:
 
         _check_model(device, force_rebuild=rebuild_model)
 
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
+        exp = create_folder(exp_name, launcher)
 
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
@@ -174,9 +172,7 @@ class Inference:
 
         _check_model(device, force_rebuild=rebuild_model)
         
-        exp = Experiment(name=exp_name, launcher=launcher)
-        exp.generate()
-        log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
+        exp = create_folder(exp_name, launcher)
 
         # create permutations of each input list and run each of the permutations
         # as a single inference scaling test
