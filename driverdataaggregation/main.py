@@ -11,7 +11,7 @@ logger = get_logger("Scaling Tests")
 class DataAggregation:
     
     def aggregation_scaling(self,
-                            exp_name="aggregation-scaling",
+                            exp_name="aggregation-standard-scaling",
                             launcher="auto",
                             run_db_as_batch=True,
                             batch_args={},
@@ -311,7 +311,7 @@ class DataAggregation:
         return model
 
     def aggregation_scaling_python(self,
-                                exp_name="aggregation-scaling-py",
+                                exp_name="aggregation-standard-scaling-py",
                                 launcher="auto",
                                 run_db_as_batch=True,
                                 batch_args={},
@@ -466,7 +466,7 @@ class DataAggregation:
         return model
     
     def aggregation_scaling_python_fs(self,
-                            exp_name="aggregation-scaling-py-fs",
+                            exp_name="aggregation-standard-scaling-py-fs",
                             launcher="auto",
                             clients_per_node=[32],
                             client_nodes=[128, 256, 512],

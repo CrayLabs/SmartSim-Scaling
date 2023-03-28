@@ -11,7 +11,7 @@ logger = get_logger("Scaling Tests")
 class Inference:
  
     def inference_standard(self,
-                           exp_name="inference-scaling",
+                           exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            batch_args={},
@@ -119,7 +119,7 @@ class Inference:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
     
     def inference_colocated(self,
-                            exp_name="inference-scaling",
+                            exp_name="inference-colocated-scaling",
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],

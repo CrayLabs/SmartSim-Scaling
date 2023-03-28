@@ -10,7 +10,7 @@ logger = get_logger("Scaling Tests")
 class Throughput:
     
     def throughput_standard(self,
-                           exp_name="standard-throughput-scaling",
+                           exp_name="throughput-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            batch_args={},

@@ -1,7 +1,7 @@
 import sys
-from inference.main import Inference
-from throughput.main import Throughput
-from dataaggregation.main import DataAggregation
+from driverinference.main import Inference
+from driverthroughput.main import Throughput
+from driverdataaggregation.main import DataAggregation
 
 
 
