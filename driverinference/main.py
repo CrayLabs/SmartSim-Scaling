@@ -14,7 +14,7 @@ class Inference:
                            exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           batch_args={},
+                           batch_args={"constraint":"P100"},
                            db_hosts=[],
                            db_nodes=[12],
                            db_cpus=[2],
@@ -120,17 +120,18 @@ class Inference:
     
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
+                            db_node_feature={},
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],
                             db_cpus=[2],
                             db_tpq=[1],
                             db_port=6780,
-                            pin_app_cpus=[False],
+                            pin_app_cpus=[False], #CPU architecutre, GPU architecture 
                             batch_size=[1],
                             device="GPU",
                             num_devices=1,
-                            net_ifname="ipogif0",
+                            net_ifname="lo",
                             rebuild_model=False
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
@@ -181,6 +182,7 @@ class Inference:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
 
             infer_session = self.create_colocated_inference_session(exp,
+                                                               db_node_feature,
                                                                c_nodes,
                                                                cpn,
                                                                pin_app,
@@ -280,6 +282,7 @@ class Inference:
     @classmethod
     def create_colocated_inference_session(cls,
                                        exp,
+                                       db_node_feature,
                                        nodes,
                                        tasks,
                                        pin_app_cpus,
@@ -292,7 +295,11 @@ class Inference:
                                        num_devices,
                                        rebuild_model):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
+        # feature = db_node_feature.split( )
+        feature = {
+            "constraint" : db_node_feature
+            }
+        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks(nodes*tasks)
         run_settings.set_tasks_per_node(tasks)
@@ -329,7 +336,7 @@ class Inference:
                         threads_per_queue=db_tpq,
                         # turning this to true can result in performance loss
                         # on networked file systems(many writes to db log file)
-                        debug=False,
+                        debug=True,
                         loglevel="notice")
         exp.generate(model, overwrite=True)
         write_run_config(model.path,

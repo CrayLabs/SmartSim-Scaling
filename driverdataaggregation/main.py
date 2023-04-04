@@ -433,7 +433,7 @@ class DataAggregation:
                                                iterations, _bytes, t_per_dataset):
         return cls._create_aggregation_producer_session(
             name="aggregate-sess-prod-for-python-consumer",
-            exe="./py-data-aggregation/db/build/aggregation_producer",
+            exe="./cpp-py-data-aggregation/db/build/aggregation_producer",
             exe_args=[str(_bytes), str(t_per_dataset)],
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
             iterations=iterations, bytes_=_bytes, t_per_dataset=t_per_dataset)
@@ -442,7 +442,7 @@ class DataAggregation:
     def create_aggregation_consumer_session_python(cls, exp, nodes, tasks, db_nodes, db_cpus,
                                                iterations, bytes_, t_per_dataset,
                                                c_threads, cpu_hyperthreads):
-        py_script_dir = "./py-data-aggregation/db/"
+        py_script_dir = "./cpp-py-data-aggregation/db/"
         py_script = "aggregation_consumer.py"
         model = cls._create_aggregation_consumer_session(
             name="aggregate-sess-cons-python",
@@ -560,7 +560,7 @@ class DataAggregation:
                                                   bytes_, t_per_dataset):
         return cls._create_aggregation_producer_session(
             name="aggregate-sess-prod-for-python-consumer-file-system",
-            exe="./py-data-aggregation/fs/build/aggregation_producer",
+            exe="./cpp-py-data-aggregation/fs/build/aggregation_producer",
             exe_args=[str(bytes_), str(t_per_dataset)],
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=0, db_cpus=0,
             iterations=iterations, bytes_=bytes_, t_per_dataset=t_per_dataset)
@@ -569,7 +569,7 @@ class DataAggregation:
     def create_aggregation_consumer_session_python_fs(cls, exp, nodes, tasks, iterations,
                                                   bytes_, t_per_dataset, c_threads,
                                                   cpu_hyperthreads):
-        py_script_dir = "./py-data-aggregation/fs/"
+        py_script_dir = "./cpp-py-data-aggregation/fs/"
         py_script = "aggregation_consumer.py"
         model = cls._create_aggregation_consumer_session(
             name="aggregate-sess-cons-python",
