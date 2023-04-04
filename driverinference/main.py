@@ -14,7 +14,7 @@ class Inference:
                            exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           batch_args={"constraint":"P100"},
+                           node_feature = [],
                            db_hosts=[],
                            db_nodes=[12],
                            db_cpus=[2],
@@ -77,13 +77,13 @@ class Inference:
             c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
 
             db = start_database(exp,
+                                node_feature,
                                 db_port,
                                 dbn,
                                 dbc,
                                 dbtpq,
                                 net_ifname,
                                 run_db_as_batch,
-                                batch_args,
                                 db_hosts)
 
             # setup a an instance of the synthetic C++ app and start it
