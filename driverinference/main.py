@@ -1,8 +1,9 @@
-import fire
+import sys
+
+if __name__ == "__main__":
+    sys.path.append("..")
+
 from utils import *
-from utils import _get_db_backend
-from utils import _check_model
-from utils import _get_uuid
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -14,7 +15,7 @@ class Inference:
                            exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           node_feature = [],
+                           node_feature = {"constraint": "P100"},
                            db_hosts=[],
                            db_nodes=[12],
                            db_cpus=[2],
@@ -63,9 +64,9 @@ class Inference:
         :type rebuild_model: bool
         """
         logger.info("Starting inference scaling tests")
-        logger.info(f"Running with database backend: {_get_db_backend()}")
+        logger.info(f"Running with database backend: {get_db_backend()}")
 
-        _check_model(device, force_rebuild=rebuild_model)
+        check_model(device, force_rebuild=rebuild_model)
 
         exp = create_folder(exp_name, launcher)
 
@@ -85,9 +86,9 @@ class Inference:
                                 net_ifname,
                                 run_db_as_batch,
                                 db_hosts)
-
+            print("past start_database")
             # setup a an instance of the synthetic C++ app and start it
-            infer_session, resnet_model = self.create_inference_session(exp,
+            infer_session, resnet_model = self._create_inference_session(exp,
                                                      c_nodes,
                                                      cpn,
                                                      dbn,
@@ -97,7 +98,7 @@ class Inference:
                                                      device,
                                                      num_devices,
                                                      rebuild_model)
-
+            print("**********past create inference session********")
             # only need 1 address to set model
             address = db.get_address()[0]
             setup_resnet(resnet_model,
@@ -120,7 +121,7 @@ class Inference:
     
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
-                            db_node_feature={},
+                            db_node_feature={"constraint": "P100"},
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],
@@ -169,9 +170,9 @@ class Inference:
         :type rebuild_model: bool
         """
         logger.info("Starting colocated inference scaling tests")
-        logger.info(f"Running with database backend: {_get_db_backend()}")
+        logger.info(f"Running with database backend: {get_db_backend()}")
 
-        _check_model(device, force_rebuild=rebuild_model)
+        check_model(device, force_rebuild=rebuild_model)
         
         exp = create_folder(exp_name, launcher)
 
@@ -181,7 +182,7 @@ class Inference:
         for perm in perms:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
 
-            infer_session = self.create_colocated_inference_session(exp,
+            infer_session = self._create_colocated_inference_session(exp,
                                                                db_node_feature,
                                                                c_nodes,
                                                                cpn,
@@ -218,7 +219,7 @@ class Inference:
             return resnet_model
 
     @classmethod
-    def create_inference_session(cls,
+    def _create_inference_session(cls,
                                 exp,
                                 nodes,
                                 tasks,
@@ -231,7 +232,7 @@ class Inference:
                                 rebuild_model
                                 ):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
-
+        print("past set resnet model")
         cluster = 1 if db_nodes > 1 else 0
         run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
         run_settings.set_nodes(nodes)
@@ -257,8 +258,9 @@ class Inference:
             "DBN"+str(db_nodes),
             "DBC"+str(db_cpus),
             "DBTPQ"+str(db_tpq),
-            _get_uuid()
+            get_uuid()
             ))
+        print("past get_uuid")
 
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
@@ -280,7 +282,7 @@ class Inference:
         return model, resnet_model
     
     @classmethod
-    def create_colocated_inference_session(cls,
+    def _create_colocated_inference_session(cls,
                                        exp,
                                        db_node_feature,
                                        nodes,
@@ -296,10 +298,7 @@ class Inference:
                                        rebuild_model):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
-        feature = {
-            "constraint" : db_node_feature
-            }
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=feature)
+        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=db_node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks(nodes*tasks)
         run_settings.set_tasks_per_node(tasks)
@@ -321,7 +320,7 @@ class Inference:
             "DBN"+str(nodes),
             "DBC"+str(db_cpus),
             "DBTPQ"+str(db_tpq),
-            _get_uuid()
+            get_uuid()
             ))
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
@@ -354,9 +353,5 @@ class Inference:
         return model
       
 if __name__ == "__main__":
-    import sys
-    sys.path.append('..')
-
-if __name__ == "__main__":
     import fire
-    fire.Fire(Inference())
+    fire.Fire(DataAggregation())

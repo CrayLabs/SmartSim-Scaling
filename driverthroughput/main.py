@@ -1,8 +1,5 @@
 import fire
 from utils import *
-from utils import _get_db_backend
-from utils import _check_model
-from utils import _get_uuid
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -13,7 +10,7 @@ class Throughput:
                            exp_name="throughput-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           batch_args={},
+                           node_feature={}, #dont need GPU
                            db_hosts=[],
                            db_nodes=[12],
                            db_cpus=36,
@@ -56,7 +53,7 @@ class Throughput:
         :type tensor_bytes: list[int], optional
         """
         logger.info("Starting throughput scaling tests")
-        logger.info(f"Running with database backend: {_get_db_backend()}")
+        logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
         exp = create_folder(exp_name, launcher)
@@ -66,13 +63,13 @@ class Throughput:
             # start the database only once per value in db_nodes so all permutations
             # are executed with the same database size without bringin down the database
             db = start_database(exp,
+                                node_feature,
                                 db_port,
                                 db_node_count,
                                 db_cpus,
                                 None, # not setting threads per queue in throughput tests
                                 net_ifname,
                                 run_db_as_batch,
-                                batch_args,
                                 db_hosts)
 
 
@@ -143,7 +140,7 @@ class Throughput:
             "DBN"+str(db_nodes),
             "ITER"+str(iterations),
             "TB"+str(_bytes),
-            _get_uuid()
+            get_uuid()
             ))
 
         model = exp.create_model(name, settings)
@@ -157,3 +154,38 @@ class Throughput:
                     iterations=iterations,
                     tensor_bytes=_bytes)
         return model
+    
+    
+    def throughput_colocated(self,
+                            exp_name="throughput-colocated-scaling",
+                            db_node_feature={},
+                            launcher="auto",
+                            nodes=[12],
+                            clients_per_node=[18],
+                            db_cpus=[2],
+                            db_tpq=[1],
+                            db_port=6780,
+                            pin_app_cpus=[False], #CPU architecutre, GPU architecture 
+                            batch_size=[1],
+                            device="GPU",
+                            num_devices=1,
+                            net_ifname="lo",
+                            rebuild_model=False
+                            ):
+        
+        def throughput_standard(self,
+                           exp_name="throughput-standard-scaling",
+                           launcher="auto",
+                           run_db_as_batch=True,
+                           node_feature={}, #dont need GPU
+                           db_hosts=[],
+                           db_nodes=[12],
+                           db_cpus=36,
+                           db_port=6780,
+                           net_ifname="ipogif0",
+                           clients_per_node=[32],
+                           client_nodes=[128, 256, 512],
+                           iterations=100,
+                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000]):
+        

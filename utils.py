@@ -1,4 +1,5 @@
 import os
+import os.path as osp
 import shutil
 import sys
 import configparser
@@ -24,7 +25,12 @@ def get_date():
     date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
     return date
 
-def _check_model(device, force_rebuild=False):
+def get_time():
+    now = datetime.datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    return current_time
+
+def check_model(device, force_rebuild=False):
     if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
         from torch.cuda import is_available
         if not is_available():
@@ -35,12 +41,9 @@ def _check_model(device, force_rebuild=False):
             sys.exit(1)
 
 def create_folder(exp_name, launcher): 
-    i = 0
-    while os.path.exists("results/"+exp_name+"/run" + str(i)):
-        i += 1
-    path2 = os.path.join(os.getcwd(), "results/"+exp_name+"/run" + str(i)) #autoincrement
-    os.makedirs(path2)
-    exp = Experiment(name="results/"+exp_name+"/run" + str(i), launcher=launcher)
+    result_path = osp.join("results", exp_name, "run-" + get_date()+ "-" + get_time()) #autoincrement
+    os.makedirs(result_path)
+    exp = Experiment(name=result_path, launcher=launcher)
     exp.generate()
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
     return exp
@@ -66,6 +69,7 @@ def start_database(exp, node_feature, port, nodes, cpus, tpq, net_ifname, run_as
     :return: orchestrator instance
     :rtype: Orchestrator
     """
+    print("******************")
     db = exp.create_database(port=port,
                             db_nodes=nodes,
                             batch=run_as_batch,
@@ -73,18 +77,17 @@ def start_database(exp, node_feature, port, nodes, cpus, tpq, net_ifname, run_as
                             threads_per_queue=tpq,
                             single_cmd=True,
                             hosts=hosts)
-    batch_args = {
-        "constraint": node_feature
-    }
+    print("**********yes********")
     if run_as_batch:
         db.set_walltime("48:00:00")
-        for k, v in batch_args.items():
+        for k, v in node_feature.items():
             db.set_batch_arg(k, v)
-        
+    print("**********yes********")
     db.set_cpus(cpus)
     exp.generate(db)
     exp.start(db)
     logger.info("Orchestrator Database created and running")
+    print("done")
     return db
 
 def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
@@ -134,8 +137,8 @@ def write_run_config(path, **kwargs):
         "path": path,
         "smartsim_version": smartsim.__version__,
         "smartredis_version": "0.3.1", # TODO put in smartredis __version__
-        "db": _get_db_backend(),
-        "date": str(datetime.datetime.now().strftime("%Y-%m-%d"))
+        "db": get_db_backend(),
+        "date": str(get_date())
     }
     config["attributes"] = kwargs
 
@@ -143,10 +146,10 @@ def write_run_config(path, **kwargs):
     with open(config_path, "w") as f:
         config.write(f)
 
-def _get_uuid():
+def get_uuid():
     uid = str(uuid4())
     return uid[:4]
 
-def _get_db_backend():
+def get_db_backend():
     db_backend_path = smartsim._core.config.CONFIG.database_exe
     return os.path.basename(db_backend_path)
