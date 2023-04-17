@@ -128,6 +128,7 @@ class Throughput:
         settings.set_tasks_per_node(tasks)
         settings.update_env({
             "SS_ITERATIONS": str(iterations)
+            #need to update
         })
         # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
         if exp._launcher == "slurm":
@@ -146,6 +147,7 @@ class Throughput:
         model = exp.create_model(name, settings)
         exp.generate(model, overwrite=True)
         write_run_config(model.path,
+                    colocated=0,
                     client_total=tasks*nodes,
                     client_per_node=tasks,
                     client_nodes=nodes,
@@ -156,17 +158,20 @@ class Throughput:
         return model
     
     def throughput_colocated(self,
+                             #no db_hosts bc inference std has but colo dne, db_hosts exists for through std
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
-                           run_db_as_batch=True,
                            db_node_feature={}, #dont need GPU
-                           db_hosts=[],
-                           db_nodes=[12],
+                           nodes=[12], #changed name to nodes instead of db_nodes
+                           #no db_tpq?
+                           #no device?
+                           #no num_devices?
+                           #no pin app cpus?
                            db_cpus=36,
                            db_port=6780,
-                           net_ifname="ipogif0",
+                           net_ifname="lo", #is this the correct netif name
                            clients_per_node=[32],
-                           client_nodes=[128, 256, 512],
+                           #client_nodes=[128, 256, 512],
                            iterations=100,
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
                                          262144, 524288, 1024000, 2048000, 4096000]):
@@ -205,24 +210,27 @@ class Throughput:
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}") # do we keep launcher? or add launcher to inference?
 
+        #why not check model here?
         exp = create_folder(exp_name, launcher)
 
-        for db_node_count in db_nodes:
+        for db_node_count in nodes:
 
-            perms = list(product(client_nodes, clients_per_node, tensor_bytes))
+            perms = list(product(nodes, clients_per_node, tensor_bytes)) #client_nodes
             for perm in perms:
-                c_nodes, cpn, _bytes = perm
+                c_nodes, cpn, _bytes = perm #might need to add
 
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self._create_colocated_throughput_session(exp,
+                                                               db_node_feature,
                                                                c_nodes,
-                                                               db_nodes_feature,
                                                                cpn,
-                                                               db_node_count,
+                                                               nodes,
                                                                db_cpus,
+                                                               db_port,
                                                                iterations,
-                                                               _bytes)
-                exp.start(throughput_session, summary=True) HERE
+                                                               _bytes,
+                                                               net_ifname)
+                exp.start(throughput_session, summary=True) #block = true?
 
                 # confirm scaling test run successfully
                 stat = exp.get_status(throughput_session)
@@ -235,12 +243,15 @@ class Throughput:
     @classmethod
     def _create_colocated_throughput_session(cls,
                               exp,
+                              db_node_feature,
                               nodes,
                               tasks,
                               db_nodes,
                               db_cpus,
+                              db_port,
                               iterations,
-                              _bytes):
+                              _bytes,
+                              net_ifname):
         """Create a Model to run a throughput scaling session
 
         :param exp: Experiment object for this test
@@ -260,18 +271,19 @@ class Throughput:
         :return: Model reference to the throughput session to launch
         :rtype: Model
         """
-        settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes))#might need to look at changing pth here
+        settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes), run_args=db_node_feature)#might need to look at changing pth here
         settings.set_tasks(nodes * tasks)
         settings.set_tasks_per_node(tasks)
         settings.update_env({
             "SS_ITERATIONS": str(iterations)
+            #need to update
         })
         # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
         if exp._launcher == "slurm":
             settings.set_nodes(nodes)
 
         name = "-".join((
-            "throughput-sess", #possibly change name here
+            "throughput-sess-colo", #possibly change name here
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
@@ -281,8 +293,21 @@ class Throughput:
             ))
 
         model = exp.create_model(name, settings)
+        # model.attach_generator_files(to_copy=["./imagenet/cat.raw",
+        #                                     resnet_model,
+        #                                     "./imagenet/data_processing_script.txt"])
+        # add co-located database
+        model.colocate_db(port=db_port,
+                        db_cpus=db_cpus,
+                        ifname=net_ifname,
+                        #threads_per_queue=db_tpq,
+                        # turning this to true can result in performance loss
+                        # on networked file systems(many writes to db log file)
+                        debug=True,
+                        loglevel="notice")
         exp.generate(model, overwrite=True)
         write_run_config(model.path,
+                    colocated=1,
                     client_total=tasks*nodes,
                     client_per_node=tasks,
                     client_nodes=nodes,

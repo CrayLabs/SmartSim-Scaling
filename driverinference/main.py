@@ -345,7 +345,7 @@ class Inference:
                         pin_app_cpus=int(pin_app_cpus),
                         client_total=tasks*nodes,
                         client_per_node=tasks,
-                        client_nodes=nodes,
+                        client_nodes=nodes, #uses client_nodes here but isnt ever passed in
                         database_nodes=nodes,
                         database_cpus=db_cpus,
                         database_threads_per_queue=db_tpq,
