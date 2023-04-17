@@ -73,7 +73,7 @@ class DataAggregation:
         """
         logger.info("Starting dataset aggregation scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
+        logger.info(f"Running with launcher: {launcher}") #remind to add launcher to inference
 
         exp = create_folder(exp_name, launcher)
 

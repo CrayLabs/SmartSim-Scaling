@@ -65,6 +65,7 @@ class Inference:
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
+        logger.info(f"Running with launcher: {launcher}")
 
         check_model(device, force_rebuild=rebuild_model)
 
@@ -116,7 +117,7 @@ class Inference:
 
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
-            if stat[0] != status.STATUS_COMPLETED:
+            if stat[0] != status.STATUS_COMPLETED: #talk about order this is in -> when to stop the experiment, does this let it continue running
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
     
     def inference_colocated(self,
@@ -171,6 +172,7 @@ class Inference:
         """
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
+        logger.info(f"Running with launcher: {launcher}")
 
         check_model(device, force_rebuild=rebuild_model)
         
