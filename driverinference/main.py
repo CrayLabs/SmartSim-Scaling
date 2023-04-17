@@ -233,7 +233,7 @@ class Inference:
                                 num_devices,
                                 rebuild_model
                                 ):
-        resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
+        resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         print("past set resnet model")
         cluster = 1 if db_nodes > 1 else 0
         run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
