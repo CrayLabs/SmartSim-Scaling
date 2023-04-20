@@ -6,7 +6,7 @@ logger = get_logger("Scaling Tests")
 
 
 class DataAggregation:
-    
+    #data aggregation only matters when ur wanting to combine datasets
     def aggregation_scaling(self,
                             exp_name="aggregation-standard-scaling",
                             launcher="auto",

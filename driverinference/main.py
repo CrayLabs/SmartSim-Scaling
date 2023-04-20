@@ -11,6 +11,7 @@ logger = get_logger("Scaling Tests")
 
 class Inference:
  
+    #is doing an actual ml inference, putting data into db, does inference, then retrieves it back
     def inference_standard(self,
                            exp_name="inference-standard-scaling",
                            launcher="auto",
@@ -119,7 +120,10 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED: #talk about order this is in -> when to stop the experiment, does this let it continue running
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-    
+    #cluster: one set of nodes that r all running db (redis server), and then seperate set of nodes thats running the app (client nodes: app: cpp inference app)
+        #shared db
+    #colo: only one set of nodes, the app is also running on the same nodes as the db
+        #every node has a db that only it can communicate to
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             db_node_feature={"constraint": "P100"},
@@ -236,7 +240,7 @@ class Inference:
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         print("past set resnet model")
         cluster = 1 if db_nodes > 1 else 0
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference")
+        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference") #run_args=db_node_feature
         run_settings.set_nodes(nodes)
         run_settings.set_tasks_per_node(tasks)
         run_settings.set_tasks(tasks*nodes)
