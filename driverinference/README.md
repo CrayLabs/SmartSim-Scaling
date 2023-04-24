@@ -1,5 +1,8 @@
 #is doing an actual ml inference, putting data into db, does inference, then retrieves it back
-
+  #cluster: one set of nodes that r all running db (redis server), and then seperate set of nodes thats running the app (client nodes: app: cpp inference app)
+        #shared db
+    #colo: only one set of nodes, the app is also running on the same nodes as the db
+        #every node has a db that only it can communicate to
 ### Inference
 
 The inference tests run as an MPI program where a single SmartRedis C++ client

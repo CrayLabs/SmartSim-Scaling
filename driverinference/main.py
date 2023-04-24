@@ -98,7 +98,6 @@ class Inference:
                                                      device,
                                                      num_devices,
                                                      rebuild_model)
-            # only need 1 address to set model
             address = db.get_address()[0]
             setup_resnet(resnet_model,
                         device,
@@ -110,17 +109,13 @@ class Inference:
 
             exp.start(infer_session, block=True, summary=True)
 
-            # kill the database each time so we get a fresh start
             exp.stop(db)
 
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
-            if stat[0] != status.STATUS_COMPLETED: #talk about order this is in -> when to stop the experiment, does this let it continue running
+            if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-    #cluster: one set of nodes that r all running db (redis server), and then seperate set of nodes thats running the app (client nodes: app: cpp inference app)
-        #shared db
-    #colo: only one set of nodes, the app is also running on the same nodes as the db
-        #every node has a db that only it can communicate to
+  
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             db_node_feature={"constraint": "P100"},
@@ -130,7 +125,7 @@ class Inference:
                             db_cpus=[2],
                             db_tpq=[1],
                             db_port=6780,
-                            pin_app_cpus=[False], #CPU architecutre, GPU architecture 
+                            pin_app_cpus=[False],
                             batch_size=[1],
                             device="GPU",
                             num_devices=1,
@@ -179,8 +174,6 @@ class Inference:
         
         exp = create_folder(exp_name, launcher)
 
-        # create permutations of each input list and run each of the permutations
-        # as a single inference scaling test
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus))
         for perm in perms:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
