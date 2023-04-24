@@ -1,4 +1,5 @@
-
+TALK ABOUT DIF BETWEEN STANDARD AND COLOCSTED
+standard -> just throwing data in to db and requesting it back
 # SmartSim Scaling
 
 This repository holds all of the scripts and materials for testing

@@ -1,3 +1,5 @@
+#is doing an actual ml inference, putting data into db, does inference, then retrieves it back
+
 ### Inference
 
 The inference tests run as an MPI program where a single SmartRedis C++ client

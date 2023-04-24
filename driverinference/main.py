@@ -11,12 +11,12 @@ logger = get_logger("Scaling Tests")
 
 class Inference:
  
-    #is doing an actual ml inference, putting data into db, does inference, then retrieves it back
     def inference_standard(self,
                            exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            node_feature = {"constraint": "P100"},
+                           db_node_feature = {},
                            db_hosts=[],
                            db_nodes=[12],
                            db_cpus=[2],
@@ -72,8 +72,6 @@ class Inference:
 
         exp = create_folder(exp_name, launcher)
 
-        # create permutations of each input list and run each of the permutations
-        # as a single inference scaling test
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
         logger.info(f"Executing {len(perms)} permutations")
         for perm in perms:
@@ -88,9 +86,9 @@ class Inference:
                                 net_ifname,
                                 run_db_as_batch,
                                 db_hosts)
-            print("past start_database")
             # setup a an instance of the synthetic C++ app and start it
             infer_session, resnet_model = self._create_inference_session(exp,
+                                                     db_node_feature,
                                                      c_nodes,
                                                      cpn,
                                                      dbn,
@@ -100,7 +98,6 @@ class Inference:
                                                      device,
                                                      num_devices,
                                                      rebuild_model)
-            print("**********past create inference session********")
             # only need 1 address to set model
             address = db.get_address()[0]
             setup_resnet(resnet_model,
@@ -238,9 +235,8 @@ class Inference:
                                 rebuild_model
                                 ):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
-        print("past set resnet model")
         cluster = 1 if db_nodes > 1 else 0
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference") #run_args=db_node_feature
+        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=db_node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks_per_node(tasks)
         run_settings.set_tasks(tasks*nodes)
@@ -266,7 +262,6 @@ class Inference:
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
-        print("past get_uuid")
 
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
@@ -309,8 +304,8 @@ class Inference:
         run_settings.set_tasks(nodes*tasks)
         run_settings.set_tasks_per_node(tasks)
         run_settings.update_env({
-            "SS_SET_MODEL": "1",  # set the model from the scaling application
-            "SS_CLUSTER": "0",     # never cluster for colocated db
+            "SS_SET_MODEL": "1", 
+            "SS_CLUSTER": "0",  
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
             "SS_CLIENT_COUNT": str(tasks),
@@ -349,7 +344,7 @@ class Inference:
                         pin_app_cpus=int(pin_app_cpus),
                         client_total=tasks*nodes,
                         client_per_node=tasks,
-                        client_nodes=nodes, #uses client_nodes here but isnt ever passed in
+                        client_nodes=nodes, #might not need client_nodes here
                         database_nodes=nodes,
                         database_cpus=db_cpus,
                         database_threads_per_queue=db_tpq,

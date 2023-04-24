@@ -69,7 +69,6 @@ def start_database(exp, node_feature, port, nodes, cpus, tpq, net_ifname, run_as
     :return: orchestrator instance
     :rtype: Orchestrator
     """
-    print("******************")
     db = exp.create_database(port=port,
                             db_nodes=nodes,
                             batch=run_as_batch,
@@ -77,17 +76,14 @@ def start_database(exp, node_feature, port, nodes, cpus, tpq, net_ifname, run_as
                             threads_per_queue=tpq,
                             single_cmd=True,
                             hosts=hosts)
-    print("**********yes********")
     if run_as_batch:
         db.set_walltime("48:00:00")
         for k, v in node_feature.items():
             db.set_batch_arg(k, v)
-    print("**********yes********")
     db.set_cpus(cpus)
     exp.generate(db)
     exp.start(db)
     logger.info("Orchestrator Database created and running")
-    print("done")
     return db
 
 def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):

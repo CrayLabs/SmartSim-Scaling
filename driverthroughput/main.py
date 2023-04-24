@@ -5,14 +5,14 @@ from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
 class Throughput:
-    #just throwing data in to db and requesting it back
     def throughput_standard(self,
                            exp_name="throughput-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           node_feature={}, #dont need GPU
+                           node_feature={},
+                           db_node_feature={},
                            db_hosts=[],
-                           db_nodes=[12], #shards
+                           db_nodes=[12],
                            db_cpus=36,
                            db_port=6780,
                            net_ifname="ipogif0",
@@ -63,7 +63,7 @@ class Throughput:
             # start the database only once per value in db_nodes so all permutations
             # are executed with the same database size without bringin down the database
             db = start_database(exp,
-                                node_feature,
+                                db_node_feature,
                                 db_port,
                                 db_node_count,
                                 db_cpus,
@@ -79,6 +79,7 @@ class Throughput:
 
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self.create_throughput_session(exp,
+                                                               node_feature,
                                                                c_nodes,
                                                                cpn,
                                                                db_node_count,
@@ -98,6 +99,7 @@ class Throughput:
     @classmethod
     def create_throughput_session(cls,
                               exp,
+                              node_feature,
                               nodes,
                               tasks,
                               db_nodes,
@@ -123,14 +125,13 @@ class Throughput:
         :return: Model reference to the throughput session to launch
         :rtype: Model
         """
-        settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes))
+        settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes), run_args=node_feature)
         cluster = 1 if db_nodes > 1 else 0
         settings.set_tasks(nodes * tasks)
         settings.set_tasks_per_node(tasks)
         settings.update_env({
             "SS_ITERATIONS": str(iterations),
             "SS_CLUSTER": cluster
-            #need to update
         })
         # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
         if exp._launcher == "slurm":
@@ -162,27 +163,16 @@ class Throughput:
     def throughput_colocated(self,
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
-                           node_feature={}, #dont need GPU
-                           nodes=[4], 
-                           #no db_tpq? it dont matter
-                           #no device? always will be GPU
-                           #no num_devices? NO bc its used for resnet
-                           #no pin app cpus? YES ADD IT : launch this program on these cores and dont let it move
-                           #48 compute cores (compute core on the processor which is on the node), launching 24 instances of the program, 
-                           db_cpus=[2], #how many cpus each db is getting
+                           node_feature={},
+                           nodes=[4],
+                           db_cpus=[2],
                            db_port=6780,
-                           net_ifname="lo", #is this the correct netif name
-                           clients_per_node=[3], #how many cpus the app is getting per node
+                           net_ifname="lo",
+                           clients_per_node=[3],
                            pin_app_cpus=[False],
-                           #client_nodes=[128, 256, 512] -> used for both through and inference std, its in inf colo but not an arg
-                           iterations=100, #iterations is not a flag for inference but it is for throughput
+                           iterations=100,
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
-                                         262144, 524288, 1024000, 2048000, 4096000]): #size of the tensor
-# 48 clients OR 48 apps
-# 48 cores OR 48 cpus
-# clients are consuming a full core
-# db is also tyeing to consume a full 48 cores
-# why do we need to specify both db_cpus and clients_per_node for colo
+                                         262144, 524288, 1024000, 2048000, 4096000]):
 
 
         """Run the throughput scaling tests
@@ -215,16 +205,15 @@ class Throughput:
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
         """
-        logger.info("Starting colocated throughput scaling tests") #check punctuation of colocated
+        logger.info("Starting colocated throughput scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}") # do we keep launcher? or add launcher to inference?
+        logger.info(f"Running with launcher: {launcher}")
 
-        #why not check model here?
         exp = create_folder(exp_name, launcher)
 
-        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus)) #client_nodes
+        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus))
         for perm in perms:
-            c_nodes, cpn, dbc, _bytes, pin_app = perm #might need to add
+            c_nodes, cpn, dbc, _bytes, pin_app = perm
 
             # setup a an instance of the C++ driver and start it
             throughput_session = self._create_colocated_throughput_session(exp,
@@ -236,23 +225,20 @@ class Throughput:
                                                             iterations,
                                                             _bytes,
                                                             pin_app,
-                                                            net_ifname)#network interface that the db will be listing over
+                                                            net_ifname)
             exp.start(throughput_session, summary=True) #block = true?
 
             # confirm scaling test run successfully
             stat = exp.get_status(throughput_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
-
-        # stop database after this set of permutations have finished
-        exp.stop(db)
     
     @classmethod
     def _create_colocated_throughput_session(cls,
                               exp,
                               node_feature,
                               nodes,
-                              tasks, #client per node
+                              tasks,
                               db_cpus,
                               db_port,
                               iterations,
@@ -284,15 +270,13 @@ class Throughput:
         settings.update_env({
             "SS_ITERATIONS": str(iterations),
             "SS_CLUSTER": "0"
-            #need to update
-            #will need to look at the cpp throughput 
         })
         # TODO replace with settings.set("nodes", condition==exp.launcher=="slurm")
         if exp._launcher == "slurm":
             settings.set_nodes(nodes)
 
         name = "-".join((
-            "throughput-sess-colo", #possibly change name here
+            "throughput-sess-colo",
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(nodes),
@@ -300,25 +284,18 @@ class Throughput:
             "TB"+str(_bytes),
             get_uuid()
             ))
-        # 12 nodes for the app
-        # 24 clients p N
-        # 16 nodes given to db
-        #shard: over multiple nodes, each shard is a portion of one db
-        model = exp.create_model(name, settings)
-        # add co-located database
         
-        #model launched on multiple nodes - redis database setup to speak with the mdoel on each node
-        #much faster bc not going off the network
-        model.colocate_db(port=db_port, #this is the model, colocating the db with the model: the db belongs to the model object and not the entire exp
+        model = exp.create_model(name, settings)
+        
+        model.colocate_db(port=db_port,
                         db_cpus=db_cpus,
                         ifname=net_ifname,
                         limit_app_cpus=pin_app_cpus,
-                        #threads_per_queue=db_tpq,
-                        # turning this to true can result in performance loss
-                        # on networked file systems(many writes to db log file)
                         debug=True,
                         loglevel="notice")
-        exp.generate(model, overwrite=True)#creates the run directory, on the file system
+        
+        exp.generate(model, overwrite=True)
+        
         write_run_config(model.path,
                     colocated=1,
                     pin_app_cpus=int(pin_app_cpus),

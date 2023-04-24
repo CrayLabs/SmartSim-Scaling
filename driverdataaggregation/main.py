@@ -6,12 +6,11 @@ logger = get_logger("Scaling Tests")
 
 
 class DataAggregation:
-    #data aggregation only matters when ur wanting to combine datasets
     def aggregation_scaling(self,
                             exp_name="aggregation-standard-scaling",
                             launcher="auto",
                             run_db_as_batch=True,
-                            node_feature = {}, #dont need GPU
+                            node_feature = {},
                             db_node_feature = {},
                             db_hosts=[],
                             db_nodes=[12],
@@ -134,7 +133,7 @@ class DataAggregation:
         return cls._create_aggregation_producer_session(
             name="aggregate-sess-prod",
             exe="./cpp-data-aggregation/build/aggregation_producer",
-            exe_args=[str(_bytes), str(t_per_dataset)], run_args=db_node_feature, #ask about this line
+            exe_args=[str(_bytes), str(t_per_dataset)], run_args=db_node_feature,
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
             iterations=iterations, bytes_=_bytes, t_per_dataset=t_per_dataset)
     
