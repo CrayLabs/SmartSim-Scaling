@@ -30,8 +30,10 @@ class Throughput:
         :type launcher: str, optional
         :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
-        :param batch_args: additional batch args for the database
-        :type batch_args: dict, optional
+        :param node_feature: name of node to bound app
+        :type node_feature: dict, optional
+        :param db_node_feature: name of node to bound db
+        :type db_node_feature: dict, optional
         :param db_hosts: optionally supply hosts to launch the database on
         :type db_hosts: list, optional
         :param db_nodes: number of compute hosts to use for the database
@@ -110,6 +112,8 @@ class Throughput:
 
         :param exp: Experiment object for this test
         :type exp: Experiment
+        :param node_feature: name of node to bound app
+        :type node_feature: dict, optional
         :param nodes: number of nodes for the synthetic throughput application
         :type nodes: int
         :param tasks: number of tasks per node for the throughput application
@@ -181,14 +185,11 @@ class Throughput:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param run_db_as_batch: run database as separate batch submission each iteration
-        :type run_db_as_batch: bool, optional
-        :param batch_args: additional batch args for the database
-        :type batch_args: dict, optional
-        :param db_hosts: optionally supply hosts to launch the database on
-        :type db_hosts: list, optional
-        :param db_nodes: number of compute hosts to use for the database
-        :type db_nodes: list, optional
+        :param node_feature: name of node to bound app
+        :type node_feature: dict, optional
+        :param nodes: compute nodes to use for synthetic scaling app with
+                      a co-located orchestrator database
+        :type nodes: list, optional
         :param db_cpus: number of cpus per compute host for the database
         :type db_cpus: list, optional
         :param db_port: port to use for the database
@@ -198,8 +199,8 @@ class Throughput:
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
         :type clients_per_node: list, optional
-        :param client_nodes: number of compute nodes to use for the synthetic scaling app
-        :type client_nodes: list, optional
+        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
+        :type pin_app_cpus: int, optional
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
