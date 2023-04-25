@@ -37,8 +37,10 @@ class DataAggregation:
         :param run_db_as_batch: run database as separate batch submission
                                 each iteration
         :type run_db_as_batch: bool, optional
-        :param batch_args: additional batch args for the database
-        :type batch_args: dict, optional
+        :param db_node_feature: name of node to bound db
+        :type db_node_feature: dict, optional
+        :param node_feature: name of node to bound app
+        :type node_feature: dict, optional
         :param db_hosts: optionally supply hosts to launch the database on
         :type db_hosts: list, optional
         :param db_nodes: number of compute hosts to use for the database
@@ -91,10 +93,9 @@ class DataAggregation:
                                 db_hosts)
 
 
-            perms = list(product(client_nodes, clients_per_node,
-                                 tensor_bytes,tensors_per_dataset, client_threads))
-            for perm in perms:
-                c_nodes, cpn, _bytes, t_per_dataset, c_threads = perm
+            for c_nodes, cpn, _bytes, t_per_dataset, c_threads in product(
+                client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads
+            ):
                 logger.info(f"Running with threads: {c_threads}")
                 # setup a an instance of the C++ driver and start it
                 aggregation_producer_sessions = \
@@ -157,6 +158,8 @@ class DataAggregation:
         :type exe: str
         :param exe_args: The arguments passed to the executable
         :type exe_args: list[str]
+        :param run_args: The arguments passed to the settings
+        :type run_args: list[str]
         :param exp: Experiment object for this test
         :type exp: Experiment
         :param nodes: number of nodes for the synthetic aggregation application
@@ -243,6 +246,8 @@ class DataAggregation:
         :type exe: str
         :param exe_args: The arguments passed to the executable
         :type exe_args: list[str]
+        :param run_args: The arguments passed to the settings
+        :type run_args: list[str]
         :param exp: Experiment object for this test
         :type exp: Experiment
         :param nodes: number of nodes for the synthetic aggregation application
@@ -339,8 +344,10 @@ class DataAggregation:
             :param run_db_as_batch: run database as separate batch submission
                                     each iteration
             :type run_db_as_batch: bool, optional
-            :param batch_args: additional batch args for the database
-            :type batch_args: dict, optional
+            :param db_node_feature: name of node to bound db
+            :type db_node_feature: dict, optional
+            :param node_feature: name of node to bound app
+            :type node_feature: dict, optional
             :param db_hosts: optionally supply hosts to launch the database on
             :type db_hosts: list, optional
             :param db_nodes: number of compute hosts to use for the database
@@ -487,6 +494,8 @@ class DataAggregation:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
+        :param db_node_feature: name of node to bound db
+        :type db_node_feature: dict, optional
         :param clients_per_node: client tasks per compute node for the aggregation
                                  producer app
         :type clients_per_node: list, optional

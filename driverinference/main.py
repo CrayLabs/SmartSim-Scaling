@@ -36,8 +36,10 @@ class Inference:
         :type launcher: str, optional
         :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
-        :param batch_args: additional batch args for the database
-        :type batch_args: dict, optional
+        :param db_node_feature: name of node to bound db
+        :type db_node_feature: dict, optional
+        :param node_feature: name of node to bound app
+        :type node_feature: dict, optional
         :param db_hosts: optionally supply hosts to launch the database on
         :type db_hosts: list, optional
         :param db_nodes: number of compute hosts to use for the database
@@ -135,6 +137,8 @@ class Inference:
         """Run ResNet50 inference tests with colocated Orchestrator deployment
         :param exp_name: name of output dir, defaults to "inference-scaling"
         :type exp_name: str, optional
+        :param db_node_feature: name of node to bound db
+        :type db_node_feature: dict, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
         :param nodes: compute nodes to use for synthetic scaling app with
