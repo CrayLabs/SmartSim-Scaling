@@ -15,8 +15,8 @@ class Inference:
                            exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           node_feature = {"constraint": "P100"},
-                           db_node_feature = {},
+                           node_feature = {},
+                           db_node_feature = {"constraint": "P100"},
                            db_hosts=[],
                            db_nodes=[12],
                            db_cpus=[2],
@@ -36,9 +36,9 @@ class Inference:
         :type launcher: str, optional
         :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
-        :param db_node_feature: name of node to bound db
+        :param db_node_feature: dict of runsettings for the db
         :type db_node_feature: dict, optional
-        :param node_feature: name of node to bound app
+        :param node_feature: dict of runsettings for the app
         :type node_feature: dict, optional
         :param db_hosts: optionally supply hosts to launch the database on
         :type db_hosts: list, optional
@@ -80,7 +80,7 @@ class Inference:
             c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
 
             db = start_database(exp,
-                                node_feature,
+                                db_node_feature,
                                 db_port,
                                 dbn,
                                 dbc,
@@ -90,7 +90,7 @@ class Inference:
                                 db_hosts)
             # setup a an instance of the synthetic C++ app and start it
             infer_session, resnet_model = self._create_inference_session(exp,
-                                                     db_node_feature,
+                                                     node_feature,
                                                      c_nodes,
                                                      cpn,
                                                      dbn,
@@ -120,7 +120,7 @@ class Inference:
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
-                            db_node_feature={"constraint": "P100"},
+                            node_feature={"constraint": "P100"},
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],
@@ -137,8 +137,8 @@ class Inference:
         """Run ResNet50 inference tests with colocated Orchestrator deployment
         :param exp_name: name of output dir, defaults to "inference-scaling"
         :type exp_name: str, optional
-        :param db_node_feature: name of node to bound db
-        :type db_node_feature: dict, optional
+        :param node_feature: dict of runsettings for the db and app
+        :type node_feature: dict, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
         :param nodes: compute nodes to use for synthetic scaling app with
@@ -183,7 +183,7 @@ class Inference:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
 
             infer_session = self._create_colocated_inference_session(exp,
-                                                               db_node_feature,
+                                                               node_feature,
                                                                c_nodes,
                                                                cpn,
                                                                pin_app,
@@ -221,6 +221,7 @@ class Inference:
     @classmethod
     def _create_inference_session(cls,
                                 exp,
+                                node_feature,
                                 nodes,
                                 tasks,
                                 db_nodes,
@@ -233,7 +234,7 @@ class Inference:
                                 ):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         cluster = 1 if db_nodes > 1 else 0
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=db_node_feature)
+        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks_per_node(tasks)
         run_settings.set_tasks(tasks*nodes)
@@ -255,7 +256,7 @@ class Inference:
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
-            "DBC"+str(db_cpus),
+            "DBCPU"+str(db_cpus),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -282,7 +283,7 @@ class Inference:
     @classmethod
     def _create_colocated_inference_session(cls,
                                        exp,
-                                       db_node_feature,
+                                       node_feature,
                                        nodes,
                                        tasks,
                                        pin_app_cpus,
@@ -296,7 +297,7 @@ class Inference:
                                        rebuild_model):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=db_node_feature)
+        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks(nodes*tasks)
         run_settings.set_tasks_per_node(tasks)
@@ -316,7 +317,7 @@ class Inference:
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(nodes),
-            "DBC"+str(db_cpus),
+            "DBCPU"+str(db_cpus),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
