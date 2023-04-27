@@ -10,8 +10,8 @@ class DataAggregation:
                             exp_name="aggregation-standard-scaling",
                             launcher="auto",
                             run_db_as_batch=True,
-                            node_feature = {},
                             db_node_feature = {},
+                            node_feature = {},
                             db_hosts=[],
                             db_nodes=[1],
                             db_cpus=36,
@@ -36,15 +36,15 @@ class DataAggregation:
                                 each iteration
         :type run_db_as_batch: bool, optional
         :param db_node_feature: dict of runsettings for the db
-        :type db_node_feature: dict, optional
+        :type db_node_feature: dict[str,str], optional
         :param node_feature: dict of runsettings for the app
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param db_hosts: optionally supply hosts to launch the database on
-        :type db_hosts: list, optional
+        :type db_hosts: list[str], optional
         :param db_nodes: number of compute hosts to use for the database
-        :type db_nodes: list, optional
+        :type db_nodes: list[int], optional
         :param db_cpus: number of cpus per compute host for the database
-        :type db_cpus: list, optional
+        :type db_cpus: int, optional
         :param db_port: port to use for the database
         :type db_port: int, optional
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
@@ -52,16 +52,16 @@ class DataAggregation:
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the aggregation
                                  producer app
-        :type clients_per_node: list, optional
+        :type clients_per_node: list[int], optional
         :param client_nodes: number of compute nodes to use for the aggregation
                              producer app
-        :type client_nodes: list, optional
+        :type client_nodes: list[int], optional
         :param iterations: number of append/retrieve loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
         :param tensors_per_dataset: list of number of tensors per dataset
-        :type tensor_bytes: list[int], optional
+        :type tensor_per_dataset: list[int], optional
         :param client_threads: list of the number of client threads used for data
                                aggregation
         :type client_threads: list[int], optional
@@ -72,7 +72,7 @@ class DataAggregation:
         """
         logger.info("Starting dataset aggregation scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}") #remind to add launcher to inference
+        logger.info(f"Running with launcher: {launcher}")
 
         exp = create_folder(exp_name, launcher)
 
@@ -157,7 +157,7 @@ class DataAggregation:
         :param exe_args: The arguments passed to the executable
         :type exe_args: list[str]
         :param run_args: The arguments passed to the settings
-        :type run_args: list[str]
+        :type run_args: dict[str,str]
         :param exp: Experiment object for this test
         :type exp: Experiment
         :param nodes: number of nodes for the synthetic aggregation application
@@ -170,8 +170,8 @@ class DataAggregation:
         :type db_cpus: int
         :param iterations: number of append/retrieve loops by the application
         :type iterations: int
-        :param _bytes: size in bytes of tensors to use for aggregation scaling
-        :type _bytes: int
+        :param bytes_: size in bytes of tensors to use for aggregation scaling
+        :type bytes_: int
         :param t_per_dataset: the number of tensors per dataset
         :type t_per_dataset: int
         :return: Model reference to the aggregation session to launch
@@ -245,7 +245,7 @@ class DataAggregation:
         :param exe_args: The arguments passed to the executable
         :type exe_args: list[str]
         :param run_args: The arguments passed to the settings
-        :type run_args: list[str]
+        :type run_args: dict[str,str]
         :param exp: Experiment object for this test
         :type exp: Experiment
         :param nodes: number of nodes for the synthetic aggregation application
@@ -263,19 +263,19 @@ class DataAggregation:
         :param t_per_dataset: the number of tensors per dataset
         :type t_per_dataset: int
         :param c_threads:  the number of client threads to use inside of SR client
-        :rtype c_threads: int
-        :type t_per_dataset: int
-        :rtype: Model
+        :type c_threads: int
         :param cpu_hyperthreads: the number of hyperthreads per cpu.  This is done
                                 to request that the consumer application utilizes
                                 all physical cores for each client thread.
         :type cpu_hyperthreads: int, optional
+        :return: Model reference to the aggregation session to launch
+        :rtype: Model
         """
         settings = exp.create_run_settings(exe, exe_args, run_args=run_args)
         #settings.set_tasks(1)
         settings.set_tasks_per_node(1)
         settings.set_cpus_per_task(c_threads * cpu_hyperthreads)
-        #note
+        #hmmm noting
         settings.run_args['cpu-bind'] = 'v'
         settings.update_env({
             "SS_ITERATIONS": str(iterations),
@@ -344,15 +344,15 @@ class DataAggregation:
                                     each iteration
             :type run_db_as_batch: bool, optional
             :param node_feature: dict of runsettings for app
-            :type node_feature: dict, optional
+            :type node_feature: dict[int,int], optional
             :param db_node_feature: dict of runsettings for db
-            :type db_node_feature: dict, optional
+            :type db_node_feature: dict[int,int], optional
             :param db_hosts: optionally supply hosts to launch the database on
-            :type db_hosts: list, optional
+            :type db_hosts: list[str], optional
             :param db_nodes: number of compute hosts to use for the database
-            :type db_nodes: list, optional
+            :type db_nodes: list[int], optional
             :param db_cpus: number of cpus per compute host for the database
-            :type db_cpus: list, optional
+            :type db_cpus: int, optional
             :param db_port: port to use for the database
             :type db_port: int, optional
             :param net_ifname: network interface to use i.e. "ib0" for infiniband or
@@ -360,10 +360,10 @@ class DataAggregation:
             :type net_ifname: str, optional
             :param clients_per_node: client tasks per compute node for the aggregation
                                     producer app
-            :type clients_per_node: list, optional
+            :type clients_per_node: list[int], optional
             :param client_nodes: number of compute nodes to use for the aggregation
                                 producer app
-            :type client_nodes: list, optional
+            :type client_nodes: list[int], optional
             :param iterations: number of append/retrieve loops run by the applications
             :type iterations: int
             :param tensor_bytes: list of tensor sizes in bytes
@@ -494,19 +494,19 @@ class DataAggregation:
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
         :param node_feature: dict of runsettings for the app
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param clients_per_node: client tasks per compute node for the aggregation
                                  producer app
-        :type clients_per_node: list, optional
+        :type clients_per_node: list[int], optional
         :param client_nodes: number of compute nodes to use for the aggregation
                              producer app
-        :type client_nodes: list, optional
+        :type client_nodes: list[int], optional
         :param iterations: number of append/retrieve loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
         :param tensors_per_dataset: list of number of tensors per dataset
-        :type tensor_bytes: list[int], optional
+        :type tensors_per_dataset: list[int], optional
         :param client_threads: list of the number of client threads used for data
                                aggregation
         :type client_threads: list[int], optional

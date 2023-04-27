@@ -55,7 +55,10 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     being executed in the standard deployment mode where
     separate computational resources are used for the app
     and the database.
-
+    :param exp: Experiment object for this test
+    :type exp: Experiment
+    :param db_node_feature: dict of runsettings for the database
+    :type db_node_feature: dict[str,str]
     :param port: port number of database
     :type port: int
     :param nodes: number of database nodes
@@ -66,6 +69,8 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :type tpq: int
     :param net_ifname: network interface name
     :type net_ifname: str
+    :param run_as_batch: run database as separate batch submission each iteration
+    :type run_as_batch: bool
     :return: orchestrator instance
     :rtype: Orchestrator
     """

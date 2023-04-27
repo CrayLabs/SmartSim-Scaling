@@ -108,12 +108,12 @@ class Throughput:
                               db_cpus,
                               iterations,
                               _bytes):
-        """Create a Model to run a throughput scaling session
+        """Create a Model to run a standard throughput scaling session
 
         :param exp: Experiment object for this test
         :type exp: Experiment
         :param node_feature: dict of runsettings for the app
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param nodes: number of nodes for the synthetic throughput application
         :type nodes: int
         :param tasks: number of tasks per node for the throughput application
@@ -180,7 +180,7 @@ class Throughput:
                                          262144, 524288, 1024000, 2048000, 4096000]):
 
 
-        """Run the throughput scaling tests
+        """Run the throughput scaling tests with colocated Orchestrator deployment
 
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -247,7 +247,7 @@ class Throughput:
                               _bytes,
                               pin_app_cpus,
                               net_ifname):
-        """Create a Model to run a throughput scaling session
+        """Run the throughput scaling tests with colocated Orchestrator deployment
 
         :param exp: Experiment object for this test
         :type exp: Experiment
