@@ -17,12 +17,12 @@ class DataAggregation:
                             db_cpus=36,
                             db_port=6780,
                             net_ifname="ipogif0",
-                            clients_per_node=[32],
+                            clients_per_node=[1],
                             client_nodes=[1],
-                            iterations=10,
-                            tensor_bytes=[10],
+                            iterations=1,
+                            tensor_bytes=[1],
                             tensors_per_dataset=[1,2,4],
-                            client_threads=[1,2,4,8,16,32],
+                            client_threads=[1],
                             cpu_hyperthreads=2):
 
         """Run the data aggregation scaling tests.  Permutations of the test
