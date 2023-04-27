@@ -22,7 +22,7 @@ class Throughput:
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
                                          262144, 524288, 1024000, 2048000, 4096000]):
 
-        """Run the throughput scaling tests
+        """Run the throughput scaling tests with standard Orchestrator deployment
 
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -31,13 +31,13 @@ class Throughput:
         :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
         :param node_feature: dict of runsettings for the app
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param db_node_feature: dict of runsettings for the db
-        :type db_node_feature: dict, optional
+        :type db_node_feature: dict[str,str], optional
         :param db_hosts: optionally supply hosts to launch the database on
-        :type db_hosts: list, optional
+        :type db_hosts: list[str], optional
         :param db_nodes: number of compute hosts to use for the database
-        :type db_nodes: list, optional
+        :type db_nodes: list[int], optional
         :param db_cpus: number of cpus per compute host for the database
         :type db_cpus: int, optional
         :param db_port: port to use for the database
@@ -46,9 +46,9 @@ class Throughput:
                            "ipogif0" aries networks
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
-        :type clients_per_node: list, optional
+        :type clients_per_node: list[int], optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
-        :type client_nodes: list, optional
+        :type client_nodes: list[int], optional
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
@@ -187,7 +187,7 @@ class Throughput:
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
         :param node_feature: dict of runsettings for both app and db
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param nodes: compute nodes to use for synthetic scaling app with
                       a co-located orchestrator database
         :type nodes: list, optional
@@ -199,9 +199,9 @@ class Throughput:
                            "ipogif0" aries networks
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
-        :type clients_per_node: list, optional
+        :type clients_per_node: list[int], optional
         :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: int, optional
+        :type pin_app_cpus: list[bool], optional
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
@@ -252,19 +252,24 @@ class Throughput:
         :param exp: Experiment object for this test
         :type exp: Experiment
         :param node_feature: dict of runsettings for app and db
-        :type node_feature: dict
+        :type node_feature: dict[str,str]
         :param nodes: number of nodes for the synthetic throughput application
         :type nodes: int
         :param tasks: number of tasks per node for the throughput application
         :type tasks: int
-        :param db_nodes: number of database nodes
-        :type db_nodes: int
         :param db_cpus: number of cpus used on each database node
         :type db_cpus: int
+        :param db_port: port to use for the database
+        :type db_port: int, optional
         :param iterations: number of put/get loops by the application
         :type iterations: int
         :param _bytes: size in bytes of tensors to use for throughput scaling
         :type _bytes: int
+        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
+        :type pin_app_cpus: bool, optional
+        :param net_ifname: network interface to use i.e. "ib0" for infiniband or
+                           "ipogif0" aries networks
+        :type net_ifname: str, optional
         :return: Model reference to the throughput session to launch
         :rtype: Model
         """
