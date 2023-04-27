@@ -18,12 +18,12 @@ void run_throughput(std::ofstream& timing_file,
                     size_t n_bytes)
 {
     int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);//this is the specific image - the rank
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     if(!rank)
         std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
-    double constructor_start = MPI_Wtime();//gets the current time on the machine
+    double constructor_start = MPI_Wtime();
     bool cluster = get_cluster_flag();
     SmartRedis::Client client(cluster);
     double constructor_end = MPI_Wtime();
@@ -31,18 +31,16 @@ void run_throughput(std::ofstream& timing_file,
     timing_file << rank << "," << "client()" << ","
                 << delta_t << "\n";
 
-    MPI_Barrier(MPI_COMM_WORLD);//makes sure all the clients are running and setup, all the copies of the program need to hit this line before continuing
-    //who has called this function
-    size_t n_values = n_bytes / sizeof(float);//size t is used in C++ to store size of types
-    std::vector<float> array(n_values, 0);//std determines what name space we r looking for the objects in
+    MPI_Barrier(MPI_COMM_WORLD);
+    size_t n_values = n_bytes / sizeof(float);
+    std::vector<float> array(n_values, 0);
     std::vector<float> result(n_values, 0);
     for(size_t i=0; i<n_values; i++)
         array[i] = i;
 
 
-    // allocate arrays to hold timings
     std::vector<double> put_tensor_times;
-    std::vector<double> unpack_tensor_times;//tensor is end dim array
+    std::vector<double> unpack_tensor_times;
 
     int iterations = get_iterations();
 
@@ -50,24 +48,21 @@ void run_throughput(std::ofstream& timing_file,
 
     double loop_start = MPI_Wtime();
 
-    // Keys are overwritten in order to help
-    // ensure that the database does not run out of memory
-    // for large messages.
+
     for (int i=0; i<iterations; i++) {
 
         std::string key = "throughput_rank_" +
                           std::to_string(rank);
 
         double put_tensor_start = MPI_Wtime();
-        //put tensor says Ive got an array and I want to send to db, so puts into db
         client.put_tensor(key,
                           array.data(),
-                          {1, n_values},//dimension of the tensor
-                          SRTensorTypeFloat, //different type of tensors
+                          {1, n_values},
+                          SRTensorTypeFloat, 
                           SRMemLayoutContiguous);
         double put_tensor_end = MPI_Wtime();
         delta_t = put_tensor_end - put_tensor_start;
-        put_tensor_times.push_back(delta_t);//put this value in the first space of the vector
+        put_tensor_times.push_back(delta_t);
 
         double unpack_tensor_start = MPI_Wtime();
         client.unpack_tensor(key,
@@ -77,7 +72,7 @@ void run_throughput(std::ofstream& timing_file,
                              SRMemLayoutContiguous);
         double unpack_tensor_end = MPI_Wtime();
         delta_t = unpack_tensor_end - unpack_tensor_start;
-        unpack_tensor_times.push_back(delta_t);//throughput things
+        unpack_tensor_times.push_back(delta_t);
     }
 
     double loop_end = MPI_Wtime();
@@ -96,14 +91,14 @@ void run_throughput(std::ofstream& timing_file,
     timing_file << rank << "," << "loop_time" << ","
                 << delta_t << "\n";
 
-    timing_file << std::flush;//if there is anything in the buffer, write it all to disk
-    //add MPI Barrier
+    timing_file << std::flush;
+    MPI_Barrier(MPI_COMM_WORLD);
     return;
 }
 
 int main(int argc, char* argv[]) {
 
-    MPI_Init(&argc, &argv);//sets up the parallel communications, setsup the actual communicator that all the images will use to talk to eachohter
+    MPI_Init(&argc, &argv);
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -123,8 +118,7 @@ int main(int argc, char* argv[]) {
                  <<n_bytes<<"bytes."<<std::endl;
 
 
-    //Open Timing file
-    std::ofstream timing_file;//open file stream
+    std::ofstream timing_file;
     timing_file.open("rank_" + std::to_string(rank) + "_timing.csv");
 
     run_throughput(timing_file, n_bytes);
@@ -137,7 +131,7 @@ int main(int argc, char* argv[]) {
     timing_file << rank << "," << "main()" << ","
                 << delta_t << std::endl << std::flush;
 
-    MPI_Finalize(); //tears down the communcator, tears down what init makes
+    MPI_Finalize();
 
     return 0;
 }

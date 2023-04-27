@@ -30,16 +30,16 @@ class Throughput:
         :type launcher: str, optional
         :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
-        :param node_feature: name of node to bound app
+        :param node_feature: dict of runsettings for the app
         :type node_feature: dict, optional
-        :param db_node_feature: name of node to bound db
+        :param db_node_feature: dict of runsettings for the db
         :type db_node_feature: dict, optional
         :param db_hosts: optionally supply hosts to launch the database on
         :type db_hosts: list, optional
         :param db_nodes: number of compute hosts to use for the database
         :type db_nodes: list, optional
         :param db_cpus: number of cpus per compute host for the database
-        :type db_cpus: list, optional
+        :type db_cpus: int, optional
         :param db_port: port to use for the database
         :type db_port: int, optional
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
@@ -80,7 +80,7 @@ class Throughput:
                 c_nodes, cpn, _bytes = perm
 
                 # setup a an instance of the C++ driver and start it
-                throughput_session = self.create_throughput_session(exp,
+                throughput_session = self._create_throughput_session(exp,
                                                                node_feature,
                                                                c_nodes,
                                                                cpn,
@@ -99,7 +99,7 @@ class Throughput:
             exp.stop(db)
     
     @classmethod
-    def create_throughput_session(cls,
+    def _create_throughput_session(cls,
                               exp,
                               node_feature,
                               nodes,
@@ -112,7 +112,7 @@ class Throughput:
 
         :param exp: Experiment object for this test
         :type exp: Experiment
-        :param node_feature: name of node to bound app
+        :param node_feature: dict of runsettings for the app
         :type node_feature: dict, optional
         :param nodes: number of nodes for the synthetic throughput application
         :type nodes: int
@@ -146,6 +146,7 @@ class Throughput:
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
+            "DBCPU"+str(db_cpus),
             "ITER"+str(iterations),
             "TB"+str(_bytes),
             get_uuid()
@@ -185,7 +186,7 @@ class Throughput:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param node_feature: name of node to bound app
+        :param node_feature: dict of runsettings for both app and db
         :type node_feature: dict, optional
         :param nodes: compute nodes to use for synthetic scaling app with
                       a co-located orchestrator database
@@ -227,7 +228,7 @@ class Throughput:
                                                             _bytes,
                                                             pin_app,
                                                             net_ifname)
-            exp.start(throughput_session, summary=True) #block = true?
+            exp.start(throughput_session, block = True, summary=True)
 
             # confirm scaling test run successfully
             stat = exp.get_status(throughput_session)
@@ -250,6 +251,8 @@ class Throughput:
 
         :param exp: Experiment object for this test
         :type exp: Experiment
+        :param node_feature: dict of runsettings for app and db
+        :type node_feature: dict
         :param nodes: number of nodes for the synthetic throughput application
         :type nodes: int
         :param tasks: number of tasks per node for the throughput application
@@ -280,7 +283,8 @@ class Throughput:
             "throughput-sess-colo",
             "N"+str(nodes),
             "T"+str(tasks),
-            "DBN"+str(nodes),
+            "DBCPU"+str(db_cpus),
+            "PIN"+int(pin_app_cpus),
             "ITER"+str(iterations),
             "TB"+str(_bytes),
             get_uuid()

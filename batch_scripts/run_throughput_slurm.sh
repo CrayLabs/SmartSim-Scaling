@@ -8,7 +8,7 @@
 
 cd ..
 module load slurm
-python driver.py throughput_scaling --client_nodes=[60] \
+python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
                                     --db_cpus=32 --net_ifname=ipogif0 \

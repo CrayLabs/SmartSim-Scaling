@@ -15,8 +15,8 @@ class Inference:
                            exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
-                           node_feature = {},
                            db_node_feature = {"constraint": "P100"},
+                           node_feature = {},
                            db_hosts=[],
                            db_nodes=[4],
                            db_cpus=[2],
@@ -36,22 +36,22 @@ class Inference:
         :type launcher: str, optional
         :param run_db_as_batch: run database as separate batch submission each iteration
         :type run_db_as_batch: bool, optional
-        :param db_node_feature: dict of runsettings for the db
-        :type db_node_feature: dict, optional
+        :param db_node_feature: dict of runsettings for the database
+        :type db_node_feature: dict[str,str], optional
         :param node_feature: dict of runsettings for the app
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param db_hosts: optionally supply hosts to launch the database on
-        :type db_hosts: list, optional
+        :type db_hosts: list[str], optional
         :param db_nodes: number of compute hosts to use for the database
-        :type db_nodes: list, optional
+        :type db_nodes: list[int], optional
         :param db_cpus: number of cpus per compute host for the database
-        :type db_cpus: list, optional
+        :type db_cpus: list[int], optional
         :param db_tpq: number of device threads to use for the database
-        :type db_tpq: list, optional
+        :type db_tpq: list[int], optional
         :param db_port: port to use for the database
         :type db_port: int, optional
         :param batch_size: batch size to set Resnet50 model with
-        :type batch_size: list, optional
+        :type batch_size: list[int], optional
         :param device: device used to run the models in the database
         :type device: str, optional
         :param num_devices: number of devices per compute node to use to run ResNet
@@ -60,9 +60,9 @@ class Inference:
                            "ipogif0" aries networks
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
-        :type clients_per_node: list, optional
+        :type clients_per_node: list[int], optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
-        :type client_nodes: list, optional
+        :type client_nodes: list[int], optional
         :param rebuild_model: force rebuild of PyTorch model even if it is available
         :type rebuild_model: bool
         """
@@ -135,29 +135,25 @@ class Inference:
                             rebuild_model=False
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
-        :param exp_name: name of output dir, defaults to "inference-scaling"
+        :param exp_name: name of output dir
         :type exp_name: str, optional
         :param node_feature: dict of runsettings for the db and app
-        :type node_feature: dict, optional
+        :type node_feature: dict[str,str], optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
         :param nodes: compute nodes to use for synthetic scaling app with
                       a co-located orchestrator database
-        :type clients_per_node: list, optional
+        :type nodes: list[int], optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
         :type clients_per_node: list, optional
-        :param db_hosts: optionally supply hosts to launch the database on
-        :type db_hosts: list, optional
-        :param db_nodes: number of compute hosts to use for the database
-        :type db_nodes: list, optional
         :param db_cpus: number of cpus per compute host for the database
-        :type db_cpus: list, optional
+        :type db_cpus: list[int], optional
         :param db_tpq: number of device threads to use for the database
-        :type db_tpq: list, optional
+        :type db_tpq: list[int], optional
         :param db_port: port to use for the database
         :type db_port: int, optional
         :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: int, optional
+        :type pin_app_cpus: list[bool], optional
         :param batch_size: batch size to set Resnet50 model with
         :type batch_size: list, optional
         :param device: device used to run the models in the database
