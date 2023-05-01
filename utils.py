@@ -9,7 +9,6 @@ from itertools import product
 from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
-from process_results import create_run_csv
 from imagenet.model_saver import save_model
 
 
