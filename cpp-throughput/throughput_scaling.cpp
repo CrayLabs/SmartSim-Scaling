@@ -8,6 +8,12 @@ int get_iterations() {
   return iters;
 }
 
+bool get_cluster_flag() {
+  char* cluster_flag = std::getenv("SS_CLUSTER");
+  bool use_cluster = cluster_flag ? std::stoi(cluster_flag) : false;
+  return use_cluster;
+}
+
 void run_throughput(std::ofstream& timing_file,
                     size_t n_bytes)
 {
@@ -18,14 +24,14 @@ void run_throughput(std::ofstream& timing_file,
         std::cout<<"Connecting clients"<<std::endl<<std::flush;
 
     double constructor_start = MPI_Wtime();
-    SmartRedis::Client client(true);
+    bool cluster = get_cluster_flag();
+    SmartRedis::Client client(cluster);
     double constructor_end = MPI_Wtime();
     double delta_t = constructor_end - constructor_start;
     timing_file << rank << "," << "client()" << ","
                 << delta_t << "\n";
 
     MPI_Barrier(MPI_COMM_WORLD);
-
     size_t n_values = n_bytes / sizeof(float);
     std::vector<float> array(n_values, 0);
     std::vector<float> result(n_values, 0);
@@ -33,7 +39,6 @@ void run_throughput(std::ofstream& timing_file,
         array[i] = i;
 
 
-    // allocate arrays to hold timings
     std::vector<double> put_tensor_times;
     std::vector<double> unpack_tensor_times;
 
@@ -41,11 +46,12 @@ void run_throughput(std::ofstream& timing_file,
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    double loop_start = MPI_Wtime();
-
     // Keys are overwritten in order to help
     // ensure that the database does not run out of memory
     // for large messages.
+    double loop_start = MPI_Wtime();
+
+
     for (int i=0; i<iterations; i++) {
 
         std::string key = "throughput_rank_" +
@@ -89,6 +95,7 @@ void run_throughput(std::ofstream& timing_file,
                 << delta_t << "\n";
 
     timing_file << std::flush;
+    MPI_Barrier(MPI_COMM_WORLD);
     return;
 }
 
@@ -114,7 +121,6 @@ int main(int argc, char* argv[]) {
                  <<n_bytes<<"bytes."<<std::endl;
 
 
-    //Open Timing file
     std::ofstream timing_file;
     timing_file.open("rank_" + std::to_string(rank) + "_timing.csv");
 

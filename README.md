@@ -1,4 +1,3 @@
-
 # SmartSim Scaling
 
 This repository holds all of the scripts and materials for testing
@@ -43,6 +42,9 @@ result processing/plotting can be installed with
 cd SmartSim-Scaling
 pip install -r requirements.txt
 ```
+
+You will need to install ``mpi4py`` in your python environment. The install instructions
+can be found by selecting [mpi4py docs](https://mpi4py.readthedocs.io/en/stable/install.html).
 
 Lastly, the C++ applications themselves need to be built. One CMake edit is required.
 Near the top of the CMake file, change the path to the ``SMARTREDIS`` variable to

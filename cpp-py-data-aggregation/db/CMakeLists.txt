@@ -3,7 +3,7 @@ project(PyAggregationTests)
 cmake_minimum_required(VERSION 3.10)
 
 # set this to the path to your smartredis installation
-set(SMARTREDIS ../../../SmartRedis/)
+set(SMARTREDIS "../../../SmartRedis" CACHE PATH "Path to SmartRedis root directory")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_BUILD_TYPE RELEASE)

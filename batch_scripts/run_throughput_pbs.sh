@@ -8,7 +8,7 @@
 
 PYTHON=/lus/snx11242/spartee/miniconda/envs/0.4.0/bin/python
 cd $PBS_O_WORKDIR/../
-$PYTHON driver.py throughput_scaling --client_nodes=[128,256,512] \
+$PYTHON driver.py throughput_standard --client_nodes=[128,256,512] \
                                      --clients_per_node=[36] \
                                      --db_nodes=[16,32,64] \
                                      --db_cpus=36 --net_ifname=ipogif0 \
