@@ -289,7 +289,7 @@ class Throughput:
             "N"+str(nodes),
             "T"+str(tasks),
             "DBCPU"+str(db_cpus),
-            "PIN"+int(pin_app_cpus),
+            "PIN"+str(pin_app_cpus),
             "ITER"+str(iterations),
             "TB"+str(_bytes),
             get_uuid()
