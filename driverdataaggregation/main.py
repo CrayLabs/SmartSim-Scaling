@@ -332,7 +332,7 @@ class DataAggregation:
                                 db_port=6780,
                                 net_ifname="ipogif0",
                                 clients_per_node=[32],
-                                client_nodes=[128, 256, 512],,
+                                client_nodes=[128, 256, 512],
                                 iterations=20,
                                 tensor_bytes=[1024, 8192, 16384, 32769, 65538,
                                           131076, 262152, 524304, 1024000,

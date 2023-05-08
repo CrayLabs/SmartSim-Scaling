@@ -18,7 +18,7 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4],
+                           db_nodes=[12],
                            db_cpus=[2],
                            db_tpq=[1],
                            db_port=6780,
@@ -26,8 +26,8 @@ class Inference:
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
-                           clients_per_node=[2],
-                           client_nodes=[6],
+                           clients_per_node=[48],
+                           client_nodes=[12],
                            rebuild_model=False):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
