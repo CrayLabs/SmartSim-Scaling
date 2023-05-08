@@ -9,6 +9,7 @@ from itertools import product
 from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
+from process_results import create_run_csv
 from imagenet.model_saver import save_model
 
 
@@ -21,15 +22,38 @@ from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
 def get_date():
+    """Return current date
+
+    This function will return the current date as a string.
+    
+    :return: date str
+    :rtype: str
+    """
     date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
     return date
 
 def get_time():
+    """Return current time
+
+    This function will return the current time as a string.
+    
+    :return: current_time str
+    :rtype: str
+    """
     now = datetime.datetime.now()
     current_time = now.strftime("%H:%M:%S")
     return current_time
 
 def check_model(device, force_rebuild=False):
+    """Regenerate model on specified device if True.
+
+    This function will rebuild the model on the specified node type. 
+    
+    :param device: device used to run the models in the database
+    :type device: str
+    :param force_rebuild: force rebuild of PyTorch model even if it is available
+    :type force_rebuild: bool
+    """
     if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
         from torch.cuda import is_available
         if not is_available():
@@ -40,6 +64,18 @@ def check_model(device, force_rebuild=False):
             sys.exit(1)
 
 def create_folder(exp_name, launcher): 
+    """Create and generate Experiment as well as create results folder.
+
+    This function is called for every scaling test. It creates an Experiment per scaling test
+    as well as the results folder to store each run folder.
+    
+    :param exp_name: name of output dir
+    :type exp_name: str
+    :param launcher: workload manager i.e. "slurm", "pbs"
+    :type launcher: str
+    :return: Experiment instance
+    :rtype: Experiment
+    """
     result_path = osp.join("results", exp_name, "run-" + get_date()+ "-" + get_time()) #autoincrement
     os.makedirs(result_path)
     exp = Experiment(name=result_path, launcher=launcher)
@@ -70,6 +106,8 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :type net_ifname: str
     :param run_as_batch: run database as separate batch submission each iteration
     :type run_as_batch: bool
+    :param hosts: host to use for the database
+    :type hosts: int
     :return: orchestrator instance
     :rtype: Orchestrator
     """
@@ -97,8 +135,12 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     :type model: str
     :param device: CPU or GPU
     :type device: str
+    :param num_device: number of devices per compute node to use to run ResNet
+    :type num_device: int
     :param batch_size: batch size for the Orchestrator (batches of batches)
     :type batch_size: int
+    :param address: address of database
+    :type address: str
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
@@ -130,6 +172,15 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
             logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
 
 def write_run_config(path, **kwargs):
+    """Write config attributes to run file.
+
+    This function will write the config attributes to the run folder.
+    
+    :param path: path to model
+    :type path: str
+    :param kwargs: config attributes
+    :type kwargs: keyword arguments
+    """
     name = os.path.basename(path)
     config = configparser.ConfigParser()
     config["run"] = {
@@ -147,9 +198,19 @@ def write_run_config(path, **kwargs):
         config.write(f)
 
 def get_uuid():
+    """Return the uuid.
+    
+    :return: uid str
+    :rtype: str
+    """
     uid = str(uuid4())
     return uid[:4]
 
 def get_db_backend():
+    """Return database backend.
+    
+    :return: db backend name str
+    :rtype: str
+    """
     db_backend_path = smartsim._core.config.CONFIG.database_exe
     return os.path.basename(db_backend_path)

@@ -26,8 +26,8 @@ class Inference:
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
-                           clients_per_node=[2],
-                           client_nodes=[6],
+                           clients_per_node=[48],
+                           client_nodes=[12],
                            rebuild_model=False):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir

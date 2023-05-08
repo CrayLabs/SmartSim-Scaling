@@ -46,6 +46,9 @@ void run_throughput(std::ofstream& timing_file,
 
     MPI_Barrier(MPI_COMM_WORLD);
 
+    // Keys are overwritten in order to help
+    // ensure that the database does not run out of memory
+    // for large messages.
     double loop_start = MPI_Wtime();
 
 

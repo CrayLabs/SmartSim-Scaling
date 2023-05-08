@@ -11,18 +11,21 @@ class DataAggregation:
                             launcher="auto",
                             run_db_as_batch=True,
                             db_node_feature = {},
-                            node_feature = {},
+                            prod_node_feature = {},
+                            cons_node_feature = {},
                             db_hosts=[],
-                            db_nodes=[4],
+                            db_nodes=[12],
                             db_cpus=36,
                             db_port=6780,
                             net_ifname="ipogif0",
                             clients_per_node=[32],
-                            client_nodes=[128],
-                            iterations=1,
-                            tensor_bytes=[1],
+                            client_nodes=[128, 256, 512],
+                            iterations=20,
+                            tensor_bytes=[1024, 8192, 16384, 32769, 65538,
+                                          131076, 262152, 524304, 1024000,
+                                          2048000],
                             tensors_per_dataset=[1,2,4],
-                            client_threads=[1],
+                            client_threads=[1,2,4,8,16,32],
                             cpu_hyperthreads=2):
 
         """Run the data aggregation scaling tests.  Permutations of the test
@@ -37,8 +40,10 @@ class DataAggregation:
         :type run_db_as_batch: bool, optional
         :param db_node_feature: dict of runsettings for the db
         :type db_node_feature: dict[str,str], optional
-        :param node_feature: dict of runsettings for the app
-        :type node_feature: dict[str,str], optional
+        :param prod_node_feature: dict of runsettings for the producer
+        :type prod_node_feature: dict[str,str], optional
+        :param cons_node_feature: dict of runsettings for the consumer
+        :type cons_node_feature: dict[str,str], optional
         :param db_hosts: optionally supply hosts to launch the database on
         :type db_hosts: list[str], optional
         :param db_nodes: number of compute hosts to use for the database
@@ -94,17 +99,18 @@ class DataAggregation:
             for c_nodes, cpn, _bytes, t_per_dataset, c_threads in product(
                 client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads
             ):
+            #create new var and set it to a copy of node_feature to pass into either
                 logger.info(f"Running with threads: {c_threads}")
                 # setup a an instance of the C++ driver and start it
                 aggregation_producer_sessions = \
-                    self._create_aggregation_producer_session_cpp(exp, node_feature, c_nodes, cpn,
+                    self._create_aggregation_producer_session_cpp(exp, prod_node_feature, c_nodes, cpn,
                                                         db_node_count,
                                                         db_cpus, iterations,
                                                         _bytes, t_per_dataset)
 
                 # setup a an instance of the C++ driver and start it
                 aggregation_consumer_sessions = \
-                    self._create_aggregation_consumer_session_cpp(exp, node_feature, c_nodes, cpn,
+                    self._create_aggregation_consumer_session_cpp(exp, cons_node_feature, c_nodes, cpn,
                                                         db_node_count, db_cpus,
                                                         iterations, _bytes, t_per_dataset,
                                                         c_threads, cpu_hyperthreads)
@@ -127,12 +133,12 @@ class DataAggregation:
             exp.stop(db)
     
     @classmethod
-    def _create_aggregation_producer_session_cpp(cls, exp, node_feature, nodes, tasks, db_nodes, db_cpus,
+    def _create_aggregation_producer_session_cpp(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
                                         iterations, _bytes, t_per_dataset):
         return cls._create_aggregation_producer_session(
             name="aggregate-sess-prod",
             exe="./cpp-data-aggregation/build/aggregation_producer",
-            exe_args=[str(_bytes), str(t_per_dataset)], run_args=node_feature,
+            exe_args=[str(_bytes), str(t_per_dataset)], run_args=prod_node_feature,
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
             iterations=iterations, bytes_=_bytes, t_per_dataset=t_per_dataset)
     
@@ -212,13 +218,13 @@ class DataAggregation:
         return model
 
     @classmethod
-    def _create_aggregation_consumer_session_cpp(cls, exp, node_feature, nodes, tasks, db_nodes, db_cpus,
+    def _create_aggregation_consumer_session_cpp(cls, exp, cons_node_feature, nodes, tasks, db_nodes, db_cpus,
                                             iterations, bytes_, t_per_dataset,
                                             c_threads, cpu_hyperthreads):
         return cls._create_aggregation_consumer_session(
             name="aggregate-sess-cons",
             exe="./cpp-data-aggregation/build/aggregation_consumer",
-            exe_args=[str(nodes*tasks)], run_args=node_feature, exp=exp, nodes=nodes, tasks=tasks,
+            exe_args=[str(nodes*tasks)], run_args=cons_node_feature, exp=exp, nodes=nodes, tasks=tasks,
             db_nodes=db_nodes, db_cpus=db_cpus, iterations=iterations, bytes_=bytes_,
             t_per_dataset=t_per_dataset, c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
 
@@ -317,17 +323,20 @@ class DataAggregation:
                                 exp_name="aggregation-standard-scaling-py",
                                 launcher="auto",
                                 run_db_as_batch=True,
-                                node_feature = {},
                                 db_node_feature = {},
+                                prod_node_feature = {},
+                                cons_node_feature = {},
                                 db_hosts=[],
-                                db_nodes=[4],
+                                db_nodes=[12],
                                 db_cpus=12,
                                 db_port=6780,
                                 net_ifname="ipogif0",
-                                clients_per_node=[3],
-                                client_nodes=[3],
-                                iterations=1,
-                                tensor_bytes=[1024],
+                                clients_per_node=[32],
+                                client_nodes=[128, 256, 512],
+                                iterations=20,
+                                tensor_bytes=[1024, 8192, 16384, 32769, 65538,
+                                          131076, 262152, 524304, 1024000,
+                                          2048000],
                                 tensors_per_dataset=[1,2,4],
                                 client_threads=[1,2,4,8,16,32],
                                 cpu_hyperthreads=2):
@@ -341,10 +350,12 @@ class DataAggregation:
             :param run_db_as_batch: run database as separate batch submission
                                     each iteration
             :type run_db_as_batch: bool, optional
-            :param node_feature: dict of runsettings for app
-            :type node_feature: dict[int,int], optional
             :param db_node_feature: dict of runsettings for db
             :type db_node_feature: dict[int,int], optional
+            :param prod_node_feature: dict of runsettings for the producer
+            :type prod_node_feature: dict[str,str], optional
+            :param cons_node_feature: dict of runsettings for the consumer
+            :type cons_node_feature: dict[str,str], optional
             :param db_hosts: optionally supply hosts to launch the database on
             :type db_hosts: list[str], optional
             :param db_nodes: number of compute hosts to use for the database
@@ -402,14 +413,14 @@ class DataAggregation:
                     logger.info(f"Running with threads: {c_threads}")
                     # setup a an instance of the C++ producer and start it
                     aggregation_producer_sessions = \
-                        self._create_aggregation_producer_session_python(exp, node_feature, c_nodes, cpn,
+                        self._create_aggregation_producer_session_python(exp, prod_node_feature, c_nodes, cpn,
                                                                 db_node_count,
                                                                 db_cpus, iterations,
                                                                 bytes_, t_per_dataset)
 
                     # setup a an instance of the python consumer and start it
                     aggregation_consumer_sessions = \
-                        self._create_aggregation_consumer_session_python(exp, node_feature, c_nodes, cpn,
+                        self._create_aggregation_consumer_session_python(exp, cons_node_feature, c_nodes, cpn,
                                                                 db_node_count, db_cpus,
                                                                 iterations, bytes_,
                                                                 t_per_dataset, c_threads,
@@ -433,17 +444,17 @@ class DataAggregation:
                 exp.stop(db)
 
     @classmethod
-    def _create_aggregation_producer_session_python(cls, exp, node_feature, nodes, tasks, db_nodes, db_cpus,
+    def _create_aggregation_producer_session_python(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
                                                iterations, _bytes, t_per_dataset):
         return cls._create_aggregation_producer_session(
             name="aggregate-sess-prod-for-python-consumer",
             exe="./cpp-py-data-aggregation/db/build/aggregation_producer",
-            exe_args=[str(_bytes), str(t_per_dataset)], run_args=node_feature,
+            exe_args=[str(_bytes), str(t_per_dataset)], run_args=prod_node_feature,
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
             iterations=iterations, bytes_=_bytes, t_per_dataset=t_per_dataset)
     
     @classmethod
-    def _create_aggregation_consumer_session_python(cls, exp, node_feature, nodes, tasks, db_nodes, db_cpus,
+    def _create_aggregation_consumer_session_python(cls, exp, cons_node_feature, nodes, tasks, db_nodes, db_cpus,
                                                iterations, bytes_, t_per_dataset,
                                                c_threads, cpu_hyperthreads):
         py_script_dir = "./cpp-py-data-aggregation/db/"
@@ -452,7 +463,7 @@ class DataAggregation:
             name="aggregate-sess-cons-python",
             exe=sys.executable,
             exe_args=[py_script, str(nodes*tasks)],
-            run_args=node_feature,
+            run_args=cons_node_feature,
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=db_nodes, db_cpus=db_cpus,
             iterations=iterations, bytes_=bytes_, t_per_dataset=t_per_dataset,
             c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
@@ -473,13 +484,16 @@ class DataAggregation:
     def aggregation_scaling_python_fs(self,
                             exp_name="aggregation-standard-scaling-py-fs",
                             launcher="auto",
-                            node_feature= {},
-                            clients_per_node=[1],
-                            client_nodes=[1],
+                            prod_node_feature = {},
+                            cons_node_feature = {},
+                            clients_per_node=[32],
+                            client_nodes=[128, 256, 512],
                             iterations=20,
-                            tensor_bytes=[1],
+                            tensor_bytes=[1024, 8192, 16384, 32769, 65538,
+                                          131076, 262152, 524304, 1024000,
+                                          2048000],
                             tensors_per_dataset=[1,2,4],
-                            client_threads=[1],
+                            client_threads=[1,2,4,8,16,32],
                             cpu_hyperthreads=2):
         """Run the data aggregation scaling tests with python consumer using the
         file system in place of the orchastrator. Permutations of the test include 
@@ -489,8 +503,10 @@ class DataAggregation:
         :type exp_name: str, optional
         :param launcher: workload manager i.e. "slurm", "pbs"
         :type launcher: str, optional
-        :param node_feature: dict of runsettings for the app
-        :type node_feature: dict[str,str], optional
+        :param prod_node_feature: dict of runsettings for the producer
+        :type prod_node_feature: dict[str,str], optional
+        :param cons_node_feature: dict of runsettings for the consumer
+        :type cons_node_feature: dict[str,str], optional
         :param clients_per_node: client tasks per compute node for the aggregation
                                  producer app
         :type clients_per_node: list[int], optional
@@ -523,13 +539,13 @@ class DataAggregation:
             logger.info(f"Running with processes: {c_threads}")
             # setup a an instance of the C++ producer and start it
             aggregation_producer_sessions = \
-                self._create_aggregation_producer_session_python_fs(exp, node_feature, c_nodes, cpn,
+                self._create_aggregation_producer_session_python_fs(exp, prod_node_feature, c_nodes, cpn,
                                                               iterations, bytes_,
                                                               t_per_dataset)
 
             # setup a an instance of the python consumer and start it
             aggregation_consumer_sessions = \
-                self._create_aggregation_consumer_session_python_fs(exp, node_feature, c_nodes, cpn,
+                self._create_aggregation_consumer_session_python_fs(exp, cons_node_feature, c_nodes, cpn,
                                                               iterations, bytes_,
                                                               t_per_dataset, c_threads,
                                                               cpu_hyperthreads)
@@ -562,18 +578,18 @@ class DataAggregation:
                                 {aggregation_consumer_sessions.name}")
 
     @classmethod
-    def _create_aggregation_producer_session_python_fs(cls, exp, node_feature, nodes, tasks, iterations,
+    def _create_aggregation_producer_session_python_fs(cls, exp, prod_node_feature, nodes, tasks, iterations,
                                                   bytes_, t_per_dataset):
         return cls._create_aggregation_producer_session(
             name="aggregate-sess-prod-for-python-consumer-file-system",
             exe="./cpp-py-data-aggregation/fs/build/aggregation_producer",
             exe_args=[str(bytes_), str(t_per_dataset)],
-            run_args=node_feature,
+            run_args=prod_node_feature,
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=0, db_cpus=0,
             iterations=iterations, bytes_=bytes_, t_per_dataset=t_per_dataset)
     
     @classmethod
-    def _create_aggregation_consumer_session_python_fs(cls, exp, node_feature, nodes, tasks, iterations,
+    def _create_aggregation_consumer_session_python_fs(cls, exp, cons_node_feature, nodes, tasks, iterations,
                                                   bytes_, t_per_dataset, c_threads,
                                                   cpu_hyperthreads):
         py_script_dir = "./cpp-py-data-aggregation/fs/"
@@ -582,7 +598,7 @@ class DataAggregation:
             name="aggregate-sess-cons-python",
             exe=sys.executable,
             exe_args=[py_script, str(nodes*tasks)],
-            run_args=node_feature,
+            run_args=cons_node_feature,
             exp=exp, nodes=nodes, tasks=tasks, db_nodes=0, db_cpus=0,
             iterations=iterations, bytes_=bytes_, t_per_dataset=t_per_dataset,
             c_threads=c_threads, cpu_hyperthreads=cpu_hyperthreads)
