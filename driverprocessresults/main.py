@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from utils import *
-from driverprocessresults import throughput_plotter
+from driverprocessresults.throughput_plotter import throughput_plotter
 
 from pathlib import Path
 from statistics import median
@@ -124,7 +124,6 @@ class ProcessResults:
 
                 if "unpack_tensor" in function_times:
                     cls._make_hist_plot(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf', session_stats_dir)
-                    cls._other_plots(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf', session_stats_dir)
 
                 if "get_list" in function_times:
                     cls._make_hist_plot(function_times['get_list'], 'get_list()', 'get_list.pdf', session_stats_dir)
@@ -135,12 +134,13 @@ class ProcessResults:
             
             data = cls._make_stats(session_path, function_times)
             data_df = pd.DataFrame(data, index=[0])
+            cls._other_plots(session_path)
             file_name = session_stats_dir / ".".join((session_name, "csv"))
             data_df.to_csv(file_name)
 
     @staticmethod
-    def _other_plots(data, title, fname, session_stats_dir):
-        throughput_plotter(data, title, fname, session_stats_dir)
+    def _other_plots(session_path):
+        throughput_plotter(session_path)
     
 
     @staticmethod
