@@ -17,7 +17,7 @@ class Throughput:
                            db_port=6780,
                            net_ifname="ipogif0",
                            clients_per_node=[32],
-                           client_nodes=[128, 256, 512],
+                           client_nodes=[128],
                            iterations=100,
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
                                          262144, 524288, 1024000, 2048000, 4096000]):
@@ -58,7 +58,15 @@ class Throughput:
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = create_folder(exp_name, launcher)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                    colocated=0,
+                    client_per_node=clients_per_node,
+                    client_nodes=client_nodes,
+                    database_nodes=db_nodes,
+                    database_cpus=db_cpus,
+                    iterations=iterations,
+                    tensor_bytes=tensor_bytes)
 
         for db_node_count in db_nodes:
 
@@ -211,7 +219,16 @@ class Throughput:
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = create_folder(exp_name, launcher)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                    colocated=1,
+                    pin_app_cpus=str(pin_app_cpus),
+                    client_per_node=clients_per_node,
+                    client_nodes=nodes,
+                    database_nodes=nodes,
+                    database_cpus=db_cpus,
+                    iterations=iterations,
+                    tensor_bytes=tensor_bytes)
 
         perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus))
         for perm in perms:

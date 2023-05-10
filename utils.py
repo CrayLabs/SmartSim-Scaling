@@ -9,7 +9,6 @@ from itertools import product
 from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
-from process_results import create_run_csv
 from imagenet.model_saver import save_model
 
 
@@ -81,7 +80,7 @@ def create_folder(exp_name, launcher):
     exp = Experiment(name=result_path, launcher=launcher)
     exp.generate()
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
-    return exp
+    return exp, result_path
 
 def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run_as_batch, hosts):
     """Create and start the Orchestrator

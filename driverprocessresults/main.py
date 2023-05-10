@@ -31,6 +31,7 @@ class ProcessResults:
             run_folders = os.listdir("results" / Path(scaling_results_dir))
             session_folders = []
             for run_folder in run_folders:
+                
                 if 'run' in run_folder:
                     session_folders += ["results/" + scaling_results_dir + "/" + run_folder + "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
             try:
@@ -84,6 +85,8 @@ class ProcessResults:
         
         if not session_stats_dir.is_dir():
             os.makedirs(session_stats_dir)
+            #HERE
+            throughput_plotter(split)
             function_times = {}
             files = os.listdir(Path(session_path))
             for file in files: 
@@ -134,7 +137,7 @@ class ProcessResults:
             
             data = cls._make_stats(session_path, function_times)
             data_df = pd.DataFrame(data, index=[0])
-            cls._other_plots(session_path)
+            #cls._other_plots(session_path)
             file_name = session_stats_dir / ".".join((session_name, "csv"))
             data_df.to_csv(file_name)
 
@@ -198,4 +201,5 @@ class ProcessResults:
         for k, v in config["attributes"].items():
             data[k] = v
         return data
+        
 
