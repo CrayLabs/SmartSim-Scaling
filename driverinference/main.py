@@ -72,7 +72,17 @@ class Inference:
 
         check_model(device, force_rebuild=rebuild_model)
 
-        exp = create_folder(exp_name, launcher)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                        colocated=0,
+                        client_per_node=clients_per_node,
+                        client_nodes=client_nodes,
+                        database_nodes=db_nodes,
+                        database_cpus=db_cpus,
+                        database_threads_per_queue=db_tpq,
+                        batch_size=batch_size,
+                        device=device,
+                        num_devices=num_devices)
 
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
         logger.info(f"Executing {len(perms)} permutations")
@@ -172,7 +182,17 @@ class Inference:
 
         check_model(device, force_rebuild=rebuild_model)
         
-        exp = create_folder(exp_name, launcher)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                        colocated=1,
+                        client_per_node=clients_per_node,
+                        client_nodes=nodes,
+                        database_nodes=nodes,
+                        database_cpus=db_cpus,
+                        database_threads_per_queue=db_tpq,
+                        batch_size=batch_size,
+                        device=device,
+                        num_devices=num_devices)
 
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus))
         for perm in perms:

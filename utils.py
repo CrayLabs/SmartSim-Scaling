@@ -212,4 +212,4 @@ def get_db_backend():
     :rtype: str
     """
     db_backend_path = smartsim._core.config.CONFIG.database_exe
-    return os.path.basename(db_backend_path)
+    return os.path.basename(db_backend_path) #Will need to look into this further, will need to return a list

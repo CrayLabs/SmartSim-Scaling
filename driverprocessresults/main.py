@@ -5,7 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from utils import *
-from driverprocessresults.throughput_plotter import throughput_plotter
+from driverprocessresults.throughput_plotter import throughput_plotter_standard
+from driverprocessresults.inference_plotter import inference_plotter
 
 from pathlib import Path
 from statistics import median
@@ -16,7 +17,7 @@ logger = get_logger("Scaling Tests")
 
 
 class ProcessResults:
-    def process_scaling_results(self, scaling_results_dir="throughput-colocated-scaling", overwrite=True):
+    def process_scaling_results(self, scaling_results_dir="throughput-standard-scaling", overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
             to build up a single csv with the results of runs over a long
@@ -86,7 +87,6 @@ class ProcessResults:
         if not session_stats_dir.is_dir():
             os.makedirs(session_stats_dir)
             #HERE
-            throughput_plotter(split)
             function_times = {}
             files = os.listdir(Path(session_path))
             for file in files: 
@@ -140,6 +140,7 @@ class ProcessResults:
             #cls._other_plots(session_path)
             file_name = session_stats_dir / ".".join((session_name, "csv"))
             data_df.to_csv(file_name)
+        throughput_plotter_standard(split) #need to change this to an fn
 
     @staticmethod
     def _other_plots(session_path):

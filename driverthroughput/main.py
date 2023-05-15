@@ -13,7 +13,7 @@ class Throughput:
                            db_node_feature={},
                            db_hosts=[],
                            db_nodes=[12],
-                           db_cpus=36,
+                           db_cpus=[36],
                            db_port=6780,
                            net_ifname="ipogif0",
                            clients_per_node=[32],
@@ -67,33 +67,33 @@ class Throughput:
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=tensor_bytes)
-
-        for db_node_count in db_nodes:
-
+        permss = list(product(db_nodes, db_cpus))
+        for permsss in permss:
+            dbn, dbc = permsss
             # start the database only once per value in db_nodes so all permutations
             # are executed with the same database size without bringin down the database
             db = start_database(exp,
                                 db_node_feature,
                                 db_port,
-                                db_node_count,
-                                db_cpus,
+                                dbn,
+                                dbc,
                                 None, # not setting threads per queue in throughput tests
                                 net_ifname,
                                 run_db_as_batch,
                                 db_hosts)
 
 
-            perms = list(product(client_nodes, clients_per_node, tensor_bytes))
+            perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus))
             for perm in perms:
-                c_nodes, cpn, _bytes = perm
+                c_nodes, cpn, _bytes, db_cpu = perm
 
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self._create_throughput_session(exp,
                                                                node_feature,
                                                                c_nodes,
                                                                cpn,
-                                                               db_node_count,
-                                                               db_cpus,
+                                                               dbn,
+                                                               db_cpu,
                                                                iterations,
                                                                _bytes)
                 exp.start(throughput_session, summary=True)
@@ -177,11 +177,11 @@ class Throughput:
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[4],
-                           db_cpus=[2],
+                           nodes=[128],
+                           db_cpus=[12],
                            db_port=6780,
                            net_ifname="lo",
-                           clients_per_node=[3],
+                           clients_per_node=[48],
                            pin_app_cpus=[False],
                            iterations=100,
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
