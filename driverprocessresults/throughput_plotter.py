@@ -274,7 +274,7 @@ def throughput_plotter_colocated(run_cfg_path):
                 
                 for i, thread in enumerate(tqdm(threads, leave=False, desc="DB node plot loop", ncols=80)):
                     dfs = df_dbs[thread]
-                    data_list = [dfs[size][label] for size in sizes]
+                    data_list = [dfs[size][label] for size in sizes] #divide this by the number of client nodes
                     props_dict = {"color": sns.color_palette()[i]}
                     
                     positions = rank_pos if plot_type == "agg" else rank_pos+spacing*(i-(len(threads)-1)/2)
@@ -293,9 +293,9 @@ def throughput_plotter_colocated(run_cfg_path):
                             legend_entries.append(plot["whiskers"][0])
                         else:
                             raise ValueError("Only boxplot, violin, and agg are valid plot types")
-                    ax.set_ylim([0, 200])
+                    ax.set_ylim([0, 50])
                     if plot_type != "agg":
-                        ax2.set_ylim([0, 200/(thread*nnodes)])#ask about this
+                        ax2.set_ylim([0, 50/(thread*nnodes)])#ask about this
                     ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%2.0f'))
             
             ax.set_xlim([rank_pos[0]-distance/2, rank_pos[-1]+distance/2])
@@ -319,17 +319,17 @@ def throughput_plotter_colocated(run_cfg_path):
                 ax.grid(True, which="minor", axis="x", ls=":", markevery=rank_pos[:-1]+distance/2)
 
             if plot_type == means:
-                ax2.legend(legend_entries,  [f'{thread} DB nodes' for thread in threads],
+                ax2.legend(legend_entries,  [f'{thread} clients per node' for thread in threads],
                         loc='upper left')
             else:
-                ax.legend([f'{thread} DB nodes' for thread in threads],
+                ax.legend([f'{thread} clients per node' for thread in threads],
                         loc='upper left')
 
             plt.title(f"{nnodes} client nodes, {threads} clients per node - {backend} backend")
             plt.xlabel("Message size [kiB]")
             if plot_type != "agg":
-                ax2.set_ylabel("Single client throughput distribution [GB/s]")
-            ax.set_ylabel("Throughput [GB/s]")
+                ax2.set_ylabel("Single client colocated throughput distribution [GB/s]")
+            ax.set_ylabel("Colocated Throughput [GB/s]")
             plt.tick_params(
                 axis='x',          # changes apply to the x-axis
                 which='minor',     # both major and minor ticks are affected
@@ -343,10 +343,8 @@ def throughput_plotter_colocated(run_cfg_path):
             # print("got here")
             # sys.exit()
             if save:
-                png_file = Path("results/throughput-colocated-scaling/stats") / os.path.basename(run_cfg_path) / f"{plot_type}-{label}-{nnodes}-{backend.lower()}_{plot_color}.png"
+                png_file = Path("results/throughput-colocated-scaling/stats") / os.path.basename(run_cfg_path) / f"{plot_type}-{label}-{backend.lower()}_{plot_color}.png"
                 #Path(run_cfg_path) / f"{label}-{nnodes}-{backend.lower()}_{plot_color}.png"
                 plt.savefig(png_file)
-                print("\n")
-                print(png_file)
-                print("\n")
-                sys.exit()
+    print("test")
+    sys.exit()
