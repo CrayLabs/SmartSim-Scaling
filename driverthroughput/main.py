@@ -20,7 +20,7 @@ class Throughput:
                            net_ifname="ipogif0",
                            clients_per_node=[32],
                            client_nodes=[128],
-                           iterations=100,
+                           iterations=3,
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
                                          262144, 524288, 1024000, 2048000, 4096000]):
 
@@ -179,7 +179,7 @@ class Throughput:
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[128],
+                           nodes=[12, 24, 48],
                            db_cpus=[12],
                            db_port=6780,
                            net_ifname="lo",

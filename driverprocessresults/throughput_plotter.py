@@ -267,14 +267,12 @@ def throughput_plotter_colocated(run_cfg_path):
         spacing = distance/(len(threads)+0.5)
 
         #quantiles = [[0.25, 0.75] for _ in ranks]
-        pprint(df_dbn)
-        sys.exit()
         for label in tqdm(labels, desc=f"Dark plot: {dark}", leave=False, ncols=80):
             
             fig, ax = plt.subplots(figsize=(8,5))
-            if plot_type != "agg":
-                ax2 = ax.twinx()
             for j, nnodes in enumerate(tqdm(nnodes_all, leave=False, desc="nnodes", ncols=80)):
+                if plot_type != "agg":
+                    ax2 = ax.twinx()
                 df_dbs = df_dbn[nnodes]
                 for i, thread in enumerate(tqdm(threads, leave=False, desc="cpn", ncols=80)):
                     dfs = df_dbs[thread]

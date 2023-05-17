@@ -16,9 +16,9 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8,16],
-                           db_cpus=[8,16],
-                           db_tpq=[1,2,4],
+                           db_nodes=[4],
+                           db_cpus=[8],
+                           db_tpq=[1],
                            db_port=6780,
                            batch_size=[1000],
                            device="GPU",
@@ -262,7 +262,8 @@ class Inference:
             "SS_DEVICE": device,
             "SS_CLIENT_COUNT": str(tasks),
             "SR_LOG_FILE": "srlog.out",
-            "SR_LOG_LEVEL": "INFO"
+            "SR_LOG_LEVEL": "INFO",
+            "SR_CONN_TIMEOUT": 1000
         })
         
         name = "-".join((

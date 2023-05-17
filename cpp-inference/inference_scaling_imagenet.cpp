@@ -146,7 +146,7 @@ void run_mnist(const std::string& model_name,
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
   double loop_start = MPI_Wtime();
-  for (int i = 0; i < 101; i++) {
+  for (int i = 0; i < 10; i++) {
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);
@@ -190,7 +190,7 @@ void run_mnist(const std::string& model_name,
   delta_t = loop_end - loop_start;
 
   // write times to file
-  for (int i = 1; i < 101; i++) { // Skip first run as it's warmup
+  for (int i = 1; i < 10; i++) { // Skip first run as it's warmup
     timing_file << rank << "," << "put_tensor" << ","
                 << put_tensor_times[i] << std::endl << std::flush;
 
