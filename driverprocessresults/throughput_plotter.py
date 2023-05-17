@@ -11,6 +11,7 @@ import configparser
 import json
 import sys
 from pathlib import Path
+from pprint import pprint
 
 # def throughput_plotter_standard(run_cfg_path):
 #     config = configparser.RawConfigParser()
@@ -192,6 +193,7 @@ def throughput_plotter_colocated(run_cfg_path):
     backends = [run_dict['db']]
     nnodes_all = json.loads(attributes_dict['client_nodes']) #make sure this is correct, naming is misleading
     #Question: so its possible to have two backends in a run.cfg file?
+    df_dbn = dict()
     for backend, nnodes in tqdm(product(backends, nnodes_all), total=len(backends)*len(nnodes_all), desc="Product loop"):
         #DB_nodes = json.loads(attributes_dict['database_nodes'])
         sizes = json.loads(attributes_dict['tensor_bytes'])
@@ -236,43 +238,45 @@ def throughput_plotter_colocated(run_cfg_path):
                 except:
                     print("WARNING, MISSING PATH:", path_root)
             df_dbs[thread] = dfs #this is a dict that stores a dict of dataframes by db_node
+        df_dbn[nnodes] = df_dbs
         # Set to false if this code is run inside a notebook
         save = True #create this into a flag to pass in
-
+    
         #leave in progress bar makes it clear after done
-        for dark in tqdm([True, False], leave=False, desc="Plot style loop", ncols=80): #figure out what the true,false val is
-            if dark: #ask about dark, when will it go to white
-                plt.style.use("dark_background")
-                plot_color="dark"
-            else:
-                plt.style.use("default")
-                plot_color="light"
-           
-            labels = ["loop_time"] #could make this customizable
+    for dark in tqdm([True, False], leave=False, desc="Plot style loop", ncols=80): #figure out what the true,false val is
+        if dark: #ask about dark, when will it go to white
+            plt.style.use("dark_background")
+            plot_color="dark"
+        else:
+            plt.style.use("default")
+            plot_color="light"
+        
+        labels = ["loop_time"] #could make this customizable
 
-            legend_entries = []
+        legend_entries = []
 
-            ranks = np.asarray(sizes)
-            whiskers = 1e9
-            color_short = "rgbmy"
-            plot_type = "boxplot" #need to make this into a flag for violin and agg
+        ranks = np.asarray(sizes)
+        whiskers = 1e9
+        color_short = "rgbmy"
+        plot_type = "boxplot" #need to make this into a flag for violin and agg
 
-            rank_pos = np.log(ranks/ranks[0])+1
+        rank_pos = np.log(ranks/ranks[0])+1
 
-            distance = np.min(np.diff(rank_pos))
-            widths = distance/(len(threads))
-            spacing = distance/(len(threads)+0.5)
+        distance = np.min(np.diff(rank_pos))
+        widths = distance/(len(threads))
+        spacing = distance/(len(threads)+0.5)
 
-            quantiles = [[0.25, 0.75] for _ in ranks]
-
-            for label in tqdm(labels, desc=f"Dark plot: {dark}", leave=False, ncols=80):
-
-                fig, ax = plt.subplots(figsize=(8,5))
-
-                if plot_type != "agg":
-                    ax2 = ax.twinx()
-                
-                for i, thread in enumerate(tqdm(threads, leave=False, desc="DB node plot loop", ncols=80)):
+        #quantiles = [[0.25, 0.75] for _ in ranks]
+        pprint(df_dbn)
+        sys.exit()
+        for label in tqdm(labels, desc=f"Dark plot: {dark}", leave=False, ncols=80):
+            
+            fig, ax = plt.subplots(figsize=(8,5))
+            if plot_type != "agg":
+                ax2 = ax.twinx()
+            for j, nnodes in enumerate(tqdm(nnodes_all, leave=False, desc="nnodes", ncols=80)):
+                df_dbs = df_dbn[nnodes]
+                for i, thread in enumerate(tqdm(threads, leave=False, desc="cpn", ncols=80)):
                     dfs = df_dbs[thread]
                     data_list = [dfs[size][label] for size in sizes] #divide this by the number of client nodes
                     props_dict = {"color": sns.color_palette()[i]}
@@ -293,58 +297,58 @@ def throughput_plotter_colocated(run_cfg_path):
                             legend_entries.append(plot["whiskers"][0])
                         else:
                             raise ValueError("Only boxplot, violin, and agg are valid plot types")
-                    ax.set_ylim([0, 50])
+                    ax.set_ylim([0, 200])
                     if plot_type != "agg":
-                        ax2.set_ylim([0, 50/(thread*nnodes)])#ask about this
+                        ax2.set_ylim([0, 200/(thread*nnodes)])#ask about this
                     ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%2.0f'))
-            
-            ax.set_xlim([rank_pos[0]-distance/2, rank_pos[-1]+distance/2])
-            ax.set_xticks(rank_pos, minor=False)
-            # print("test")
-            # sys.exit()
+        
+        ax.set_xlim([rank_pos[0]-distance/2, rank_pos[-1]+distance/2])
+        ax.set_xticks(rank_pos, minor=False)
+        # print("test")
+        # sys.exit()
 
-            if plot_type != means:
-                x_minor_ticks = []
-                for i, pos in enumerate(rank_pos[:-1]):
-                    if i and pos-rank_pos[i-1] > distance*1.5:
-                        x_minor_ticks.append(pos-distance/2)
-                    x_minor_ticks.append(pos+distance/2)
+        if plot_type != means:
+            x_minor_ticks = []
+            for i, pos in enumerate(rank_pos[:-1]):
+                if i and pos-rank_pos[i-1] > distance*1.5:
+                    x_minor_ticks.append(pos-distance/2)
+                x_minor_ticks.append(pos+distance/2)
 
-                ax.set_xticks(x_minor_ticks, minor=True)
+            ax.set_xticks(x_minor_ticks, minor=True)
 
-            labels = ["1", "8", "16", "32", "64", "128", "256", "512", "1000", "2000", "4000"]
-            ax.set_xticklabels(labels, fontdict={'fontsize': 10})
+        labels = ["1", "8", "16", "32", "64", "128", "256", "512", "1000", "2000", "4000"]
+        ax.set_xticklabels(labels, fontdict={'fontsize': 10})
 
-            if plot_type != "agg":
-                ax.grid(True, which="minor", axis="x", ls=":", markevery=rank_pos[:-1]+distance/2)
+        if plot_type != "agg":
+            ax.grid(True, which="minor", axis="x", ls=":", markevery=rank_pos[:-1]+distance/2)
 
-            if plot_type == means:
-                ax2.legend(legend_entries,  [f'{thread} clients per node' for thread in threads],
-                        loc='upper left')
-            else:
-                ax.legend([f'{thread} clients per node' for thread in threads],
-                        loc='upper left')
+        if plot_type == means:
+            ax2.legend(legend_entries,  [f'{thread} clients per node' for thread in threads],
+                    loc='upper left')
+        else:
+            ax.legend([f'{thread} clients per node' for thread in threads],
+                    loc='upper left')
 
-            plt.title(f"{nnodes} client nodes, {threads} clients per node - {backend} backend")
-            plt.xlabel("Message size [kiB]")
-            if plot_type != "agg":
-                ax2.set_ylabel("Single client colocated throughput distribution [GB/s]")
-            ax.set_ylabel("Colocated Throughput [GB/s]")
-            plt.tick_params(
-                axis='x',          # changes apply to the x-axis
-                which='minor',     # both major and minor ticks are affected
-                bottom=False,      # ticks along the bottom edge are off
-                top=False,         # ticks along the top edge are off
-                labelbottom=True)
+        plt.title(f"{nnodes} client nodes, {threads} clients per node - {backend} backend")
+        plt.xlabel("Message size [kiB]")
+        if plot_type != "agg":
+            ax2.set_ylabel("Single client colocated throughput distribution [GB/s]")
+        ax.set_ylabel("Colocated Throughput [GB/s]")
+        plt.tick_params(
+            axis='x',          # changes apply to the x-axis
+            which='minor',     # both major and minor ticks are affected
+            bottom=False,      # ticks along the bottom edge are off
+            top=False,         # ticks along the top edge are off
+            labelbottom=True)
 
 
-            plt.tight_layout()
-            plt.draw()
-            # print("got here")
-            # sys.exit()
-            if save:
-                png_file = Path("results/throughput-colocated-scaling/stats") / os.path.basename(run_cfg_path) / f"{plot_type}-{label}-{backend.lower()}_{plot_color}.png"
-                #Path(run_cfg_path) / f"{label}-{nnodes}-{backend.lower()}_{plot_color}.png"
-                plt.savefig(png_file)
+        plt.tight_layout()
+        plt.draw()
+        # print("got here")
+        # sys.exit()
+        if save:
+            png_file = Path("results/throughput-colocated-scaling/stats") / os.path.basename(run_cfg_path) / f"{plot_type}-{label}-{backend.lower()}_{plot_color}.png"
+            #Path(run_cfg_path) / f"{label}-{nnodes}-{backend.lower()}_{plot_color}.png"
+            plt.savefig(png_file)
     print("test")
     sys.exit()
