@@ -12,7 +12,7 @@ import configparser
 import json
 from pathlib import Path
 
-def inference_plotter(run_cfg_path):
+def inference_plotter_standard(run_cfg_path):
     config = configparser.RawConfigParser()
     config.read(run_cfg_path + "/run.cfg")
     attributes_dict = dict(config.items('attributes'))
@@ -37,8 +37,8 @@ def inference_plotter(run_cfg_path):
 
     df_dbs = dict()
     base_path = run_cfg_path
-    # print(base_path)
-    # sys.exit()
+    print(base_path)
+    sys.exit()
 
     functions = ['put_tensor', 'run_script', 'run_model', 'unpack_tensor']
     # print("path: ")

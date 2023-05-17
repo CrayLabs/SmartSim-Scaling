@@ -1,5 +1,7 @@
-import fire
 from utils import *
+
+if __name__ == "__main__":
+    sys.path.append("..")
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -615,10 +617,6 @@ class DataAggregation:
                         t_per_dataset=t_per_dataset,
                         client_threads=c_threads)
         return model
-
-if __name__ == "__main__":
-    import sys
-    sys.path.append('..')
 
 if __name__ == "__main__":
     import fire

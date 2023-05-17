@@ -1,9 +1,7 @@
-import sys
+from utils import *
 
 if __name__ == "__main__":
     sys.path.append("..")
-
-from utils import *
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -18,16 +16,16 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4],
-                           db_cpus=[2],
-                           db_tpq=[1],
+                           db_nodes=[4,8,16],
+                           db_cpus=[8,16],
+                           db_tpq=[1,2,4],
                            db_port=6780,
                            batch_size=[1000],
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[48],
-                           client_nodes=[12],
+                           client_nodes=[60],
                            rebuild_model=False):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
@@ -366,7 +364,7 @@ class Inference:
                         device=device,
                         num_devices=num_devices)
         return model
-      
+   
 if __name__ == "__main__":
     import fire
-    fire.Fire(DataAggregation())
+    fire.Fire(Inference())

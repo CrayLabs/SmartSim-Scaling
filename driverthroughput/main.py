@@ -1,5 +1,7 @@
-import fire
 from utils import *
+
+if __name__ == "__main__":
+    sys.path.append("..")
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -225,7 +227,6 @@ class Throughput:
                     pin_app_cpus=str(pin_app_cpus),
                     client_per_node=clients_per_node,
                     client_nodes=nodes,
-                    database_nodes=nodes,
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=tensor_bytes)
@@ -334,3 +335,7 @@ class Throughput:
                     iterations=iterations,
                     tensor_bytes=_bytes)
         return model
+
+if __name__ == "__main__":
+    import fire
+    fire.Fire(Throughput())
