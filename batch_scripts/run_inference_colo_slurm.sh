@@ -9,7 +9,7 @@ module load cudatoolkit/11.7 cudnn PrgEnv-intel
 source ~/pyenvs/smartsim-dev/bin/activate
 
 cd ..
-python driver.py inference_colocated --clients_per_node=[12] \
+python driver.py inference_colocated --clients_per_node=[12,24,36,60,96] \
                                      --nodes=[1] --db_tpq=[2] \
                                      --db_cpus=[12] --pin_app_cpus=[True] \
-				     --net_type="uds" --node_feature='{}' --languages=['fortran']
+                                     --net_type="uds" --node_feature='{}' --languages=['fortran','cpp']
