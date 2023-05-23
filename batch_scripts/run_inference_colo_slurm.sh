@@ -1,12 +1,15 @@
 #!/bin/bash
 
-#SBATCH -N 12
+#SBATCH -N 1
 #SBATCH --exclusive
-#SBATCH -C P100
-#SBATCH -t 10:00:00
+#SBATCH -p allgriz
+#SBATCH -t 1:00:00
+
+module load cudatoolkit/11.7 cudnn PrgEnv-intel
+source ~/pyenvs/smartsim-dev/bin/activate
 
 cd ..
-module load slurm
-python driver.py inference_colocated --clients_per_node=[16,18,24] \
-                                     --nodes=[12] --db_tpq=[2] \
-                                     --db_cpus=[4] --pin_app_cpus=[True]
+python driver.py inference_colocated --clients_per_node=[12] \
+                                     --nodes=[1] --db_tpq=[2] \
+                                     --db_cpus=[12] --pin_app_cpus=[True] \
+				     --net_type="uds" --node_feature='{}' --languages=['fortran']
