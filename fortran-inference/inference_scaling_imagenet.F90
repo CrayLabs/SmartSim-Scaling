@@ -3,7 +3,7 @@ program main
 use utils, only : get_env_var
 use smartredis_client, only : client_type
 use smartredis_errors, only : print_last_error
-use mpi_f08
+use mpi
 
 implicit none
 
@@ -58,7 +58,7 @@ else
     write(script_key,'(A,I0)') 'resnet_script_',mod(rank,num_devices)
 endif
 
-call MPI_Barrier(MPI_COMM_WORLD)
+call MPI_Barrier(MPI_COMM_WORLD, ierror)
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
 
 if (rank==0) write(*,*) "Finished Resnet test"
@@ -67,7 +67,7 @@ delta_t = main_end - main_start
 
 write(timing_unit,'(I0,A,G0)') rank, ',main(),', delta_t
 
-call MPI_finalize()
+call MPI_finalize(ierror)
 
 contains
 
@@ -195,7 +195,7 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     ! Start the main loop
     loop_start = MPI_WTime()
     do i=1,100
-        call MPI_Barrier(MPI_COMM_WORLD)
+        call MPI_Barrier(MPI_COMM_WORLD, ierror)
 
         write(in_key,'(A,I0,A,I0)') 'resnet_input_rank_', rank, '_', i
         write(script_out_key,'(A,I0,A,I0)') 'resnet_processed_input_rank_', rank, '_', i
