@@ -129,7 +129,7 @@ class Inference:
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
-                            node_feature={},
+                            node_feature={"constraint": "P100"},
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],
@@ -140,7 +140,7 @@ class Inference:
                             batch_size=[1],
                             device="GPU",
                             num_devices=1,
-                            net_ifname="lo",
+                            net_ifname="ipogif0",
                             rebuild_model=False
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment

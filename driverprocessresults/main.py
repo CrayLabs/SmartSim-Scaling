@@ -8,6 +8,9 @@ from utils import *
 from driverprocessresults.throughput_plotter import throughput_plotter_standard
 from driverprocessresults.throughput_plotter import throughput_plotter_colocated
 from driverprocessresults.inference_plotter import inference_plotter_standard
+from driverprocessresults.aggregation_plotter import aggregation_plotter_standard
+from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py
+from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py_fs
 
 from pathlib import Path
 from statistics import median
@@ -18,7 +21,7 @@ logger = get_logger("Scaling Tests")
 
 
 class ProcessResults:
-    def process_scaling_results(self, scaling_results_dir="inference-standard-scaling", overwrite=True):
+    def process_scaling_results(self, scaling_results_dir="aggregation-standard-scaling-py-fs", overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
             to build up a single csv with the results of runs over a long
@@ -149,6 +152,12 @@ class ProcessResults:
         split = os.path.basename(os.path.dirname(session_path))
         if split == "throughput-colocated-scaling": 
             throughput_plotter_colocated(session_path)
+        if split == "aggregation-standard-scaling":
+            aggregation_plotter_standard(session_path)
+        if split == "aggregation-standard-scaling-py":
+            aggregation_plotter_standard_py(session_path)
+        if split == "aggregation-standard-scaling-py-fs":
+            aggregation_plotter_standard_py_fs(session_path)
         else:
             inference_plotter_standard(session_path)
     
@@ -182,7 +191,7 @@ class ProcessResults:
                 data["_".join((k, "mean"))] = arr_mean
                 data["_".join((k, "max"))] = arr_max
             else:
-                data[k] = np.float(v[0])
+                data[k] = float(v[0])
         return data
 
     @staticmethod

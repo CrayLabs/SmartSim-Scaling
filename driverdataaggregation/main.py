@@ -23,11 +23,9 @@ class DataAggregation:
                             clients_per_node=[32],
                             client_nodes=[128],
                             iterations=20,
-                            tensor_bytes=[1024, 8192, 16384, 32769, 65538,
-                                          131076, 262152, 524304, 1024000,
-                                          2048000],
+                            tensor_bytes=[1024],
                             tensors_per_dataset=[1,2,4],
-                            client_threads=[1,2,4,8,16,32],
+                            client_threads=[1,2,4,8],
                             cpu_hyperthreads=2):
 
         """Run the data aggregation scaling tests.  Permutations of the test
@@ -347,13 +345,11 @@ class DataAggregation:
                                 db_port=6780,
                                 net_ifname="ipogif0",
                                 clients_per_node=[32],
-                                client_nodes=[128, 256, 512],
+                                client_nodes=[128],
                                 iterations=20,
-                                tensor_bytes=[1024, 8192, 16384, 32769, 65538,
-                                          131076, 262152, 524304, 1024000,
-                                          2048000],
-                                tensors_per_dataset=[1,2,4],
-                                client_threads=[1,2,4,8,16,32],
+                                tensor_bytes=[1024],
+                                tensors_per_dataset=[4],
+                                client_threads=[32],
                                 cpu_hyperthreads=2):
             """Run the data aggregation scaling tests with python consumer.
             Permutations of the test include client_nodes, clients_per_node, 
@@ -406,7 +402,19 @@ class DataAggregation:
             logger.info(f"Running with database backend: {get_db_backend()}")
             logger.info(f"Running with launcher: {launcher}")
 
-            exp = create_folder(exp_name, launcher)
+            exp, result_path = create_folder(exp_name, launcher)
+            
+            write_run_config(result_path,
+                    colocated=0,
+                    client_per_node=clients_per_node,
+                    client_nodes=client_nodes,
+                    db_cpus=db_cpus,
+                    iterations=iterations,
+                    tensor_bytes=tensor_bytes,
+                    tensors_per_dataset=tensors_per_dataset,
+                    client_threads=client_threads,
+                    cpu_hyperthreads=cpu_hyperthreads,
+                    language="cpp")
 
             for db_node_count in db_nodes:
 
@@ -502,13 +510,11 @@ class DataAggregation:
                             prod_node_feature = {},
                             cons_node_feature = {},
                             clients_per_node=[32],
-                            client_nodes=[128, 256, 512],
+                            client_nodes=[128],
                             iterations=20,
-                            tensor_bytes=[1024, 8192, 16384, 32769, 65538,
-                                          131076, 262152, 524304, 1024000,
-                                          2048000],
-                            tensors_per_dataset=[1,2,4],
-                            client_threads=[1,2,4,8,16,32],
+                            tensor_bytes=[1024],
+                            tensors_per_dataset=[4],
+                            client_threads=[16,32],
                             cpu_hyperthreads=2):
         """Run the data aggregation scaling tests with python consumer using the
         file system in place of the orchastrator. Permutations of the test include 
@@ -546,7 +552,17 @@ class DataAggregation:
         logger.info(f"Running with database backend: None (data to file system)")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = create_folder(exp_name, launcher)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                    colocated=0,
+                    client_per_node=clients_per_node,
+                    client_nodes=client_nodes,
+                    iterations=iterations,
+                    tensor_bytes=tensor_bytes,
+                    tensors_per_dataset=tensors_per_dataset,
+                    client_threads=client_threads,
+                    cpu_hyperthreads=cpu_hyperthreads,
+                    language="cpp")
 
         for c_nodes, cpn, bytes_, t_per_dataset, c_threads in product(
             client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads
@@ -628,7 +644,8 @@ class DataAggregation:
                         iterations=iterations,
                         tensor_bytes=bytes_,
                         t_per_dataset=t_per_dataset,
-                        client_threads=c_threads)
+                        client_threads=c_threads,
+                        language="cpp")
         return model
 
 if __name__ == "__main__":
