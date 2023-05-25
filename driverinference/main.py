@@ -25,7 +25,7 @@ class Inference:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[48],
-                           client_nodes=[60],
+                           client_nodes=[8,16],
                            rebuild_model=False):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
@@ -80,7 +80,8 @@ class Inference:
                         database_threads_per_queue=db_tpq,
                         batch_size=batch_size,
                         device=device,
-                        num_devices=num_devices)
+                        num_devices=num_devices,
+                        language="cpp")
 
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
         logger.info(f"Executing {len(perms)} permutations")
@@ -128,7 +129,7 @@ class Inference:
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
-                            node_feature={"constraint": "P100"},
+                            node_feature={},
                             launcher="auto",
                             nodes=[12],
                             clients_per_node=[18],
@@ -190,7 +191,8 @@ class Inference:
                         database_threads_per_queue=db_tpq,
                         batch_size=batch_size,
                         device=device,
-                        num_devices=num_devices)
+                        num_devices=num_devices,
+                        language="cpp")
 
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus))
         for perm in perms:
@@ -291,7 +293,8 @@ class Inference:
                         database_threads_per_queue=db_tpq,
                         batch_size=batch_size,
                         device=device,
-                        num_devices=num_devices)
+                        num_devices=num_devices,
+                        language="cpp")
 
         return model, resnet_model
     
@@ -363,7 +366,8 @@ class Inference:
                         database_threads_per_queue=db_tpq,
                         batch_size=batch_size,
                         device=device,
-                        num_devices=num_devices)
+                        num_devices=num_devices,
+                        language="cpp")
         return model
    
 if __name__ == "__main__":

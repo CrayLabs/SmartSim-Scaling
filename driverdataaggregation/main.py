@@ -21,7 +21,7 @@ class DataAggregation:
                             db_port=6780,
                             net_ifname="ipogif0",
                             clients_per_node=[32],
-                            client_nodes=[128, 256, 512],
+                            client_nodes=[128],
                             iterations=20,
                             tensor_bytes=[1024, 8192, 16384, 32769, 65538,
                                           131076, 262152, 524304, 1024000,
@@ -81,7 +81,18 @@ class DataAggregation:
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
 
-        exp = create_folder(exp_name, launcher)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                    colocated=0,
+                    client_per_node=clients_per_node,
+                    client_nodes=client_nodes,
+                    db_cpus=db_cpus,
+                    iterations=iterations,
+                    tensor_bytes=tensor_bytes,
+                    tensors_per_dataset=tensors_per_dataset,
+                    client_threads=client_threads,
+                    cpu_hyperthreads=cpu_hyperthreads,
+                    language="cpp")
 
         for db_node_count in db_nodes:
 
@@ -216,7 +227,8 @@ class DataAggregation:
                         database_cpus=db_cpus,
                         iterations=iterations,
                         tensor_bytes=bytes_,
-                        t_per_dataset=t_per_dataset)
+                        t_per_dataset=t_per_dataset,
+                        language="cpp")
         return model
 
     @classmethod
@@ -318,7 +330,8 @@ class DataAggregation:
                     iterations=iterations,
                     tensor_bytes=bytes_,
                     t_per_dataset=t_per_dataset,
-                    client_threads=c_threads)
+                    client_threads=c_threads,
+                    language="cpp")
         return model
 
     def aggregation_scaling_python(self,

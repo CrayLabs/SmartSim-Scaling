@@ -188,7 +188,8 @@ def write_run_config(path, **kwargs):
         "smartsim_version": smartsim.__version__,
         "smartredis_version": "0.3.1", # TODO put in smartredis __version__
         "db": get_db_backend(),
-        "date": str(get_date())
+        "date": str(get_date()),
+        "language": "cpp"
     }
     config["attributes"] = kwargs
 

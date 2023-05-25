@@ -14,7 +14,7 @@ class Throughput:
                            node_feature={},
                            db_node_feature={},
                            db_hosts=[],
-                           db_nodes=[12],
+                           db_nodes=[8, 12],
                            db_cpus=[36],
                            db_port=6780,
                            net_ifname="ipogif0",
@@ -68,7 +68,8 @@ class Throughput:
                     database_nodes=db_nodes,
                     database_cpus=db_cpus,
                     iterations=iterations,
-                    tensor_bytes=tensor_bytes)
+                    tensor_bytes=tensor_bytes,
+                    language="cpp")
         permss = list(product(db_nodes, db_cpus))
         for permsss in permss:
             dbn, dbc = permsss
@@ -172,7 +173,8 @@ class Throughput:
                     database_nodes=db_nodes,
                     database_cpus=db_cpus,
                     iterations=iterations,
-                    tensor_bytes=_bytes)
+                    tensor_bytes=_bytes,
+                    language="cpp")
         return model
     
     def throughput_colocated(self,
@@ -185,7 +187,7 @@ class Throughput:
                            net_ifname="lo",
                            clients_per_node=[48],
                            pin_app_cpus=[False],
-                           iterations=100,
+                           iterations=3,
                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
                                          262144, 524288, 1024000, 2048000, 4096000]):
 
@@ -229,7 +231,8 @@ class Throughput:
                     client_nodes=nodes,
                     database_cpus=db_cpus,
                     iterations=iterations,
-                    tensor_bytes=tensor_bytes)
+                    tensor_bytes=tensor_bytes,
+                    language="cpp")
 
         perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus))
         for perm in perms:
@@ -333,7 +336,8 @@ class Throughput:
                     database_nodes=nodes,
                     database_cpus=db_cpus,
                     iterations=iterations,
-                    tensor_bytes=_bytes)
+                    tensor_bytes=_bytes,
+                    language="cpp")
         return model
 
 if __name__ == "__main__":
