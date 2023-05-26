@@ -75,8 +75,6 @@ def aggregation_plotter_standard(run_cfg_path):
 
 
 def aggregation_plotter_standard_py(run_cfg_path):
-    print("test")
-    sys.exit()
     palette = sns.set_palette("colorblind", color_codes=True)
 
     font = {'family' : 'sans',

@@ -21,7 +21,7 @@ class DataAggregation:
                             db_port=6780,
                             net_ifname="ipogif0",
                             clients_per_node=[32],
-                            client_nodes=[128],
+                            client_nodes=[28],
                             iterations=20,
                             tensor_bytes=[1024],
                             tensors_per_dataset=[1,2,4],

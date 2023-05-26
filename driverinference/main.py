@@ -131,7 +131,7 @@ class Inference:
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[12],
+                            nodes=[1],
                             clients_per_node=[18],
                             db_cpus=[2],
                             db_tpq=[1],

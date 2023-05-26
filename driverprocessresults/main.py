@@ -8,6 +8,7 @@ from utils import *
 from driverprocessresults.throughput_plotter import throughput_plotter_standard
 from driverprocessresults.throughput_plotter import throughput_plotter_colocated
 from driverprocessresults.inference_plotter import inference_plotter_standard
+from driverprocessresults.inference_plotter import inference_plotter_colocated
 from driverprocessresults.aggregation_plotter import aggregation_plotter_standard
 from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py
 from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py_fs
@@ -21,7 +22,7 @@ logger = get_logger("Scaling Tests")
 
 
 class ProcessResults:
-    def process_scaling_results(self, scaling_results_dir="aggregation-standard-scaling-py-fs", overwrite=True):
+    def process_scaling_results(self, scaling_results_dir="aggregation-standard-scaling-py", overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
             to build up a single csv with the results of runs over a long
@@ -123,9 +124,9 @@ class ProcessResults:
                         print(f'there are {num_run} values in the run_model entries')
                     cls._make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', session_stats_dir)
                     cls._make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', session_stats_dir)
-
-                cls._make_hist_plot(function_times['client()'], 'client()', 'client_constructor_dist.pdf', session_stats_dir)
-
+                if "client()" in function_times:
+                    cls._make_hist_plot(function_times['client()'], 'client()', 'client_constructor_dist.pdf', session_stats_dir)
+                
                 if "put_tensor" in function_times:
                     cls._make_hist_plot(function_times['put_tensor'], 'put_tensor()', 'put_tensor.pdf', session_stats_dir)
 
@@ -134,8 +135,8 @@ class ProcessResults:
 
                 if "get_list" in function_times:
                     cls._make_hist_plot(function_times['get_list'], 'get_list()', 'get_list.pdf', session_stats_dir)
-
-                cls._make_hist_plot(function_times['main()'], 'main()', 'main.pdf', session_stats_dir)
+                if "main()" in function_times:
+                    cls._make_hist_plot(function_times['main()'], 'main()', 'main.pdf', session_stats_dir)
             except KeyError as e:
                 raise KeyError(f'{e} not found in function_times for run {session_name}')
             
@@ -158,6 +159,8 @@ class ProcessResults:
             aggregation_plotter_standard_py(session_path)
         if split == "aggregation-standard-scaling-py-fs":
             aggregation_plotter_standard_py_fs(session_path)
+        if split == "inference-colocated-scaling":
+            inference_plotter_colocated(session_path)
         else:
             inference_plotter_standard(session_path)
     
