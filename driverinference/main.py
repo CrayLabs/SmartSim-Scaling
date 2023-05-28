@@ -16,7 +16,7 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4],
+                           db_nodes=[4, 8],
                            db_cpus=[8],
                            db_tpq=[1],
                            db_port=6780,
@@ -26,7 +26,9 @@ class Inference:
                            net_ifname="ipogif0",
                            clients_per_node=[48],
                            client_nodes=[8,16],
-                           rebuild_model=False):
+                           rebuild_model=False,
+                           iterations=5,
+                           languages=["cpp"]):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -63,6 +65,10 @@ class Inference:
         :type client_nodes: list[int], optional
         :param rebuild_model: force rebuild of PyTorch model even if it is available
         :type rebuild_model: bool
+        :param iterations: number of put/get loops run by the applications
+        :type iterations: int
+        :param languages: which language to use for the tester "cpp" or "fortran"
+        :type languages: str
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -75,18 +81,23 @@ class Inference:
                         colocated=0,
                         client_per_node=clients_per_node,
                         client_nodes=client_nodes,
+                        database_hosts=db_hosts,
                         database_nodes=db_nodes,
                         database_cpus=db_cpus,
                         database_threads_per_queue=db_tpq,
+                        database_port=db_port,
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
-                        language="cpp")
+                        iterations=iterations,
+                        language=languages,
+                        db_node_feature=db_node_feature,
+                        node_feature=node_feature)
 
-        perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
+        perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size, languages))
         logger.info(f"Executing {len(perms)} permutations")
         for perm in perms:
-            c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
+            c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
 
             db = start_database(exp,
                                 db_node_feature,
@@ -108,7 +119,9 @@ class Inference:
                                                      batch,
                                                      device,
                                                      num_devices,
-                                                     rebuild_model)
+                                                     rebuild_model,
+                                                     iterations,
+                                                     language)
             address = db.get_address()[0]
             setup_resnet(resnet_model,
                         device,
@@ -246,11 +259,13 @@ class Inference:
                                 batch_size,
                                 device,
                                 num_devices,
-                                rebuild_model
+                                rebuild_model,
+                                iterations,
+                                language
                                 ):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         cluster = 1 if db_nodes > 1 else 0
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=node_feature)
+        run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks_per_node(tasks)
         run_settings.set_tasks(tasks*nodes)
@@ -258,6 +273,7 @@ class Inference:
         # as we will do that from the driver in non-converged deployments
         run_settings.update_env({
             "SS_SET_MODEL": 0,
+            "SS_ITERATIONS": str(iterations),
             "SS_CLUSTER": cluster,
             "SS_NUM_DEVICES": str(num_devices),
             "SS_BATCH_SIZE": str(batch_size),
@@ -270,10 +286,12 @@ class Inference:
         
         name = "-".join((
             "infer-sess",
+            str(language),
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
             "DBCPU"+str(db_cpus),
+            "ITER"+str(iterations),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -294,7 +312,9 @@ class Inference:
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
-                        language="cpp")
+                        language=language,
+                        iterations=iterations,
+                        node_feature=node_feature)
 
         return model, resnet_model
     

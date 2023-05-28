@@ -54,25 +54,35 @@ def inference_plotter_standard(run_cfg_path):
 
     function_names = ['put_tensor', 'unpack_tensor']
     languages = ['cpp']
-
+    dbn_list = df['database_nodes'].drop_duplicates().tolist()
     for function_name in function_names:
         fig = plt.figure(figsize=[12,4])
         axs = fig.subplots(1,2,sharey=True)
         for i, language in enumerate(languages):
             language_df = df.groupby('language').get_group(language)
-            function_df = language_df.groupby('function').get_group(function_name)[ ['client_total','time'] ]
-            data = [function_df.groupby('client_total').get_group(client)['time'] for client in ordered_client_total]
-            pos = [int(client) for client in ordered_client_total]
-            axs[i].violinplot(data, pos, **violin_opts, widths=24)
-            axs[i].set_xlabel('Number of Clients')
-            axs[i].set_title(language)
-            axs[i].set_xticks(pos)
+            for dbn in dbn_list:
+                function_df = language_df.groupby('function').get_group(function_name)
+                dbn_df = function_df.groupby('database_nodes').get_group(dbn)[ ['client_total','time'] ]
+                data = [dbn_df.groupby('client_total').get_group(client)['time'] for client in ordered_client_total]
+                pos = [int(client) for client in ordered_client_total]
+                axs[i].violinplot(data, pos, **violin_opts, widths=24)
+                axs[i].set_xlabel('Number of Clients')
+                axs[i].set_title(language)
+                axs[i].set_xticks(pos)
+            data_labels = [f"{db_node} DB nodes" for db_node in dbn_list]
+            axs[i].legend(data_labels, loc='upper left')
         axs[0].set_ylabel(f'{function_name}\nTime (s)')
     # plt.box(put_tensor_df['client_total'], put_tensor_df['time'])
         png_file = Path("results/inference-standard-scaling/stats") / os.path.basename(run_cfg_path) / f"{function_name}.png"
         plt.savefig(png_file)
         print(png_file)
     sys.exit()
+    
+    
+    # data_labels = [f"{db_node} DB nodes" for db_node in dbn_list]
+    # axs[i].legend(data_labels, loc='upper left')
+    # dbn_list = df['database_nodes'].drop_duplicates().tolist()
+        
 
 
 def inference_plotter_colocated(run_cfg_path):

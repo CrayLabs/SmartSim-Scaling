@@ -7,8 +7,7 @@ from tqdm import tqdm
 from utils import *
 from driverprocessresults.throughput_plotter import throughput_plotter_standard
 from driverprocessresults.throughput_plotter import throughput_plotter_colocated
-from driverprocessresults.inference_plotter import inference_plotter_standard
-from driverprocessresults.inference_plotter import inference_plotter_colocated
+from driverprocessresults.inference_plotter import *
 from driverprocessresults.aggregation_plotter import aggregation_plotter_standard
 from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py
 from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py_fs
@@ -22,7 +21,7 @@ logger = get_logger("Scaling Tests")
 
 
 class ProcessResults:
-    def process_scaling_results(self, scaling_results_dir="aggregation-standard-scaling-py", overwrite=True):
+    def process_scaling_results(self, scaling_results_dir="inference-standard-scaling", overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
             to build up a single csv with the results of runs over a long
@@ -149,20 +148,18 @@ class ProcessResults:
 
     @staticmethod
     def _other_plots(session_path):
-        #session_name = os.path.basename(session_path)
-        split = os.path.basename(os.path.dirname(session_path))
-        if split == "throughput-colocated-scaling": 
-            throughput_plotter_colocated(session_path)
-        if split == "aggregation-standard-scaling":
-            aggregation_plotter_standard(session_path)
-        if split == "aggregation-standard-scaling-py":
-            aggregation_plotter_standard_py(session_path)
-        if split == "aggregation-standard-scaling-py-fs":
-            aggregation_plotter_standard_py_fs(session_path)
-        if split == "inference-colocated-scaling":
-            inference_plotter_colocated(session_path)
-        else:
-            inference_plotter_standard(session_path)
+        exp_name = os.path.basename(os.path.dirname(session_path))
+        ops = {
+            "inference-colocated-scaling": inference_plotter_colocated,
+            "inference-standard-scaling": inference_plotter_standard,
+            "throughput-colocated-scaling": throughput_plotter_colocated,
+            "throughput-standard-scaling": throughput_plotter_standard,
+            "aggregation-standard-scaling": aggregation_plotter_standard,
+            "aggregation-standard-scaling-py": aggregation_plotter_standard_py,
+            "aggregation-standard-scaling-py-fs": aggregation_plotter_standard_py_fs
+        }
+        chosen_operation_function = ops.get(exp_name)
+        chosen_operation_function(session_path)
     
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):
