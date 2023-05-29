@@ -5,12 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from utils import *
-from driverprocessresults.throughput_plotter import throughput_plotter_standard
-from driverprocessresults.throughput_plotter import throughput_plotter_colocated
-from driverprocessresults.inference_plotter import *
-from driverprocessresults.aggregation_plotter import aggregation_plotter_standard
-from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py
-from driverprocessresults.aggregation_plotter import aggregation_plotter_standard_py_fs
+from driverprocessresults.scaling_plotter import *
 
 from pathlib import Path
 from statistics import median
@@ -21,7 +16,9 @@ logger = get_logger("Scaling Tests")
 
 
 class ProcessResults:
-    def process_scaling_results(self, scaling_results_dir="inference-standard-scaling", overwrite=True):
+    def process_scaling_results(self, 
+                                scaling_results_dir="inference-standard-scaling", 
+                                overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
             to build up a single csv with the results of runs over a long
@@ -76,7 +73,6 @@ class ProcessResults:
                 logger.error("Could not preprocess results")
                 raise
 
-    #run_path = "results" / Path(scaling_dir) / run
     @classmethod
     def _create_run_csv(cls, session_path, delete_previous=False, verbose=False):
         session_name = os.path.basename(session_path)
@@ -149,17 +145,7 @@ class ProcessResults:
     @staticmethod
     def _other_plots(session_path):
         exp_name = os.path.basename(os.path.dirname(session_path))
-        ops = {
-            "inference-colocated-scaling": inference_plotter_colocated,
-            "inference-standard-scaling": inference_plotter_standard,
-            "throughput-colocated-scaling": throughput_plotter_colocated,
-            "throughput-standard-scaling": throughput_plotter_standard,
-            "aggregation-standard-scaling": aggregation_plotter_standard,
-            "aggregation-standard-scaling-py": aggregation_plotter_standard_py,
-            "aggregation-standard-scaling-py-fs": aggregation_plotter_standard_py_fs
-        }
-        chosen_operation_function = ops.get(exp_name)
-        chosen_operation_function(session_path)
+        scaling_plotter(session_path, exp_name, "database_nodes")
     
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):

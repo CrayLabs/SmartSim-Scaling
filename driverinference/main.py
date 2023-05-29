@@ -16,7 +16,7 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4, 8],
+                           db_nodes=[4,8],
                            db_cpus=[8],
                            db_tpq=[1],
                            db_port=6780,
