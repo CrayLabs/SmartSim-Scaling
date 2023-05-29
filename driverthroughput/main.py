@@ -8,7 +8,7 @@ logger = get_logger("Scaling Tests")
 
 class Throughput:
     def throughput_standard(self,
-                           exp_name="throughput-standard-scaling",
+                           exp_name="inference-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            node_feature={},
@@ -21,8 +21,8 @@ class Throughput:
                            clients_per_node=[32],
                            client_nodes=[128],
                            iterations=3,
-                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
-                                         262144, 524288, 1024000, 2048000, 4096000]):
+                           tensor_bytes=[1024],
+                           languages=["cpp"]):
 
         """Run the throughput scaling tests with standard Orchestrator deployment
 
@@ -69,7 +69,7 @@ class Throughput:
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=tensor_bytes,
-                    language="cpp")
+                    language=languages)
         permss = list(product(db_nodes, db_cpus))
         for permsss in permss:
             dbn, dbc = permsss
@@ -86,9 +86,9 @@ class Throughput:
                                 db_hosts)
 
 
-            perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus))
+            perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))
             for perm in perms:
-                c_nodes, cpn, _bytes, db_cpu = perm
+                c_nodes, cpn, _bytes, db_cpu, language = perm
 
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self._create_throughput_session(exp,
@@ -98,7 +98,8 @@ class Throughput:
                                                                dbn,
                                                                db_cpu,
                                                                iterations,
-                                                               _bytes)
+                                                               _bytes,
+                                                               language)
                 exp.start(throughput_session, summary=True)
 
                 # confirm scaling test run successfully
@@ -118,7 +119,8 @@ class Throughput:
                               db_nodes,
                               db_cpus,
                               iterations,
-                              _bytes):
+                              _bytes,
+                              language):
         """Create a Model to run a standard throughput scaling session
 
         :param exp: Experiment object for this test
@@ -140,7 +142,7 @@ class Throughput:
         :return: Model reference to the throughput session to launch
         :rtype: Model
         """
-        settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes), run_args=node_feature)
+        settings = exp.create_run_settings(f"./{language}-throughput/build/throughput", str(_bytes), run_args=node_feature)
         cluster = 1 if db_nodes > 1 else 0
         settings.set_tasks(nodes * tasks)
         settings.set_tasks_per_node(tasks)
@@ -154,6 +156,7 @@ class Throughput:
 
         name = "-".join((
             "throughput-sess",
+            str(language),
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
@@ -174,7 +177,7 @@ class Throughput:
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=_bytes,
-                    language="cpp")
+                    language=language)
         return model
     
     def throughput_colocated(self,
@@ -188,8 +191,8 @@ class Throughput:
                            clients_per_node=[48],
                            pin_app_cpus=[False],
                            iterations=3,
-                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
-                                         262144, 524288, 1024000, 2048000, 4096000]):
+                           tensor_bytes=[1024],
+                           languages=["cpp"]):
 
 
         """Run the throughput scaling tests with colocated Orchestrator deployment
@@ -232,11 +235,11 @@ class Throughput:
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=tensor_bytes,
-                    language="cpp")
+                    language=languages)
 
-        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus))
+        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus, languages))
         for perm in perms:
-            c_nodes, cpn, dbc, _bytes, pin_app = perm
+            c_nodes, cpn, dbc, _bytes, pin_app, language = perm
 
             # setup a an instance of the C++ driver and start it
             throughput_session = self._create_colocated_throughput_session(exp,
@@ -248,7 +251,8 @@ class Throughput:
                                                             iterations,
                                                             _bytes,
                                                             pin_app,
-                                                            net_ifname)
+                                                            net_ifname,
+                                                            language)
             exp.start(throughput_session, block = True, summary=True)
 
             # confirm scaling test run successfully
@@ -267,7 +271,8 @@ class Throughput:
                               iterations,
                               _bytes,
                               pin_app_cpus,
-                              net_ifname):
+                              net_ifname,
+                              language):
         """Run the throughput scaling tests with colocated Orchestrator deployment
 
         :param exp: Experiment object for this test
@@ -294,7 +299,7 @@ class Throughput:
         :return: Model reference to the throughput session to launch
         :rtype: Model
         """
-        settings = exp.create_run_settings("./cpp-throughput/build/throughput", str(_bytes), run_args=node_feature)
+        settings = exp.create_run_settings(f"./{language}-throughput/build/throughput", str(_bytes), run_args=node_feature)
         settings.set_tasks(nodes * tasks)
         settings.set_tasks_per_node(tasks)
         settings.update_env({
@@ -307,6 +312,7 @@ class Throughput:
 
         name = "-".join((
             "throughput-sess-colo",
+            str(language),
             "N"+str(nodes),
             "T"+str(tasks),
             "DBCPU"+str(db_cpus),
@@ -337,7 +343,7 @@ class Throughput:
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=_bytes,
-                    language="cpp")
+                    language=language)
         return model
 
 if __name__ == "__main__":

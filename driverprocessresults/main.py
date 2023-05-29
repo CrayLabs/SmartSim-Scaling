@@ -17,7 +17,7 @@ logger = get_logger("Scaling Tests")
 
 class ProcessResults:
     def process_scaling_results(self, 
-                                scaling_results_dir="inference-standard-scaling", 
+                                scaling_results_dir="aggregation-standard-scaling-py-fs", 
                                 overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
@@ -145,7 +145,7 @@ class ProcessResults:
     @staticmethod
     def _other_plots(session_path):
         exp_name = os.path.basename(os.path.dirname(session_path))
-        scaling_plotter(session_path, exp_name, "database_nodes")
+        scaling_plotter(session_path, exp_name, "client_threads")
     
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):
