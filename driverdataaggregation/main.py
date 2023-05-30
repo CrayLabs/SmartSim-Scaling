@@ -28,7 +28,8 @@ class DataAggregation:
                             tensors_per_dataset=[4],
                             client_threads=[8],
                             cpu_hyperthreads=2,
-                            languages=["cpp"]):
+                            languages=["cpp"],
+                            wall_time="05:00:00"):
 
         """Run the data aggregation scaling tests.  Permutations of the test
         include client_nodes, clients_per_node, tensor_bytes,
@@ -92,7 +93,8 @@ class DataAggregation:
                     tensors_per_dataset=tensors_per_dataset,
                     client_threads=client_threads,
                     cpu_hyperthreads=cpu_hyperthreads,
-                    language=languages)
+                    language=languages,
+                    wall_time=wall_time)
 
         for db_node_count in db_nodes:
 
@@ -106,7 +108,8 @@ class DataAggregation:
                                 None, # not setting threads per queue in throughput tests
                                 net_ifname,
                                 run_db_as_batch,
-                                db_hosts)
+                                db_hosts,
+                                wall_time)
 
 
             for c_nodes, cpn, _bytes, t_per_dataset, c_threads, language in product(
@@ -356,7 +359,8 @@ class DataAggregation:
                                 tensors_per_dataset=[4],
                                 client_threads=[32],
                                 cpu_hyperthreads=2,
-                                languages=["cpp"]):
+                                languages=["cpp"],
+                                wall_time="05:00:00"):
             """Run the data aggregation scaling tests with python consumer.
             Permutations of the test include client_nodes, clients_per_node, 
             tensor_bytes, tensors_per_dataset, and client_threads.
@@ -420,7 +424,8 @@ class DataAggregation:
                     tensors_per_dataset=tensors_per_dataset,
                     client_threads=client_threads,
                     cpu_hyperthreads=cpu_hyperthreads,
-                    languages=languages)
+                    languages=languages,
+                    wall_time=wall_time)
 
             for db_node_count in db_nodes:
 
@@ -434,7 +439,8 @@ class DataAggregation:
                                     None, # not setting threads per queue in throughput tests
                                     net_ifname,
                                     run_db_as_batch,
-                                    db_hosts)
+                                    db_hosts,
+                                    wall_time)
 
                 for c_nodes, cpn, bytes_, t_per_dataset, c_threads, language in product(
                     client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads, languages

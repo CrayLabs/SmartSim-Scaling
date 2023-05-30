@@ -23,7 +23,8 @@ class Throughput:
                            client_nodes=[128],
                            iterations=3,
                            tensor_bytes=[1024],
-                           languages=["cpp"]):
+                           languages=["cpp"],
+                           wall_time="05:00:00"):
 
         """Run the throughput scaling tests with standard Orchestrator deployment
 
@@ -70,7 +71,8 @@ class Throughput:
                     database_cpus=db_cpus,
                     iterations=iterations,
                     tensor_bytes=tensor_bytes,
-                    language=languages)
+                    language=languages,
+                    wall_time=wall_time)
         permss = list(product(db_nodes, db_cpus))
         for permsss in permss:
             dbn, dbc = permsss
@@ -84,7 +86,8 @@ class Throughput:
                                 None, # not setting threads per queue in throughput tests
                                 net_ifname,
                                 run_db_as_batch,
-                                db_hosts)
+                                db_hosts,
+                                wall_time)
 
 
             perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))

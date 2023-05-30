@@ -29,7 +29,8 @@ class Inference:
                            client_nodes=[8,16],
                            rebuild_model=False,
                            iterations=5,
-                           languages=["cpp"]):
+                           languages=["cpp"],
+                           wall_time="05:00:00"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -93,7 +94,8 @@ class Inference:
                         iterations=iterations,
                         language=languages,
                         db_node_feature=db_node_feature,
-                        node_feature=node_feature)
+                        node_feature=node_feature,
+                        wall_time=wall_time)
 
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size, languages))
         logger.info(f"Executing {len(perms)} permutations")
@@ -108,7 +110,8 @@ class Inference:
                                 dbtpq,
                                 net_ifname,
                                 run_db_as_batch,
-                                db_hosts)
+                                db_hosts,
+                                wall_time)
             # setup a an instance of the synthetic C++ app and start it
             infer_session, resnet_model = self._create_inference_session(exp,
                                                      node_feature,
