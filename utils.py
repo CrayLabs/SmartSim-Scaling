@@ -82,7 +82,7 @@ def create_folder(exp_name, launcher):
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
     return exp, result_path
 
-def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run_as_batch, hosts):
+def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run_as_batch, hosts, wall_time):
     """Create and start the Orchestrator
 
     This function is only called if the scaling tests are
@@ -107,6 +107,8 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :type run_as_batch: bool
     :param hosts: host to use for the database
     :type hosts: int
+    :param wall_time: allotted time for database launcher to run
+    :type wall_time: str
     :return: orchestrator instance
     :rtype: Orchestrator
     """
@@ -118,7 +120,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
                             single_cmd=True,
                             hosts=hosts)
     if run_as_batch:
-        db.set_walltime("48:00:00")
+        db.set_walltime(wall_time)
         for k, v in db_node_feature.items():
             db.set_batch_arg(k, v)
     db.set_cpus(cpus)

@@ -77,6 +77,10 @@ class DataAggregation:
                                  to request that the consumer application utilizes
                                  all physical cores for each client thread.
         :type cpu_hyperthreads: int, optional
+        :param languages: which language to use for the tester "cpp" or "fortran"
+        :type languages: str
+        :param wall_time: allotted time for database launcher to run
+        :type wall_time: str
         """
         logger.info("Starting dataset aggregation scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -407,6 +411,10 @@ class DataAggregation:
                                     to request that the consumer application utilizes
                                     all physical cores for each client thread.
             :type cpu_hyperthreads: int, optional
+            :param languages: which language to use for the tester "cpp" or "fortran"
+            :type languages: str
+            :param wall_time: allotted time for database launcher to run
+            :type wall_time: str
             """
             logger.info("Starting dataset aggregation scaling with python tests")
             logger.info(f"Running with database backend: {get_db_backend()}")
@@ -562,6 +570,8 @@ class DataAggregation:
                                  to request that the consumer application utilizes
                                  all physical cores for each client thread.
         :type cpu_hyperthreads: int, optional
+        :param languages: which language to use for the tester "cpp" or "fortran"
+        :type languages: str
         """
         logger.info("Starting dataset aggregation scaling with python on file system tests")
         logger.info(f"Running with database backend: None (data to file system)")

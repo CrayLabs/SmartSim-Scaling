@@ -71,6 +71,8 @@ class Inference:
         :type iterations: int
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
+        :param wall_time: allotted time for database launcher to run
+        :type wall_time: str
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")

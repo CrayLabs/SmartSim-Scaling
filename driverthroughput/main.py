@@ -57,6 +57,10 @@ class Throughput:
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
+        :param languages: which language to use for the tester "cpp" or "fortran"
+        :type languages: str
+        :param wall_time: allotted time for database launcher to run
+        :type wall_time: str
         """
         logger.info("Starting throughput scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -226,6 +230,8 @@ class Throughput:
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
+        :param languages: which language to use for the tester "cpp" or "fortran"
+        :type languages: str
         """
         logger.info("Starting colocated throughput scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
