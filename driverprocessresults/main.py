@@ -32,10 +32,12 @@ class ProcessResults:
             final_stat_dir = "results" / Path(scaling_results_dir) / "stats"
             run_folders = os.listdir("results" / Path(scaling_results_dir))
             session_folders = []
+            run_list = []
             for run_folder in run_folders:
                 
                 if 'run' in run_folder:
                     session_folders += ["results/" + scaling_results_dir + "/" + run_folder + "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
+                    run_list += [Path("results/" + scaling_results_dir + "/" + run_folder)]
             try:
                 # write csv each so this function is idempotent
                 # csv's will not be written if they are already created
@@ -50,6 +52,8 @@ class ProcessResults:
                         logger.error(e)
                         continue
                 # collect all written csv into dataframes to concat
+                for run in tqdm(run_list, desc="Creating plots...", ncols=80):
+                    self._other_plots(run, scaling_results_dir) #need to change this to an fn
                 for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80): #QUESTION: ncols: hardcoded?
                     try:
                         session_name = os.path.basename(session)
@@ -137,15 +141,15 @@ class ProcessResults:
             
             data = cls._make_stats(session_path, function_times)
             data_df = pd.DataFrame(data, index=[0])
-            #cls._other_plots(session_path)
             file_name = session_stats_dir / ".".join((session_name, "csv"))
             data_df.to_csv(file_name)
-        cls._other_plots(split) #need to change this to an fn
 
-    @staticmethod
-    def _other_plots(session_path):
-        exp_name = os.path.basename(os.path.dirname(session_path))
-        scaling_plotter(session_path, exp_name, "client_threads")
+    @classmethod
+    def _other_plots(cls, run, exp_name):
+        if "standard" in exp_name:
+            scaling_plotter(run, exp_name, "database_nodes")
+        else:
+            scaling_plotter(run, exp_name, "client_threads")
     
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):

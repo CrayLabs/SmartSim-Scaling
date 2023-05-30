@@ -6,6 +6,7 @@ import numpy as np
 from glob import glob
 import seaborn as sns
 from tqdm.auto import tqdm
+import matplotlib.patches as mpatches
 
 import sys
 import configparser
@@ -27,22 +28,14 @@ def scaling_plotter(run_cfg_path, scaling_test_name, var_input):
         config = configparser.ConfigParser()
         config.read(run_cfg)
         configs.append(config)
-    
     df_list = []
     for config in configs:
-        print("1")
         timing_files = Path(config['run']['path']).glob('rank*.csv')
-        print("2")
         for timing_file in timing_files:
-            print("4")
             tmp_df = pd.read_csv(timing_file, header=0, names=["rank", "function", "time"])
-            print("5")
             for key, value in config._sections['attributes'].items():
-                print("6")
                 tmp_df[key] = value
-                print("7")
             df_list.append(tmp_df)
-            print("8")
     
     df = pd.concat(df_list, ignore_index=True)
     violin_opts = dict(        
@@ -58,6 +51,7 @@ def scaling_plotter(run_cfg_path, scaling_test_name, var_input):
     languages = df['language'].unique()
     legend_entries = []
     var_list = df[var_input].unique()
+
     for function_name in function_names:
         fig = plt.figure(figsize=[12,4])
         for lang_idx, language in enumerate(languages):
@@ -66,22 +60,18 @@ def scaling_plotter(run_cfg_path, scaling_test_name, var_input):
             for idx, var in enumerate(var_list):
                 var_df = language_df.groupby(var_input).get_group(var)
                 function_df = var_df.groupby('function').get_group(function_name)[ ['client_total','time'] ]
-                #var_df = function_df.groupby(var_input).get_group(var)[ ['client_total','time'] ]
-                # print(var_df)
-                #sys.exit()
                 data = [function_df.groupby('client_total').get_group(client)['time'] for client in ordered_client_total]
-                # print(data)
-                pos = [int(client)-idx*25 for client in ordered_client_total]
+                pos = [int(client)-idx*36 for client in ordered_client_total]
                 plot = axs[lang_idx].violinplot(data, pos, **violin_opts, widths=24)
+                [col.set_alpha(0.3) for col in plot["bodies"]]
+                props_dict = dict(color=plot["cbars"].get_color().flatten())
+                entry = plot["cbars"]
+                legend_entries.append(entry)     
+            data_labels = [f"{var} DB nodes" for var in var_list]
+            axs[lang_idx].legend(legend_entries, data_labels, loc='upper left')
             axs[lang_idx].set_xlabel('Number of Clients')
             axs[lang_idx].set_title(language)
             axs[lang_idx].set_xticks(pos)
-            entry = plot["cbars"]
-            #legend_entries.append(entry)
-            # data_labels = [f"{var} {var_input}" for var in var_list]
-            #axs[lang_idx].legend(loc='upper left')
         axs[0].set_ylabel(f'{function_name}\nTime (s)')
         png_file = Path("results/" + scaling_test_name + "/stats") / os.path.basename(run_cfg_path) / f"{function_name}.png"
         plt.savefig(png_file)
-        print(png_file)
-    sys.exit()

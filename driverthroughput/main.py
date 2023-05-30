@@ -1,4 +1,5 @@
 from utils import *
+from driverprocessresults.main import *
 
 if __name__ == "__main__":
     sys.path.append("..")
@@ -109,6 +110,7 @@ class Throughput:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
+        self.process_scaling_results(scaling_results_dir=exp_name)
     
     @classmethod
     def _create_throughput_session(cls,
@@ -259,6 +261,7 @@ class Throughput:
             stat = exp.get_status(throughput_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
+        self.process_scaling_results(scaling_results_dir=exp_name)
     
     @classmethod
     def _create_colocated_throughput_session(cls,

@@ -1,4 +1,5 @@
 from utils import *
+from driverprocessresults.main import *
 
 if __name__ == "__main__":
     sys.path.append("..")
@@ -139,6 +140,7 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
+        self.process_scaling_results(scaling_results_dir=exp_name)
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",

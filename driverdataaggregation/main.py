@@ -1,4 +1,5 @@
 from utils import *
+from driverprocessresults.main import *
 
 if __name__ == "__main__":
     sys.path.append("..")
@@ -143,6 +144,7 @@ class DataAggregation:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
+        self.process_scaling_results(scaling_results_dir=exp_name)
     
     @classmethod
     def _create_aggregation_producer_session_cpp(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
@@ -469,6 +471,7 @@ class DataAggregation:
 
                 # stop database after this set of permutations have finished
                 exp.stop(db)
+            self.process_scaling_results(scaling_results_dir=exp_name)
 
     @classmethod
     def _create_aggregation_producer_session_python(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
@@ -613,6 +616,7 @@ class DataAggregation:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"ERROR: One of the scaling tests failed \
                                 {aggregation_consumer_sessions.name}")
+        self.process_scaling_results(scaling_results_dir=exp_name)
 
     @classmethod
     def _create_aggregation_producer_session_python_fs(cls, exp, prod_node_feature, nodes, tasks, iterations,
