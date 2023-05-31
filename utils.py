@@ -11,6 +11,7 @@ from uuid import uuid4
 import pandas as pd
 from process_results import create_run_csv
 from imagenet.model_saver import save_model
+from smartsim.error.errors import *
 
 
 import smartsim
@@ -78,8 +79,14 @@ def create_folder(exp_name, launcher):
     """
     result_path = osp.join("results", exp_name, "run-" + get_date()+ "-" + get_time()) #autoincrement
     os.makedirs(result_path)
-    exp = Experiment(name=result_path, launcher=launcher)
-    exp.generate()
+    
+    try:
+        exp = Experiment(name=result_path, launcher=launcher)
+        exp.generate()
+    except SmartSimError as e:
+        logger.error(e)
+        raise
+    
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
     return exp
 
@@ -111,22 +118,26 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :return: orchestrator instance
     :rtype: Orchestrator
     """
-    db = exp.create_database(port=port,
+    try:
+        db = exp.create_database(port=port,
                             db_nodes=nodes,
                             batch=run_as_batch,
                             interface=net_ifname,
                             threads_per_queue=tpq,
                             single_cmd=True,
                             hosts=hosts)
-    if run_as_batch:
-        db.set_walltime("48:00:00")
-        for k, v in db_node_feature.items():
-            db.set_batch_arg(k, v)
-    db.set_cpus(cpus)
-    exp.generate(db)
-    exp.start(db)
-    logger.info("Orchestrator Database created and running")
-    return db
+        if run_as_batch:
+            db.set_walltime("48:00:00")
+            for k, v in db_node_feature.items():
+                db.set_batch_arg(k, v)
+        db.set_cpus(cpus)
+        exp.generate(db)
+        exp.start(db)
+        logger.info("Orchestrator Database created and running")
+        return db
+    except SmartSimError as e:
+        logger.error(e)
+        raise
 
 def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     """Set and configure the PyTorch resnet50 model for inference
@@ -144,33 +155,36 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    client = Client(address=address, cluster=cluster)
-    device = device.upper()
-    if (device == "GPU") and (num_devices > 1):
-        client.set_model_from_file_multigpu("resnet_model_0",
-                                            model,
-                                            "TORCH",
-                                            0, num_devices,
-                                            batch_size)
-        client.set_script_from_file_multigpu("resnet_script_0",
-                                             "./imagenet/data_processing_script.txt",
-                                             0, num_devices)
-        logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
-    else:
-        # Redis does not accept CPU:<n>. We are either
-        # setting (possibly multiple copies of) the model and script on CPU, or one
-        # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
-        for i in range (num_devices):
-            client.set_model_from_file(f"resnet_model_{i}",
-                                       model,
-                                       "TORCH",
-                                       device,
-                                       batch_size)
-            client.set_script_from_file(f"resnet_script_{i}",
-                                        "./imagenet/data_processing_script.txt",
-                                        device)
-            logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
-
+    try:
+        client = Client(address=address, cluster=cluster)
+        device = device.upper()
+        if (device == "GPU") and (num_devices > 1):
+            client.set_model_from_file_multigpu("resnet_model_0",
+                                                model,
+                                                "TORCH",
+                                                0, num_devices,
+                                                batch_size)
+            client.set_script_from_file_multigpu("resnet_script_0",
+                                                "./imagenet/data_processing_script.txt",
+                                                0, num_devices)
+            logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
+        else:
+            # Redis does not accept CPU:<n>. We are either
+            # setting (possibly multiple copies of) the model and script on CPU, or one
+            # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
+            for i in range (num_devices):
+                client.set_model_from_file(f"resnet_model_{i}",
+                                        model,
+                                        "TORCH",
+                                        device,
+                                        batch_size)
+                client.set_script_from_file(f"resnet_script_{i}",
+                                            "./imagenet/data_processing_script.txt",
+                                            device)
+                logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
+    except ParameterWriterError as e:
+        logger.error(e)
+        raise
 def write_run_config(path, **kwargs):
     """Write config attributes to run file.
 
@@ -214,3 +228,17 @@ def get_db_backend():
     """
     db_backend_path = smartsim._core.config.CONFIG.database_exe
     return os.path.basename(db_backend_path)
+
+def check_node_allocation(client_nodes, db_nodes):
+    if not db_nodes:
+        raise ValueError("db_nodes cannot be empty")
+    
+    total_nodes = os.getenv("SLURM_NNODES")
+    for perm in list(product(client_nodes, db_nodes)):
+            one, two = perm
+            val = one + two
+            if val > int(total_nodes):
+                raise AllocationError(f"Addition of db_nodes and client_nodes is {val} but you allocated {total_nodes}")
+    # raise SmartSimError(
+    #     "Could not parse interactive allocation nodes from PBS_NODEFILE"
+    # )
