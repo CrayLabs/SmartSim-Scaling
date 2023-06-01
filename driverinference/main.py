@@ -73,6 +73,7 @@ class Inference:
         check_model(device, force_rebuild=rebuild_model)
 
         exp = create_folder(exp_name, launcher)
+        check_node_allocation(client_nodes, db_nodes)
 
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
         logger.info(f"Executing {len(perms)} permutations")

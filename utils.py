@@ -217,8 +217,12 @@ def get_uuid():
     :return: uid str
     :rtype: str
     """
-    uid = str(uuid4())
-    return uid[:4]
+    try:
+        uid = str(uuid4())
+        return uid[:4]
+    except SmartSimError as e:
+        logger.error(e)
+        raise
 
 def get_db_backend():
     """Return database backend.
@@ -226,8 +230,12 @@ def get_db_backend():
     :return: db backend name str
     :rtype: str
     """
-    db_backend_path = smartsim._core.config.CONFIG.database_exe
-    return os.path.basename(db_backend_path)
+    try:
+        db_backend_path = smartsim._core.config.CONFIG.database_exe
+        return os.path.basename(db_backend_path)
+    except SmartSimError as e:
+        logger.error(e)
+        raise
 
 def check_node_allocation(client_nodes, db_nodes):
     if not db_nodes:
@@ -238,7 +246,4 @@ def check_node_allocation(client_nodes, db_nodes):
             one, two = perm
             val = one + two
             if val > int(total_nodes):
-                raise AllocationError(f"Addition of db_nodes and client_nodes is {val} but you allocated {total_nodes}")
-    # raise SmartSimError(
-    #     "Could not parse interactive allocation nodes from PBS_NODEFILE"
-    # )
+                raise AllocationError(f"Addition of db_nodes and client_nodes is {val} nodes but you allocated only {total_nodes} nodes")

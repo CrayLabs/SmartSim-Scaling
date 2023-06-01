@@ -76,6 +76,7 @@ class Throughput:
                                 run_db_as_batch,
                                 db_hosts)
             perms = list(product(client_nodes, clients_per_node, tensor_bytes))
+            logger.info(f"Running experiment with {db_node_count} db_nodes through {len(perms)} permutations")
             for perm in perms:
                 c_nodes, cpn, _bytes = perm
 
@@ -89,6 +90,7 @@ class Throughput:
                                                                iterations,
                                                                _bytes)
                 exp.start(throughput_session, summary=True)
+                logger.debug("Waiting for Experiment to complete...")
                 #exp.poll(interval=10, verbose=True, kill_on_interrupt=True)
                 # confirm scaling test run successfully
                 stat = exp.get_status(throughput_session)

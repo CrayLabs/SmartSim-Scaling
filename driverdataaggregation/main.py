@@ -80,7 +80,8 @@ class DataAggregation:
         logger.info(f"Running with launcher: {launcher}")
 
         exp = create_folder(exp_name, launcher)
-
+        check_node_allocation(client_nodes, db_nodes)
+        
         for db_node_count in db_nodes:
 
             # start the database only once per value in db_nodes so all permutations
@@ -392,6 +393,7 @@ class DataAggregation:
             logger.info(f"Running with launcher: {launcher}")
 
             exp = create_folder(exp_name, launcher)
+            check_node_allocation(client_nodes, db_nodes)
 
             for db_node_count in db_nodes:
 
