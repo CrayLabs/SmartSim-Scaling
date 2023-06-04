@@ -69,7 +69,7 @@ class Inference:
         :type rebuild_model: bool
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
-        :param languages: which language to use for the tester "cpp" or "fortran"
+        :param languages: list of languages to use for the tester "cpp" and/or "fortran"
         :type languages: str
         :param wall_time: allotted time for database launcher to run
         :type wall_time: str

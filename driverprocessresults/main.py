@@ -36,13 +36,14 @@ class ProcessResults:
             for run_folder in run_folders:
                 
                 if 'run' in run_folder:
-                    session_folders += ["results/" + scaling_results_dir + "/" + run_folder + "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
+                    session_folders += ["results/" + scaling_results_dir + "/" + run_folder + 
+                                        "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
                     run_list += [Path("results/" + scaling_results_dir + "/" + run_folder)]
             try:
                 # write csv each so this function is idempotent
                 # csv's will not be written if they are already created
                 #tqdm creates a smart progress bar for the loops
-                for session_folder in tqdm(session_folders, desc="Processing scaling results...", ncols=80): #QUESTION: ncols: hardcoded?
+                for session_folder in tqdm(session_folders, desc="Processing scaling results...", ncols=80):
                     try:
                         self._create_run_csv(session_folder, delete_previous=overwrite)
                     # want to catch all exceptions and skip runs that may
@@ -53,8 +54,15 @@ class ProcessResults:
                         continue
                 # collect all written csv into dataframes to concat
                 for run in tqdm(run_list, desc="Creating plots...", ncols=80):
-                    self._other_plots(run, scaling_results_dir) #need to change this to an fn
-                for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80): #QUESTION: ncols: hardcoded?
+                    try:
+                        self._other_plots(run, scaling_results_dir)
+                    # want to catch all exceptions and skip runs that may
+                    # not have completed or finished b/c some reason i.e. node failure
+                    except Exception as e:
+                        logger.warning(f"Skipping {run} in {scaling_results_dir}: could not process results")
+                        logger.error(e)
+                        continue
+                for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80):
                     try:
                         session_name = os.path.basename(session)
                         split = os.path.dirname(session)
@@ -65,7 +73,7 @@ class ProcessResults:
                     
                     # catch all and skip for reason listed above
                     except Exception as e:
-                        logger.warning(f"Skipping path {session} could not read results csv")
+                        logger.warning(f"Skipping path {session}: could not read results csv")
                         logger.error(e)
                         continue
                 final_df = pd.concat(dataframes, join="outer")
@@ -74,7 +82,7 @@ class ProcessResults:
                 final_df.to_csv(str(csv_path))
 
             except Exception:
-                logger.error("Could not preprocess results")
+                logger.error(f"Could not preprocess results for {scaling_results_dir}")
                 raise
 
     @classmethod
@@ -90,19 +98,15 @@ class ProcessResults:
         
         if not session_stats_dir.is_dir():
             os.makedirs(session_stats_dir)
-            #HERE
             function_times = {}
             files = os.listdir(Path(session_path))
             for file in files: 
                 if '.csv' in file:
-                    #creating fp=sess/file.csv
                     fp = os.path.join(session_path, file)
                     #opening csv file
                     with open(fp) as f:
                         #scan over all lines in file
                         for i, line in enumerate(f):
-                            #QUESTION: ask for an explanation
-                            #does this created 2 keys and assigns all values to the 2 keys?
                             vals = line.split(',')
                             if vals[1] in function_times.keys():
                                 function_times[vals[1]].append(float(vals[2]))
@@ -116,11 +120,10 @@ class ProcessResults:
                 print('Max {0}'.format(max(function_times['client()'])))
             try:
                 if "run_model" in function_times:
-                    #will always be false and therefore skip this?
                     if verbose:
-                        #Question: explanation?
                         num_run = len(function_times['run_model'])
                         print(f'there are {num_run} values in the run_model entries')
+                        #is it neccessary to print all run_model values?
                     cls._make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', session_stats_dir)
                     cls._make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', session_stats_dir)
                 if "client()" in function_times:
