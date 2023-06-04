@@ -56,9 +56,18 @@ class Throughput:
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
         """
-        logger.info("Starting throughput scaling tests")
+        logger.info("Starting throughput standard scaling tests\n")
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
+        logger.info(f"Running with database nodes: {', '.join(map(str, db_nodes))}")
+        logger.info(f"Running with database cpus: {db_cpus}")
+        logger.info(f"Running with network interface: {net_ifname}")
+        logger.info(f"Running with cleints per node: {', '.join(map(str, clients_per_node))}")
+        logger.info(f"Running with client nodes: {', '.join(map(str, client_nodes))}")
+        logger.info(f"Running with iterations: {iterations}")
+        logger.info(f"Running with tensor bytes: {', '.join(map(str, tensor_bytes))}")
+        logger.info(f"Running with node feature: {node_feature}")
+        logger.info(f"Running with database node feature: {db_node_feature}\n")
         
         check_node_allocation(client_nodes, db_nodes)
         exp = create_folder(exp_name, launcher)
@@ -76,9 +85,11 @@ class Throughput:
                                 run_db_as_batch,
                                 db_hosts)
             perms = list(product(client_nodes, clients_per_node, tensor_bytes))
-            logger.info(f"Running experiment with {db_node_count} db_nodes through {len(perms)} permutations")
             for perm in perms:
                 c_nodes, cpn, _bytes = perm
+                logger.info(f"Running iteration {perm} of {len(perms)}")
+                logger.info(f"Running with db_node: {db_node_count}")
+                sys.exit()
 
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self._create_throughput_session(exp,

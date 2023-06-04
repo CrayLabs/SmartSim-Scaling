@@ -240,10 +240,11 @@ def get_db_backend():
 def check_node_allocation(client_nodes, db_nodes):
     if not db_nodes:
         raise ValueError("db_nodes cannot be empty")
-    
+    if not client_nodes:
+        raise ValueError("client_nodes cannot be empty")
     total_nodes = os.getenv("SLURM_NNODES")
     for perm in list(product(client_nodes, db_nodes)):
-            one, two = perm
-            val = one + two
-            if val > int(total_nodes):
-                raise AllocationError(f"Addition of db_nodes and client_nodes is {val} nodes but you allocated only {total_nodes} nodes")
+        one, two = perm
+        val = one + two
+        if val > int(total_nodes):
+            raise AllocationError(f"Addition of db_nodes and client_nodes is {val} nodes but you allocated only {total_nodes} nodes")
