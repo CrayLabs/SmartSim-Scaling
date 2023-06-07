@@ -8,4 +8,8 @@ smartredis
 smartredis-0.1.0
 smartredis-0.1.0.tar.gz
 
+slurm-*.out
+*.mod
+*.o
+
 **/build
