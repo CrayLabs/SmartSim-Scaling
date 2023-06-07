@@ -64,7 +64,7 @@ def check_model(device, force_rebuild=False):
             logger.error(message)
             sys.exit(1)
 
-def create_folder(exp_name, launcher): 
+def create_experiment_and_dir(exp_name, launcher): 
     """Create and generate Experiment as well as create results folder.
 
     This function is called for every scaling test. It creates an Experiment per scaling test
@@ -79,11 +79,11 @@ def create_folder(exp_name, launcher):
     """
     result_path = osp.join("results", exp_name, "run-" + get_date()+ "-" + get_time()) #autoincrement
     os.makedirs(result_path)
-    
+    #Ask Bill if I need a try/except block here even tho exp.generate has a try/except
     try:
         exp = Experiment(name=result_path, launcher=launcher)
         exp.generate()
-    except SmartSimError as e:
+    except Exception as e:
         logger.error(e)
         raise
     
@@ -118,6 +118,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :return: orchestrator instance
     :rtype: Orchestrator
     """
+    #Ask Bill about this right here
     try:
         db = exp.create_database(port=port,
                             db_nodes=nodes,
@@ -126,18 +127,18 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
                             threads_per_queue=tpq,
                             single_cmd=True,
                             hosts=hosts)
-        if run_as_batch:
-            db.set_walltime("48:00:00")
-            for k, v in db_node_feature.items():
-                db.set_batch_arg(k, v)
-        db.set_cpus(cpus)
-        exp.generate(db)
-        exp.start(db)
-        logger.info("Orchestrator Database created and running")
-        return db
     except SmartSimError as e:
         logger.error(e)
         raise
+    if run_as_batch:
+        db.set_walltime("48:00:00")
+        for k, v in db_node_feature.items():
+            db.set_batch_arg(k, v)
+    db.set_cpus(cpus)
+    exp.generate(db)
+    exp.start(db)
+    logger.info("Orchestrator Database created and running")
+    return db
 
 def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     """Set and configure the PyTorch resnet50 model for inference

@@ -11,15 +11,20 @@ int get_iterations() {
 void run_aggregation_consumer(std::ofstream& timing_file,
                               int list_length)
 {
+    std::string context("Run Data Aggregation consumer");
+
+    //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    //Indicate Client creation
     if (rank == 0)
+        log_data(context, LLInfo, "Connecting clients");
         std::cout << "Connecting clients" << std::endl;
 
     // Connect the client and save connection time
     double constructor_start = MPI_Wtime();
-    SmartRedis::Client client(true);
+    SmartRedis::Client client(true, context);
     double constructor_end = MPI_Wtime();
     double delta_t = constructor_end - constructor_start;
     timing_file << rank << "," << "client()" << ","
@@ -30,15 +35,23 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
     // Retrieve the number of iterations to run
     int iterations = get_iterations();
+    std::string text = "Running with iterations: ";
+    text += std::to_string(iterations);
+    log_data(context, LLDebug, text);
 
     // Block to make sure all clients are connected
     MPI_Barrier(MPI_COMM_WORLD);
+
+    log_data(context, LLDebug, "Iteration loop starting...");
 
     // Retrieve rank-local loop start time
     double loop_start = MPI_Wtime();
 
     // Perform dataset aggregation retrieval
     for (int i=0; i<iterations; i++) {
+        std::string text1 = "Running iteration: ";
+        text1 += std::to_string(i);
+        log_data(context, LLDebug, text1);
 
         // Create aggregation list name
         std::string list_name = "iteration_" + std::to_string(i);
@@ -64,9 +77,11 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
         // Have each rank retrieve the datasets in the aggregation list
         double get_list_start = MPI_Wtime();
+        log_data(context, LLDebug, "get_list started");
         std::vector<SmartRedis::DataSet> result =
             client.get_datasets_from_list(list_name);
         double get_list_end = MPI_Wtime();
+        log_data(context, LLDebug, "get_list ended");
         delta_t = get_list_end - get_list_start;
         get_list_times.push_back(delta_t);
 
@@ -76,13 +91,20 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         // Delete the list so the producer knows the list has been consumed
         if (rank == 0) {
             client.delete_list(list_name);
+            log_data(context, LLDebug, "Data Agg List deleted");
         }
+
+        std::string text2 = "Ending iteration: ";
+        text2 += std::to_string(i);
+        log_data(context, LLDebug, text2);
     }
 
     // Compute loop execution time
     double loop_end = MPI_Wtime();
+    log_data(context, LLDebug, "All iterations complete");
     delta_t = loop_end - loop_start;
 
+    log_data(context, LLDebug, "Writing data to files");
     // Write aggregation times to file
     for (int i = 0; i < iterations; i++) {
         timing_file << rank << "," << "get_list" << ","
@@ -93,6 +115,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     timing_file << rank << "," << "loop_time" << ","
                 << delta_t << "\n";
 
+    log_data(context, LLDebug, "Data written to files");
     // Flush the output stream
     timing_file << std::flush;
 
@@ -101,15 +124,22 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
 int main(int argc, char* argv[]) {
 
+    std::string context("Scaling tests");
+
     MPI_Init(&argc, &argv);
 
+    //initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    log_data(context, LLDebug, "Starting Data Aggregation test");
     double main_start = MPI_Wtime();
 
     // Get command line arguments
     if(argc==1)
+        // log_error(context, LLInfo, "The number tensor size in "\
+        //                          "bytes must be provided as "\
+        //                          "a command line argument.");
         throw std::runtime_error("The expected list length must be "
                                  "passed in.");
 
@@ -117,6 +147,7 @@ int main(int argc, char* argv[]) {
     int list_length = std::stoi(s_list_length);
 
     if(rank==0)
+        log_data(context, LLInfo, "Running aggregate scaling test consumer.");
         std::cout << "Running aggregate scaling test consumer." << std::endl;
 
     // Open Timing file
@@ -126,11 +157,15 @@ int main(int argc, char* argv[]) {
     // Run the aggregation scaling study
     run_aggregation_consumer(timing_file, list_length);
 
-    if(rank==0)
-        std::cout << "Finished aggregation scaling consumer." << std::endl;
-
     // Save time it took to run main function
     double main_end = MPI_Wtime();
+
+    //Indicate test end to user
+    if(rank==0)
+        log_data(context, LLInfo, "Finished aggregation scaling consumer.");
+        std::cout << "Finished aggregation scaling consumer." << std::endl;
+    
+    //Logging total Data Agg time to file
     double delta_t = main_end - main_start;
     timing_file << rank << "," << "main()" << ","
                 << delta_t << std::endl << std::flush;

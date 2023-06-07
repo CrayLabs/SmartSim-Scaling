@@ -69,6 +69,7 @@ class Inference:
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
+        logger.info(f"Running with database node feature: {db_node_feature}")
 
         check_model(device, force_rebuild=rebuild_model)
 
