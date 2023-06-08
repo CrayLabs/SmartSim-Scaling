@@ -1,6 +1,6 @@
 # Inference Scaling
 
-### Co-located inference
+## Co-located inference
 
 Co-located Orchestrators are deployed on the same nodes as the
 application. This improves inference performance as no data movement
@@ -102,7 +102,7 @@ python driver.py inference_colocated --clients_per_node=[24,28] \
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 
-### Standard Inference
+## Standard Inference
 
 Co-locacated deployment is the preferred method for running tightly coupled
 inference workloads with SmartSim, however, if you want to deploy the Orchestrator
