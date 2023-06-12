@@ -1,4 +1,13 @@
-## Throughput Overview
+# Throughput Scaling Tests
+
+SmartSim-Scaling offers two throughput test versions listed below:
+
+ 1. Throughput Co-located     (c++ client and SmartRedis Orchestrator)
+ 2. Throughput Standard       (c++ client and SmartRedis Orchestrator)
+
+Follow along for more information on all respective tests.
+
+# Client Description
 
 The throughput tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
@@ -10,15 +19,6 @@ Each client performs 10 executions of the following commands
 
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
-
-## Throughput Scaling Tests Offered
-
-SmartSim-Scaling currently offers two versions of throughput scaling shown below.
-
- 1. Throughput Co-located
- 2. Throughput Standard
-
-Please scroll for more information on a respective throughput test.
 
 ### Co-located throughput
 
