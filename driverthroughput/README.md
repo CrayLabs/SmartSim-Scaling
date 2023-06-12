@@ -1,4 +1,13 @@
-### Throughput
+# Throughput Scaling Tests
+
+SmartSim-Scaling currently offers two versions of throughput scaling tests as shown below.
+
+ 1. [Throughput Co-located](### Co-located throughput)
+ 2. [Throughput Standard](### Standard throughput)
+
+For more information on a respective test, please scroll or select from the list above.
+
+## Throughput Overview
 
 The throughput tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
@@ -11,7 +20,7 @@ Each client performs 10 executions of the following commands
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-## Co-located throughput
+### Co-located throughput
 
 Co-located Orchestrators are deployed on the same nodes as the
 application. This improves inference performance as no data movement
@@ -72,7 +81,7 @@ FLAGS
         which language to use for the tester "cpp" or "fortran"
 ```
 
-So for example, the following command could be run to execute a battery of
+For demonstration, the following command could be run to execute a battery of
 tests in the same allocation
 
 ```bash
@@ -99,10 +108,21 @@ python driver.py throughput_colocated --client_nodes=[20,40,60] \
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
-## Standard throughput
+### Standard throughput
 
-The input parameters to the test are used to generate permutations
-of tests with varying configurations.
+Co-locacated deployment is the preferred method for running tightly coupled
+throughput workloads with SmartSim, however, if you want to deploy the Orchestrator
+database and the application on different nodes, you want to use standard
+deployment.
+
+For example, if you only have a small number of GPU nodes and want to test a large
+CPU application, standard deployment is optimal. For more information
+on Orchestrator deployment methods, please see
+[our documentation](https://www.craylabs.org/docs/orchestrator.html)
+
+Like the above colocated throughput tests, the standard throughput tests also provide
+a method of running a battery of tests all at once. Below is the help output.
+The arguments which are lists control the possible permutations that will be run.
 
 ```text
 
@@ -126,11 +146,11 @@ FLAGS
         Default: True
         run database as separate batch submission each iteration
     --node_feature=NODE_FEATURE
-      Default: {}
-      dict of runsettings for both app
+        Default: {}
+        dict of runsettings for both app
     --db_node_feature=DB_NODE_FEATURE
-      Default: {}
-      dict of runsettings for the db
+        Default: {}
+        dict of runsettings for the db
     --db_hosts=DB_HOSTS
         Default: []
         optionally supply hosts to launch the database on
@@ -171,11 +191,12 @@ battery of tests chosen by the user. There are multiple ways to run this.
 
 1. Everything in the same interactive (or batch file) without caring about placement
 ```bash
-# alloc must contain at least 120 (max client_nodes) + 16 nodes (max db_nodes)
-python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
-                                    --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --run_db_as_batch=False \
-                                    --net_ifname=ipogif0 --device=GPU
+# alloc must contain at least 60 (max client_nodes) + 32 nodes (max db_nodes)
+python driver.py throughput_standard --client_nodes=[60] \
+                                    --clients_per_node=[48] \
+                                    --db_nodes=[32] \
+                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --run_db_as_batch=False
 ```
 
 This option is recommended as it's easy to launch in interactive allocations and
@@ -188,24 +209,31 @@ based systems.
 ```bash
 #!/bin/bash
 
-#SBATCH -N 136
+#SBATCH -N 92
 #SBATCH --exclusive
 #SBATCH -t 10:00:00
+#SBATCH -C SK48
+#SBATCH --oversubscribe
 
-python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
-                                    --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --run_db_as_batch=False
-                                    --net_ifname=ipogif0 --device=CPU
+cd ..
+module load slurm
+python driver.py throughput_standard --client_nodes=[60] \
+                                    --clients_per_node=[48] \
+                                    --db_nodes=[32] \
+                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --run_db_as_batch=False
 ```
 
 2. Same as 1, but specify hosts for the database
 ```bash
-# alloc must contain at least 120 (max client_nodes) + 16 nodes (max db_nodes)
+# alloc must contain at least 60 (max client_nodes) + 32 nodes (max db_nodes)
 # db nodes must be fixed if hostlist is specified
-python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
-                                    --db_nodes=[16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --db_hosts=[nid0001, ...] \
-                                    --net_ifname=ipogif0 --device=CPU
+python driver.py throughput_standard --client_nodes=[60] \
+                                    --clients_per_node=[48] \
+                                    --db_nodes=[32] \
+                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --run_db_as_batch=False \
+                                    --db_hosts=[nid0001, ...]
 
 ```
 
@@ -213,10 +241,12 @@ python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
 ```bash
 # must obtain separate allocation for client driver through interactive or batch submission
 # if batch submission, compute nodes must have access to slurm
-python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
-                                    --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
-                                    --db_cpus=[1,4,8,16] --batch_args='{"C":"V100", "exclusive": None}' \
-                                    --net_ifname=ipogif0 --device=GPU
+python driver.py throughput_standard --client_nodes=[60] \
+                                    --clients_per_node=[48] \
+                                    --db_nodes=[32] \
+                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --run_db_as_batch=False \
+                                    --db_node_feature='{"C":"V100", "exclusive": None}' \
 ```
 
 All three options will conduct ``n`` scaling tests where ``n`` is the multiple of
