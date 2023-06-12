@@ -1,4 +1,45 @@
-# Inference Scaling
+### Inference
+
+The inference tests run as an MPI program where a single SmartRedis C++ client
+is initialized on every rank.
+
+Currently supported inference tests
+
+  1) Resnet50 CNN with ImageNet dataset
+
+Each client performs 101 executions of the following commands. The first iteration is a warmup;
+the next 100 are measured for inference throughput. 
+
+  1) ``put_tensor``     (send image to database)
+  2) ``run_script``     (preprocess image)
+  3) ``run_model``      (run resnet50 on the image)
+  4) ``unpack_tensor``  (Retrieve the inference result)
+
+The input parameters to the test are used to generate permutations
+of tests with varying configurations.
+
+### The model
+As Neural Network, we use Pytorch's implementation of Resnet50. The script `imagenet/model_saver.py`
+can be used to generate the model for CPU or GPU. By navigating to the `imagenet` folder, the CPU model
+can be created running 
+
+```bash
+python model_saver.py
+```
+
+and the GPU model can be created running
+
+```bash
+python model_saver.py --device=GPU
+```
+
+
+If the benchmark driver is executed and
+no model exists, an attempt is made to generate the model on the fly. In both cases,
+the specified device must be available on the node where the script is called (this
+means that it could be required to run the script through the workload manager launcher
+to execute it on a node with a GPU, for example).
+
 
 ## Co-located inference
 
