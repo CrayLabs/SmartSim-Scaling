@@ -4,7 +4,7 @@ SmartSim-Scaling currently offers three data aggregation versions listed below.
 
  1. Data Aggregation Standard - (c++ client and SmartRedis Orchestrator)
  2. Data Aggregation Standard Python - (python client and SmartRedis Orchestrator)
- 3. Data Aggregation Co-located File System - (python client and file system)
+ 3. Data Aggregation Standard File System - (python client and file system)
 
 You may follow along below for more information on a respective test.
 
@@ -41,7 +41,7 @@ of tests with varying configurations.
 
 ### Data Aggregation
 
-The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. Depending on your user application, you may want to run data aggregation with a c++ client.
+The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. Depending on your user application, you may want to run data aggregation with a c++ client. It will launched the Orchestrator database and the application on different nodes given standard deployement.
 
 ```text
 
