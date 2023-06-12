@@ -22,8 +22,10 @@ DESCRIPTION
 
 FLAGS
     --exp_name=EXP_NAME
-        Default: 'inference-scaling'
+        Default: 'inference-colocated-scaling'
         name of output dir, defaults to "inference-scaling"
+    --node_feature=NODE_FEATURE
+        Default: {'constraint': 'P100'}
     --launcher=LAUNCHER
         Default: 'auto'
         workload manager i.e. "slurm", "pbs"
@@ -63,12 +65,6 @@ FLAGS
     --iterations=ITERATIONS
         Default: 100
         number of put/get loops run by the applications
-    --languages=LANGUAGES
-        Default: ['fortran','cpp']
-        list of languages to use for the tester "cpp" and/or "fortran"
-    --wall_time=WALL_TIME
-        Default: "05:00:00"
-        allotted time for database launcher to run
 ```
 
 So for example, the following command could be run to execute a battery of
@@ -106,15 +102,15 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 Co-locacated deployment is the preferred method for running tightly coupled
 inference workloads with SmartSim, however, if you want to deploy the Orchestrator
-database and the application on different nodes you may want to use standard
+database and the application on different nodes, you want to use standard
 deployment.
 
 For example, if you only have a small number of GPU nodes and want to test a large
-CPU application you may want to use standard deployment. For more information
+CPU application, standard deployment is optimal. For more information
 on Orchestrator deployment methods, please see
 [our documentation](https://www.craylabs.org/docs/orchestrator.html)
 
-Like the above inference scaling tests, the standard inference tests also provide
+Like the above colocated inference tests, the standard inference tests also provide
 a method of running a battery of tests all at once. Below is the help output.
 The arguments which are lists control the possible permutations that will be run.
 
@@ -130,7 +126,7 @@ DESCRIPTION
 
 FLAGS
     --exp_name=EXP_NAME
-        Default: 'inference-scaling'
+        Default: 'inference-standard-scaling'
         name of output dir
     --launcher=LAUNCHER
         Default: 'auto'
@@ -138,9 +134,12 @@ FLAGS
     --run_db_as_batch=RUN_DB_AS_BATCH
         Default: True
         run database as separate batch submission each iteration
-    --batch_args=BATCH_ARGS
+    --db_node_feature=DB_NODE_FEATURE
+        Default: {'constraint': 'P100'}
+        dict of runsettings for the database
+    --node_feature=NODE_FEATURE
         Default: {}
-        additional batch args for the database
+        dict of runsettings for the app
     --db_hosts=DB_HOSTS
         Default: []
         optionally supply hosts to launch the database on
@@ -177,6 +176,15 @@ FLAGS
     --rebuild_model=FORCE_REBUILD
         Default: False
         force rebuild of PyTorch model even if it is available
+    --iterations=ITERATIONS
+        Default: 100
+        number of put/get loops run by the applications
+    --wall_time=WALL_TIME
+        Default: "05:00:00"
+        allotted time for database launcher to run
+    --languages=LANGUAGES
+        Default: ['cpp']
+        list of languages to use for the tester "cpp" and/or "fortran"
 ```
 
 The standard inference tests will spin up a database for each iteration in the
