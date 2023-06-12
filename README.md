@@ -7,9 +7,9 @@ the scaling of SmartSim and the SmartRedis clients.
 
 There are two types of scaling tests in the repository.
 
- 1. [Inference](https://github.com/CrayLabs/SmartSim-Scaling/blob/usability-documentation/driverinference/README.md)
- 2. [Throughput](https://github.com/CrayLabs/SmartSim-Scaling/blob/usability-documentation/driverthroughput/README.md)
- 3. [Data Aggregation]()
+ 1. [Inference](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverinference)
+ 2. [Throughput](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverthroughput)
+ 3. [Data Aggregation](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverdataaggregation)
 
 All applications use a MPI + C++ application to mimic an HPC workload
 making calls to SmartSim infrastructure. These applications are used
