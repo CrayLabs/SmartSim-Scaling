@@ -32,10 +32,10 @@ the possible permutations that will be run.
 
 ```text
 NAME
-    driver.py inference_colocated - Run ResNet50 inference tests with colocated Orchestrator deployment
+    driver.py throughput_colocated - 
 
 SYNOPSIS
-    driver.py inference_colocated <flags>
+    driver.py throughput_colocated <flags>
 
 DESCRIPTION
     Run ResNet50 inference tests with colocated Orchestrator deployment
@@ -127,10 +127,10 @@ The arguments which are lists control the possible permutations that will be run
 ```text
 
 NAME
-    driver.py throughput_scaling - Run the throughput scaling tests
+    driver.py throughput_standard - Run the throughput scaling tests
 
 SYNOPSIS
-    driver.py throughput_scaling <flags>
+    driver.py throughput_standard <flags>
 
 DESCRIPTION
     Run the throughput scaling tests
