@@ -2,7 +2,7 @@
 
 SmartSim-Scaling currently offers two versions of throughput scaling tests as shown below.
 
- 1. [Throughput Co-located](### Co-located throughput)
+ 1. [Throughput Co-located]([### Co-located throughput](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverthroughput#co-located-throughput))
  2. [Throughput Standard](### Standard throughput)
 
 For more information on a respective test, please scroll or select from the list above.
