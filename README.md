@@ -3,15 +3,15 @@
 This repository holds all of the scripts and materials for testing
 the scaling of SmartSim and the SmartRedis clients.
 
-
 ## Scaling Tests
 
 There are two types of scaling tests in the repository.
 
  1. Inference
  2. Throughput
+ 3. Data Aggregation
 
-Both applications use a MPI + C++ application to mimic an HPC workload
+All applications use a MPI + C++ application to mimic an HPC workload
 making calls to SmartSim infrastructure. These applications are used
 to test the performance of SmartSim across various system types.
 
@@ -73,15 +73,38 @@ COMMANDS
 
      process_scaling_results
        Create a results directory with performance data and plots
+       
+     scaling_plotter
+       Create a results directory with performance data and plots
 
      inference_colocated
        Run ResNet50 inference tests with colocated Orchestrator deployment
-
+       Client: c++
+       
      inference_standard
        Run ResNet50 inference tests with standard Orchestrator deployment
-
-     throughput_scaling
-       Run the throughput scaling tests
+       Client: c++
+       
+     throughput_colocated
+       Run throughput scaling tests with colocated Orchestrator deployment
+       Client: c++
+       
+     throughput_standard
+       Run throughput scaling tests with standard Orchestrator deployment
+       Client: c++
+       
+     aggregation-scaling
+       Run aggregation scaling tests with standard Orchestrator deployment
+       Client: c++
+       
+     aggregation_scaling_python
+       Run aggregation scaling tests with standard Orchestrator deployment
+       Client: python
+       
+     aggregation_scaling_python_fs
+       Run aggregation scaling tests with standard file system deployment
+       Client: python
+     
 ```
 
 Each of the command provides their own help menu as well that shows the
