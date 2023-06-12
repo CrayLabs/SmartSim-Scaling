@@ -1,4 +1,4 @@
-# Throughput
+### Throughput
 
 The throughput tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
@@ -7,6 +7,9 @@ Each client performs 10 executions of the following commands
 
   1) ``put_tensor``     (send image to database)
   2) ``unpack_tensor``  (Retrieve the inference result)
+
+The input parameters to the test are used to generate permutations
+of tests with varying configurations.
 
 ## Co-located throughput
 
