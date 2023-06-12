@@ -1,12 +1,14 @@
-## Data Aggregation Scaling Tests
+# Data Aggregation Scaling Tests
 
-Below are the following Data Aggregation scaling test versions in driverdataaggregation/main.py.
+SmartSim-Scaling currently offers three versions of data aggregation shown below.
 
  1. [Data Aggregation Standard](### Data aggregation)
- 2. Data Aggregation Python
- 3. Data Aggregation File System
+ 2. [Data Aggregation Python](### Data Aggregation Python)
+ 3. [Data Aggregation File System](### Data Aggregation File System)
 
-### Data aggregation
+You may scroll or select from the above list for more information on the respective test.
+
+## Description
 
 The data aggregation scaling test runs two applications.  The first application
 is an MPI application that produces datasets that are added to an aggregation list.
@@ -37,7 +39,9 @@ invokes the following SmartRedis commands:
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-## Data Aggregation
+### Data Aggregation
+
+Desc
 
 ```text
 
@@ -101,10 +105,12 @@ So for example, the following command could be run to execute a battery of
 tests in the same allocation
 
 ```bash
-python driver.py inference_colocated --clients_per_node=[24,28] \
-                                     --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
-                                     --device=GPU
+python driver.py aggregation_scaling --client_nodes=[60] \
+                                     --clients_per_node=[48] \
+                                     --db_nodes=[16,32] \
+                                     --db_cpus=32 --net_ifname=ipogif0 \
+                                     --run_db_as_batch=False \
+                                     --tensors_per_dataset=[1,4]
 ```
 
 This command can be executed in a terminal with an interactive allocation
@@ -113,21 +119,27 @@ or used in a batch script such as the following for Slurm based systems
 ```bash
 #!/bin/bash
 
-#SBATCH -N 16
+#SBATCH -N 93
 #SBATCH --exclusive
-#SBATCH -C P100
-#SBATCH -t 10:00:00
+#SBATCH -t 12:00:00
+#SBATCH -C SK48
+#SBATCH --oversubscribe
 
+cd ..
 module load slurm
-python driver.py inference_colocated --clients_per_node=[24,28] \
-                                     --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
-                                     --device=GPU
+python driver.py aggregation_scaling --client_nodes=[60] \
+                                     --clients_per_node=[48] \
+                                     --db_nodes=[16,32] \
+                                     --db_cpus=32 --net_ifname=ipogif0 \
+                                     --run_db_as_batch=False \
+                                     --tensors_per_dataset=[1,4]
 ```
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
-## Data Aggregation Python
+### Data Aggregation Python
+
+Desc
 
 
 ```text
@@ -209,10 +221,18 @@ So for example, the following command could be run to execute a battery of
 tests in the same allocation
 
 ```bash
-python driver.py inference_colocated --clients_per_node=[24,28] \
-                                     --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
-                                     --device=GPU
+python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \
+                                            --client_nodes=[60] \
+                                            --clients_per_node=[48] \
+                                            --db_nodes=[16] \
+                                            --db_cpus=32 \
+                                            --net_ifname=ipogif0 \
+                                            --run_db_as_batch=False \
+                                            --tensors_per_dataset=[1,4] \
+                                            --tensor_bytes=[1024,8192,16384,32769,65538,131076,262152,524304,1024000] \
+                                            --client_threads=[1,2,4,8,16,32] \
+                                            --cpu_hyperthreads=2 \
+                                            --iterations=20
 ```
 
 This command can be executed in a terminal with an interactive allocation
@@ -221,21 +241,31 @@ or used in a batch script such as the following for Slurm based systems
 ```bash
 #!/bin/bash
 
-#SBATCH -N 16
+#SBATCH -N 93
 #SBATCH --exclusive
-#SBATCH -C P100
-#SBATCH -t 10:00:00
+#SBATCH -t 24:00:00
 
+cd ..
 module load slurm
-python driver.py inference_colocated --clients_per_node=[24,28] \
-                                     --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
-                                     --device=GPU
+python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \
+                                            --client_nodes=[60] \
+                                            --clients_per_node=[48] \
+                                            --db_nodes=[16] \
+                                            --db_cpus=32 \
+                                            --net_ifname=ipogif0 \
+                                            --run_db_as_batch=False \
+                                            --tensors_per_dataset=[1,4] \
+                                            --tensor_bytes=[1024,8192,16384,32769,65538,131076,262152,524304,1024000] \
+                                            --client_threads=[1,2,4,8,16,32] \
+                                            --cpu_hyperthreads=2 \
+                                            --iterations=20
 ```
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
-## Data Aggregation File System
+### Data Aggregation File System
+
+Desc
 
 ```text
 
@@ -293,10 +323,14 @@ So for example, the following command could be run to execute a battery of
 tests in the same allocation
 
 ```bash
-python driver.py inference_colocated --clients_per_node=[24,28] \
-                                     --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
-                                     --device=GPU
+python driver.py aggregation_scaling_python_fs --exp_name='aggregation-scaling-py-fs-batch' \
+                                               --client_nodes=[60] \
+                                               --clients_per_node=[48] \
+                                               --tensors_per_dataset=[1,4] \
+                                               --tensor_bytes=[1024,8192,16384,32769,65538,131076,262152,524304,1024000] \
+                                               --client_threads=[1,2,4,8,16,32] \
+                                               --cpu_hyperthreads=2 \
+                                               --iterations=20
 ```
 
 This command can be executed in a terminal with an interactive allocation
@@ -305,16 +339,20 @@ or used in a batch script such as the following for Slurm based systems
 ```bash
 #!/bin/bash
 
-#SBATCH -N 16
+#SBATCH -N 61
 #SBATCH --exclusive
-#SBATCH -C P100
-#SBATCH -t 10:00:00
+#SBATCH -t 24:00:00
 
+cd ..
 module load slurm
-python driver.py inference_colocated --clients_per_node=[24,28] \
-                                     --nodes=[16] --db_tpq=[1,2,4] \
-                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
-                                     --device=GPU
+python driver.py aggregation_scaling_python_fs --exp_name='aggregation-scaling-py-fs-batch' \
+                                               --client_nodes=[60] \
+                                               --clients_per_node=[48] \
+                                               --tensors_per_dataset=[1,4] \
+                                               --tensor_bytes=[1024,8192,16384,32769,65538,131076,262152,524304,1024000] \
+                                               --client_threads=[1,2,4,8,16,32] \
+                                               --cpu_hyperthreads=2 \
+                                               --iterations=20
 ```
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
