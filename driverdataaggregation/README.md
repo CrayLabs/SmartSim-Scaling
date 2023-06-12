@@ -1,3 +1,11 @@
+## Data Aggregation Scaling Tests
+
+Below are the following Data Aggregation scaling test versions in driverdataaggregation/main.py.
+
+ 1. [Data Aggregation Standard](### Data aggregation)
+ 2. Data Aggregation Python
+ 3. Data Aggregation File System
+
 ### Data aggregation
 
 The data aggregation scaling test runs two applications.  The first application
@@ -89,71 +97,224 @@ FLAGS
         Default: [1, 2, 4, 8, 16, 32]
         list of the number of client threads used for data aggregation
 ```
+So for example, the following command could be run to execute a battery of
+tests in the same allocation
+
+```bash
+python driver.py inference_colocated --clients_per_node=[24,28] \
+                                     --nodes=[16] --db_tpq=[1,2,4] \
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
+                                     --device=GPU
+```
+
+This command can be executed in a terminal with an interactive allocation
+or used in a batch script such as the following for Slurm based systems
+
+```bash
+#!/bin/bash
+
+#SBATCH -N 16
+#SBATCH --exclusive
+#SBATCH -C P100
+#SBATCH -t 10:00:00
+
+module load slurm
+python driver.py inference_colocated --clients_per_node=[24,28] \
+                                     --nodes=[16] --db_tpq=[1,2,4] \
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
+                                     --device=GPU
+```
+
+Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Data Aggregation Python
+
 
 ```text
 
 NAME
-    driver.py aggregation-scaling - Run the data aggregation scaling tests
+    driver.py aggregation_scaling_python - Run the data aggregation scaling tests
 
 SYNOPSIS
-    driver.py aggregation-scaling <flags>
+    driver.py aggregation_scaling_python <flags>
 
 DESCRIPTION
     Run the data aggregation scaling tests
 
 FLAGS
   --exp_name=EXP_NAME
+      Default: 'aggregation-standard-scaling-py'
+      name of output dir
   --launcher=LAUNCHER
+      Default: 'auto'
+      workload manager i.e. "slurm", "pbs"
   --run_db_as_batch=RUN_DB_AS_BATCH
+      Default: True
+      run database as separate batch submission
+                                    each iteration
   --db_node_feature=DB_NODE_FEATURE
+      Default: {}
+      dict of runsettings for db
   --prod_node_feature=PROD_NODE_FEATURE
+      Default: {}
+      dict of runsettings for the producer
   --cons_node_feature=CONS_NODE_FEATURE
+      Default: {}
+      dict of runsettings for the consumer
   --db_hosts=DB_HOSTS
+      Default: []
+      optionally supply hosts to launch the database on
   --db_nodes=DB_NODES
+      Default: []
+      number of compute hosts to use for the database
   --db_cpus=DB_CPUS
+      Default: #
+      number of cpus per compute host for the database
   --db_port=DB_PORT
+      Default: 6780
+      port to use for the database
   --net_ifname=NET_IFNAME
+      Default: 'ipogif0'
+      network interface to use i.e. "ib0" for infiniband or
+                            "ipogif0" aries networks
   --clients_per_node=CLIENTS_PER_NODE
+      Default: []
+      client tasks per compute node for the aggregation
+                                    producer app
   --client_nodes=CLIENT_NODES
+      Default: []
+      number of compute nodes to use for the aggregation
+                                producer app
   --iterations=ITERATIONS
+      Default: #
+      number of append/retrieve loops run by the applications
   --tensor_bytes=TENSOR_BYTES
+      Default: []
+      list of tensor sizes in bytes
   --tensors_per_dataset=TENSORS_PER_DATASET
+      Default: []
+      list of number of tensors per dataset
   --client_threads=CLIENT_THREADS
+      Default: []
+      list of the number of client threads used for data
+                                aggregation
   --cpu_hyperthreads=CPU_HYPERTHREADS
+      Default: #
+      the number of hyperthreads per cpu.  This is done
+                                    to request that the consumer application utilizes
+                                    all physical cores for each client thread
 ```
+
+So for example, the following command could be run to execute a battery of
+tests in the same allocation
+
+```bash
+python driver.py inference_colocated --clients_per_node=[24,28] \
+                                     --nodes=[16] --db_tpq=[1,2,4] \
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
+                                     --device=GPU
+```
+
+This command can be executed in a terminal with an interactive allocation
+or used in a batch script such as the following for Slurm based systems
+
+```bash
+#!/bin/bash
+
+#SBATCH -N 16
+#SBATCH --exclusive
+#SBATCH -C P100
+#SBATCH -t 10:00:00
+
+module load slurm
+python driver.py inference_colocated --clients_per_node=[24,28] \
+                                     --nodes=[16] --db_tpq=[1,2,4] \
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
+                                     --device=GPU
+```
+
+Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Data Aggregation File System
 
 ```text
 
 NAME
-    driver.py aggregation-scaling - Run the data aggregation scaling tests
+    aggregation_scaling_python_fs - Run the data aggregation scaling tests
 
 SYNOPSIS
-    driver.py aggregation-scaling <flags>
+    driver.py aggregation_scaling_python_fs <flags>
 
 DESCRIPTION
     Run the data aggregation scaling tests
 
 FLAGS
-  --exp_name
-  --launcher
-  --run_db_as_batch
-  --db_node_feature
-  --prod_node_feature
-  --cons_node_feature
-  --db_hosts
-  --db_nodes
-  --db_cpus
-  --db_port
-  --net_ifname
-  --clients_per_node
-  --client_nodes
-  --iterations
-  --tensor_bytes
-  --tensors_per_dataset
-  --client_threads
-  --cpu_hyperthreads
+  --exp_name=EXP_NAME
+      Default: 'aggregation-standard-scaling-py-fs'
+      name of output dir
+  --launcher=LAUNCHER
+      Default: 'auto'
+      workload manager i.e. "slurm", "pbs"
+  --prod_node_feature=PROD_NODE_FEATURE
+      Default: {}
+      dict of runsettings for the producer
+  --cons_node_feature=CONS_NODE_FEATURE
+      Default: {}
+      dict of runsettings for the consumer
+  --clients_per_node=CLIENTS_PER_NODE
+      Default: []
+      client tasks per compute node for the aggregation
+                                 producer app
+  --client_nodes=CLIENT_NODES
+      Default: []
+      number of compute nodes to use for the aggregation
+                             producer app
+  --iterations=ITERATIONS
+      Default: #
+      number of append/retrieve loops run by the applications
+  --tensor_bytes=TENSOR_BYTES
+      Default: []
+      list of tensor sizes in bytes
+  --tensors_per_dataset=TENSORS_PER_DATASET
+      Default: []
+      list of number of tensors per dataset
+  --client_threads=CLIENT_THREADS
+      Default: []
+      list of the number of client threads used for data
+                               aggregation
+  --cpu_hyperthreads=CPU_HYPERTHREADS
+      Default: #
+      the number of hyperthreads per cpu.  This is done
+                                 to request that the consumer application utilizes
+                                 all physical cores for each client thread
 ```
+
+So for example, the following command could be run to execute a battery of
+tests in the same allocation
+
+```bash
+python driver.py inference_colocated --clients_per_node=[24,28] \
+                                     --nodes=[16] --db_tpq=[1,2,4] \
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0 \
+                                     --device=GPU
+```
+
+This command can be executed in a terminal with an interactive allocation
+or used in a batch script such as the following for Slurm based systems
+
+```bash
+#!/bin/bash
+
+#SBATCH -N 16
+#SBATCH --exclusive
+#SBATCH -C P100
+#SBATCH -t 10:00:00
+
+module load slurm
+python driver.py inference_colocated --clients_per_node=[24,28] \
+                                     --nodes=[16] --db_tpq=[1,2,4] \
+                                     --db_cpus=[1,2,4,8] --net_ifname=ipogif0
+                                     --device=GPU
+```
+
+Examples of batch scripts to use are provided in the ``batch_scripts`` directory
