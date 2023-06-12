@@ -1,16 +1,16 @@
 # Data Aggregation Scaling Tests
 
-SmartSim-Scaling currently offers three versions of data aggregation shown below.
+SmartSim-Scaling currently offers three data aggregation versions listed below.
 
- 1. [Data Aggregation Standard](### Data aggregation)
- 2. [Data Aggregation Python](### Data Aggregation Python)
- 3. [Data Aggregation File System](### Data Aggregation File System)
+ 1. Data Aggregation Standard - (c++ client and SmartRedis Orchestrator)
+ 2. Data Aggregation Python - (python client and SmartRedis Orchestrator)
+ 3. Data Aggregation File System - (python client and file system)
 
-You may scroll or select from the above list for more information on the respective test.
+You may follow along below for more information on a respective test.
 
 ## Description
 
-The data aggregation scaling test runs two applications.  The first application
+The data aggregation scaling test runs two applications. The first application
 is an MPI application that produces datasets that are added to an aggregation list.
 In this producer application, each MPI rank has a single-threaded client.  The second
 application is a consumer application.  This application consumes the aggregation
@@ -22,7 +22,7 @@ the next aggregation list.
 
 By default, the clients in the producer application perform 100 executions of the following command:
 
-  1) ``append_to_list`` (add dataset to the aggregation list)
+  1) ``append_to_list`` - (add dataset to the aggregation list)
 
 Note that the client on rank 0 of the producer application performs a ``get_list_length()``
 function invocation prior to an ``MPI_BARRIER`` in order to only produce the next aggregation
@@ -32,8 +32,8 @@ There is only a single MPI rank for the consumer application, which means there 
 one SmartRedis client active for the consumer application.  The consumer application client
 invokes the following SmartRedis commands:
 
-  1) ``poll_list_length`` (check when the next aggregation list is ready)
-  2) ``get_datasets_from_list`` (retrieve the data from the aggregation list)
+  1) ``poll_list_length`` - (check when the next aggregation list is ready)
+  2) ``get_datasets_from_list`` - (retrieve the data from the aggregation list)
 
 
 The input parameters to the test are used to generate permutations
@@ -41,12 +41,12 @@ of tests with varying configurations.
 
 ### Data Aggregation
 
-Desc
+The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. Depending on your user application, you may want to run data aggregation with a c++ client.
 
 ```text
 
 NAME
-    driver.py aggregation-scaling - Run the data aggregation scaling tests
+    driver.py aggregation_scaling - Run the data aggregation scaling tests
 
 SYNOPSIS
     driver.py aggregation-scaling <flags>
@@ -101,8 +101,9 @@ FLAGS
         Default: [1, 2, 4, 8, 16, 32]
         list of the number of client threads used for data aggregation
 ```
-So for example, the following command could be run to execute a battery of
-tests in the same allocation
+For example, the following command could be run to execute a battery of
+tests in the same allocation. The battery of test will be determined by the number 
+of permutations computed based on the list inputs.
 
 ```bash
 python driver.py aggregation_scaling --client_nodes=[60] \
@@ -137,9 +138,10 @@ python driver.py aggregation_scaling --client_nodes=[60] \
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
+
 ### Data Aggregation Python
 
-Desc
+The ``aggregation_scaling_python`` test uses a python client and a SmartRedis Orchestrator. Depending on your user application, you may want to run the scaling test with a python client.
 
 
 ```text
@@ -217,8 +219,9 @@ FLAGS
                                     all physical cores for each client thread
 ```
 
-So for example, the following command could be run to execute a battery of
-tests in the same allocation
+For example, the following command could be run to execute a battery of
+tests in the same allocation. The number of tests executed will be computed based
+on the number of permutations from the list inputs given.
 
 ```bash
 python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \
@@ -263,9 +266,10 @@ python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-b
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
+
 ### Data Aggregation File System
 
-Desc
+The ``aggregation_scaling_python_fs`` test uses a python client with the file system in replacement of SmartRedis. This test demonstrates a significant performance hit from using the file system instead of the SmartRedis Orchestrator.
 
 ```text
 
@@ -319,8 +323,9 @@ FLAGS
                                  all physical cores for each client thread
 ```
 
-So for example, the following command could be run to execute a battery of
-tests in the same allocation
+For example, the following command could be run to execute a battery of
+tests in the same allocation. As mentioned before, the number of tests executed are
+made up of all permutations of the given list inputs.
 
 ```bash
 python driver.py aggregation_scaling_python_fs --exp_name='aggregation-scaling-py-fs-batch' \
