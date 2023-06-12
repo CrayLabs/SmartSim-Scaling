@@ -29,6 +29,8 @@ invokes the following SmartRedis commands:
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
+## Data Aggregation
+
 ```text
 
 NAME
@@ -86,4 +88,72 @@ FLAGS
     --client_threads=CLIENT_THREADS
         Default: [1, 2, 4, 8, 16, 32]
         list of the number of client threads used for data aggregation
+```
+
+## Data Aggregation Python
+
+```text
+
+NAME
+    driver.py aggregation-scaling - Run the data aggregation scaling tests
+
+SYNOPSIS
+    driver.py aggregation-scaling <flags>
+
+DESCRIPTION
+    Run the data aggregation scaling tests
+
+FLAGS
+  --exp_name=EXP_NAME
+  --launcher=LAUNCHER
+  --run_db_as_batch=RUN_DB_AS_BATCH
+  --db_node_feature=DB_NODE_FEATURE
+  --prod_node_feature=PROD_NODE_FEATURE
+  --cons_node_feature=CONS_NODE_FEATURE
+  --db_hosts=DB_HOSTS
+  --db_nodes=DB_NODES
+  --db_cpus=DB_CPUS
+  --db_port=DB_PORT
+  --net_ifname=NET_IFNAME
+  --clients_per_node=CLIENTS_PER_NODE
+  --client_nodes=CLIENT_NODES
+  --iterations=ITERATIONS
+  --tensor_bytes=TENSOR_BYTES
+  --tensors_per_dataset=TENSORS_PER_DATASET
+  --client_threads=CLIENT_THREADS
+  --cpu_hyperthreads=CPU_HYPERTHREADS
+```
+
+## Data Aggregation File System
+
+```text
+
+NAME
+    driver.py aggregation-scaling - Run the data aggregation scaling tests
+
+SYNOPSIS
+    driver.py aggregation-scaling <flags>
+
+DESCRIPTION
+    Run the data aggregation scaling tests
+
+FLAGS
+  --exp_name
+  --launcher
+  --run_db_as_batch
+  --db_node_feature
+  --prod_node_feature
+  --cons_node_feature
+  --db_hosts
+  --db_nodes
+  --db_cpus
+  --db_port
+  --net_ifname
+  --clients_per_node
+  --client_nodes
+  --iterations
+  --tensor_bytes
+  --tensors_per_dataset
+  --client_threads
+  --cpu_hyperthreads
 ```
