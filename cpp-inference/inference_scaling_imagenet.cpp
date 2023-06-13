@@ -108,7 +108,7 @@ void run_mnist(const std::string& model_name,
           std::string script_key = "resnet_script_" + std::to_string(i);
           client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
           client.set_script_from_file(script_key, device, "./data_processing_script.txt");
-        
+
         }
       }
     }
@@ -126,8 +126,7 @@ void run_mnist(const std::string& model_name,
   for(int i=0; i<224; i++)
     for(int j=0; j<224; j++)
       for(int k=0; k<3; k++) {
-        array[i][j][k] = p[c];
-        c++;
+        array[i][j][k] = (rand() % 100)*0.01;
       }
 
   //float**** array = allocate_4D_array<float>(1,1,28,28);
@@ -148,12 +147,37 @@ void run_mnist(const std::string& model_name,
     script_key = "resnet_script_0";
   }
 
-  MPI_Barrier(MPI_COMM_WORLD);
   if (!rank)
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
+  // Warmup the database with an inference
+  std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
+  std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
+  std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
+
+  client.put_tensor(in_key, array, {224, 224, 3},
+                    SRTensorTypeFloat,
+                    SRMemLayoutNested);
+  double put_tensor_end = MPI_Wtime();
+
+  if (use_multigpu)
+    client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
+  else
+    client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
+
+  if (use_multigpu)
+    client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
+  else
+    client.run_model(model_key, {script_out_key}, {out_key});
+
+  client.unpack_tensor(out_key, result, {1,1000},
+      SRTensorTypeFloat,
+      SRMemLayoutNested);
+
+  // Begin the actual iteration loop
   double loop_start = MPI_Wtime();
-  for (int i = 0; i < iterations; i++) {
+  for (int i = 0; i < 101; i++) {
+    MPI_Barrier(MPI_COMM_WORLD);
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);

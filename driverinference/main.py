@@ -9,7 +9,7 @@ logger = get_logger("Scaling Tests")
 
 
 class Inference:
- 
+
     def inference_standard(self,
                            exp_name="inference-standard-scaling",
                            launcher="auto",
@@ -157,11 +157,13 @@ class Inference:
                             db_tpq=[1],
                             db_port=6780,
                             pin_app_cpus=[False],
-                            batch_size=[1],
+                            batch_size=[96],
                             device="GPU",
                             num_devices=1,
-                            net_ifname="ipogif0",
-                            rebuild_model=False
+                            net_type="uds",
+                            net_ifname="lo",
+                            rebuild_model=False,
+                            languages=["cpp","fortran"],
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
         :param exp_name: name of output dir
@@ -189,11 +191,15 @@ class Inference:
         :type device: str, optional
         :param num_devices: number of devices per compute node to use to run ResNet
         :type num_devices: int, optional
+        :param net_type: type of connection to use ("tcp" or "uds")
+        :type net_type: str, optional
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
         :param rebuild_model: force rebuild of PyTorch model even if it is available
         :type rebuild_model: bool
+        :param languages: which language to use for the tester "cpp" or "fortran"
+        :type languages: str
         """
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -214,15 +220,16 @@ class Inference:
                         num_devices=num_devices,
                         language="cpp")
 
-        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus))
+        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for perm in perms:
-            c_nodes, cpn, dbc, dbtpq, batch, pin_app = perm
+            c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
 
             infer_session = self._create_colocated_inference_session(exp,
                                                                node_feature,
                                                                c_nodes,
                                                                cpn,
                                                                pin_app,
+                                                               net_type,
                                                                net_ifname,
                                                                dbc,
                                                                dbtpq,
@@ -230,7 +237,8 @@ class Inference:
                                                                batch,
                                                                device,
                                                                num_devices,
-                                                               rebuild_model)
+                                                               rebuild_model,
+                                                               language)
 
             exp.start(infer_session, block=True, summary=True)
 
@@ -239,7 +247,7 @@ class Inference:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
 
-                
+
     @staticmethod
     def _set_resnet_model(device="GPU", force_rebuild=False):
             resnet_model = f"./imagenet/resnet50.{device}.pt"
@@ -290,7 +298,7 @@ class Inference:
             "SR_LOG_LEVEL": "INFO",
             "SR_CONN_TIMEOUT": 1000
         })
-        
+
         name = "-".join((
             "infer-sess",
             str(language),
@@ -324,7 +332,7 @@ class Inference:
                         node_feature=node_feature)
 
         return model, resnet_model
-    
+
     @classmethod
     def _create_colocated_inference_session(cls,
                                        exp,
@@ -332,6 +340,7 @@ class Inference:
                                        nodes,
                                        tasks,
                                        pin_app_cpus,
+                                       net_type,
                                        net_ifname,
                                        db_cpus,
                                        db_tpq,
@@ -339,16 +348,17 @@ class Inference:
                                        batch_size,
                                        device,
                                        num_devices,
-                                       rebuild_model):
+                                       rebuild_model,
+                                       language):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=node_feature)
+        run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks(nodes*tasks)
         run_settings.set_tasks_per_node(tasks)
         run_settings.update_env({
-            "SS_SET_MODEL": "1", 
-            "SS_CLUSTER": "0",  
+            "SS_SET_MODEL": "1",
+            "SS_CLUSTER": "0",
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
             "SS_CLIENT_COUNT": str(tasks),
@@ -371,32 +381,44 @@ class Inference:
                                             resnet_model,
                                             "./imagenet/data_processing_script.txt"])
 
+        db_opts = dict(
+            db_cpus=db_cpus,
+            limit_app_cpus=pin_app_cpus,
+            threads_per_queue=db_tpq,
+            # turning this to true can result in performance loss
+            # on networked file systems(many writes to db log file)
+            debug=True,
+            loglevel="notice"
+        )
+
+
         # add co-located database
-        model.colocate_db(port=db_port,
-                        db_cpus=db_cpus,
-                        limit_app_cpus=pin_app_cpus,
-                        ifname=net_ifname,
-                        threads_per_queue=db_tpq,
-                        # turning this to true can result in performance loss
-                        # on networked file systems(many writes to db log file)
-                        debug=True,
-                        loglevel="notice")
+        if net_type.lower() == "uds":
+            model.colocate_db_uds(**db_opts)
+        elif net_type.lower() == "tcp":
+            model.colocate_db_tcp(
+                port=db_port,
+                ifname=net_ifname,
+                **db_opts
+            )
         exp.generate(model, overwrite=True)
-        write_run_config(model.path,
-                        colocated=1,
-                        pin_app_cpus=int(pin_app_cpus),
-                        client_total=tasks*nodes,
-                        client_per_node=tasks,
-                        client_nodes=nodes, #might not need client_nodes here
-                        database_nodes=nodes,
-                        database_cpus=db_cpus,
-                        database_threads_per_queue=db_tpq,
-                        batch_size=batch_size,
-                        device=device,
-                        num_devices=num_devices,
-                        language="cpp")
+        write_run_config(
+            model.path,
+            colocated=1,
+            pin_app_cpus=int(pin_app_cpus),
+            client_total=tasks*nodes,
+            client_per_node=tasks,
+            client_nodes=nodes, #might not need client_nodes here
+            database_nodes=nodes,
+            database_cpus=db_cpus,
+            database_threads_per_queue=db_tpq,
+            batch_size=batch_size,
+            device=device,
+            num_devices=num_devices,
+            language=language
+        )
         return model
-   
+
 if __name__ == "__main__":
     import fire
     fire.Fire(Inference())

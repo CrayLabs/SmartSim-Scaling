@@ -24,7 +24,7 @@ def get_date():
     """Return current date
 
     This function will return the current date as a string.
-    
+
     :return: date str
     :rtype: str
     """
@@ -35,7 +35,7 @@ def get_time():
     """Return current time
 
     This function will return the current time as a string.
-    
+
     :return: current_time str
     :rtype: str
     """
@@ -46,8 +46,8 @@ def get_time():
 def check_model(device, force_rebuild=False):
     """Regenerate model on specified device if True.
 
-    This function will rebuild the model on the specified node type. 
-    
+    This function will rebuild the model on the specified node type.
+
     :param device: device used to run the models in the database
     :type device: str
     :param force_rebuild: force rebuild of PyTorch model even if it is available
@@ -62,12 +62,12 @@ def check_model(device, force_rebuild=False):
             logger.error(message)
             sys.exit(1)
 
-def create_folder(exp_name, launcher): 
+def create_folder(exp_name, launcher):
     """Create and generate Experiment as well as create results folder.
 
     This function is called for every scaling test. It creates an Experiment per scaling test
     as well as the results folder to store each run folder.
-    
+
     :param exp_name: name of output dir
     :type exp_name: str
     :param launcher: workload manager i.e. "slurm", "pbs"
@@ -152,7 +152,8 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
                                             model,
                                             "TORCH",
                                             0, num_devices,
-                                            batch_size)
+                                            batch_size,
+                                            min_batch_size=batch_size)
         client.set_script_from_file_multigpu("resnet_script_0",
                                              "./imagenet/data_processing_script.txt",
                                              0, num_devices)
@@ -166,7 +167,8 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
                                        model,
                                        "TORCH",
                                        device,
-                                       batch_size)
+                                       batch_size,
+                                       min_batch_size=batch_size)
             client.set_script_from_file(f"resnet_script_{i}",
                                         "./imagenet/data_processing_script.txt",
                                         device)
@@ -176,7 +178,7 @@ def write_run_config(path, **kwargs):
     """Write config attributes to run file.
 
     This function will write the config attributes to the run folder.
-    
+
     :param path: path to model
     :type path: str
     :param kwargs: config attributes
@@ -201,7 +203,7 @@ def write_run_config(path, **kwargs):
 
 def get_uuid():
     """Return the uuid.
-    
+
     :return: uid str
     :rtype: str
     """
@@ -210,7 +212,7 @@ def get_uuid():
 
 def get_db_backend():
     """Return database backend.
-    
+
     :return: db backend name str
     :rtype: str
     """
