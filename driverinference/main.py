@@ -1,5 +1,6 @@
 from utils import *
 from driverprocessresults.main import *
+import time
 
 if __name__ == "__main__":
     sys.path.append("..")
@@ -151,7 +152,7 @@ class Inference:
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[1],
+                            nodes=[12],
                             clients_per_node=[18],
                             db_cpus=[2],
                             db_tpq=[1],
@@ -163,7 +164,8 @@ class Inference:
                             net_type="uds",
                             net_ifname="lo",
                             rebuild_model=False,
-                            languages=["cpp","fortran"],
+                            iterations=5,
+                            languages=["cpp"],
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
         :param exp_name: name of output dir
@@ -198,6 +200,8 @@ class Inference:
         :type net_ifname: str, optional
         :param rebuild_model: force rebuild of PyTorch model even if it is available
         :type rebuild_model: bool
+        :param iterations: number of put/get loops run by the applications
+        :type iterations: int
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
         """
@@ -218,7 +222,8 @@ class Inference:
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
-                        language="cpp")
+                        iterations=iterations,
+                        language=languages)
 
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for perm in perms:
@@ -238,14 +243,15 @@ class Inference:
                                                                device,
                                                                num_devices,
                                                                rebuild_model,
+                                                               iterations,
                                                                language)
 
             exp.start(infer_session, block=True, summary=True)
-
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
+        #self.process_scaling_results(scaling_results_dir=exp_name)
 
 
     @staticmethod
@@ -349,6 +355,7 @@ class Inference:
                                        device,
                                        num_devices,
                                        rebuild_model,
+                                       iterations,
                                        language):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
@@ -358,6 +365,7 @@ class Inference:
         run_settings.set_tasks_per_node(tasks)
         run_settings.update_env({
             "SS_SET_MODEL": "1",
+            "SS_ITERATIONS": str(iterations),
             "SS_CLUSTER": "0",
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
@@ -369,10 +377,12 @@ class Inference:
 
         name = "-".join((
             "infer-sess-colo",
+            str(language),
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(nodes),
             "DBCPU"+str(db_cpus),
+            "ITER"+str(iterations),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -415,6 +425,7 @@ class Inference:
             batch_size=batch_size,
             device=device,
             num_devices=num_devices,
+            iterations=iterations,
             language=language
         )
         return model

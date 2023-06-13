@@ -69,6 +69,7 @@ void run_mnist(const std::string& model_name,
                const std::string& script_name,
                std::ofstream& timing_file)
 {
+  std::string context("Run Inference");
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -154,34 +155,49 @@ void run_mnist(const std::string& model_name,
   std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
   std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
   std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
-
   client.put_tensor(in_key, array, {224, 224, 3},
                     SRTensorTypeFloat,
                     SRMemLayoutNested);
   double put_tensor_end = MPI_Wtime();
-
+  log_data(context, LLInfo, "print3");
+  log_data(context, LLInfo, script_key);
+  log_data(context, LLInfo, "test1");
+  log_data(context, LLInfo, in_key);
+  log_data(context, LLInfo, "test2");
+  log_data(context, LLInfo, script_out_key);
   if (use_multigpu)
     client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
   else
     client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
-
+  log_data(context, LLInfo, model_key);
+  log_data(context, LLInfo, script_out_key);
+  log_data(context, LLInfo, out_key);
+  //log_data(context, LLInfo, rank);
+  //log_data(context, LLInfo, num_devices);
+  log_data(context, LLInfo, "print4");
   if (use_multigpu)
     client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
   else
     client.run_model(model_key, {script_out_key}, {out_key});
-
+  log_data(context, LLInfo, "print5");
   client.unpack_tensor(out_key, result, {1,1000},
       SRTensorTypeFloat,
       SRMemLayoutNested);
 
   // Begin the actual iteration loop
+  log_data(context, LLInfo, "print1");
   double loop_start = MPI_Wtime();
   for (int i = 0; i < 101; i++) {
     MPI_Barrier(MPI_COMM_WORLD);
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);
-
+    log_data(context, LLInfo, "out_key");
+    log_data(context, LLInfo, out_key);
+    log_data(context, LLInfo, "in_key");
+    log_data(context, LLInfo, in_key);
+    log_data(context, LLInfo, "script_out_key");
+    log_data(context, LLInfo, script_out_key);
     double put_tensor_start = MPI_Wtime();
     client.put_tensor(in_key, array, {224, 224, 3},
                       SRTensorTypeFloat,
@@ -191,10 +207,12 @@ void run_mnist(const std::string& model_name,
     put_tensor_times.push_back(delta_t);
 
     double run_script_start = MPI_Wtime();
+    log_data(context, LLInfo, "test");
     if (use_multigpu)
       client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
     else
       client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
+    log_data(context, LLInfo, "test1");
     double run_script_end = MPI_Wtime();
     delta_t = run_script_end - run_script_start;
     run_script_times.push_back(delta_t);
@@ -204,6 +222,7 @@ void run_mnist(const std::string& model_name,
       client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
     else
       client.run_model(model_key, {script_out_key}, {out_key});
+    log_data(context, LLInfo, "test2");
     double run_model_end = MPI_Wtime();
     delta_t = run_model_end - run_model_start;
     run_model_times.push_back(delta_t);

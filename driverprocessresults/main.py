@@ -34,11 +34,10 @@ class ProcessResults:
             session_folders = []
             run_list = []
             for run_folder in run_folders:
-                
                 if 'run' in run_folder:
                     session_folders += ["results/" + scaling_results_dir + "/" + run_folder + 
                                         "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
-                    run_list += [Path("results/" + scaling_results_dir + "/" + run_folder)]
+                    run_list += [Path("results") / scaling_results_dir / run_folder]
             try:
                 # write csv each so this function is idempotent
                 # csv's will not be written if they are already created
