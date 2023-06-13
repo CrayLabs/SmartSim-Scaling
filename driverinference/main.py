@@ -5,6 +5,10 @@ import time
 if __name__ == "__main__":
     sys.path.append("..")
 
+if __name__ == "__main__":
+    import fire
+    fire.Fire(Inference())
+
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
@@ -84,12 +88,11 @@ class Inference:
         exp, result_path = create_folder(exp_name, launcher)
         write_run_config(result_path,
                         colocated=0,
-                        client_per_node=clients_per_node,
+                        clients_per_node=clients_per_node,
                         client_nodes=client_nodes,
                         database_hosts=db_hosts,
                         database_nodes=db_nodes,
                         database_cpus=db_cpus,
-                        database_threads_per_queue=db_tpq,
                         database_port=db_port,
                         batch_size=batch_size,
                         device=device,
@@ -152,8 +155,8 @@ class Inference:
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[12],
-                            clients_per_node=[18],
+                            nodes=[1],
+                            clients_per_node=[2],
                             db_cpus=[2],
                             db_tpq=[1],
                             db_port=6780,
@@ -200,8 +203,6 @@ class Inference:
         :type net_ifname: str, optional
         :param rebuild_model: force rebuild of PyTorch model even if it is available
         :type rebuild_model: bool
-        :param iterations: number of put/get loops run by the applications
-        :type iterations: int
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
         """
@@ -210,21 +211,25 @@ class Inference:
         logger.info(f"Running with launcher: {launcher}")
 
         check_model(device, force_rebuild=rebuild_model)
-        
+
         exp, result_path = create_folder(exp_name, launcher)
         write_run_config(result_path,
                         colocated=1,
-                        client_per_node=clients_per_node,
-                        client_nodes=nodes,
-                        database_nodes=nodes,
+                        clients_per_node=clients_per_node,
+                        client_nodes=client_nodes,
+                        database_hosts=db_hosts,
+                        database_nodes=db_nodes,
                         database_cpus=db_cpus,
-                        database_threads_per_queue=db_tpq,
+                        database_port=db_port,
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
                         iterations=iterations,
-                        language=languages)
-
+                        language=languages,
+                        db_node_feature=db_node_feature,
+                        node_feature=node_feature,
+                        wall_time=wall_time)
+        
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for perm in perms:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
@@ -247,11 +252,12 @@ class Inference:
                                                                language)
 
             exp.start(infer_session, block=True, summary=True)
+
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-        #self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name)
 
 
     @staticmethod
@@ -366,6 +372,7 @@ class Inference:
         run_settings.update_env({
             "SS_SET_MODEL": "1",
             "SS_ITERATIONS": str(iterations),
+            "SS_COLO": "1",
             "SS_CLUSTER": "0",
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
@@ -377,12 +384,10 @@ class Inference:
 
         name = "-".join((
             "infer-sess-colo",
-            str(language),
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(nodes),
             "DBCPU"+str(db_cpus),
-            "ITER"+str(iterations),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -418,18 +423,12 @@ class Inference:
             pin_app_cpus=int(pin_app_cpus),
             client_total=tasks*nodes,
             client_per_node=tasks,
-            client_nodes=nodes, #might not need client_nodes here
-            database_nodes=nodes,
+            client_nodes=nodes,
             database_cpus=db_cpus,
             database_threads_per_queue=db_tpq,
             batch_size=batch_size,
             device=device,
             num_devices=num_devices,
-            iterations=iterations,
             language=language
         )
         return model
-
-if __name__ == "__main__":
-    import fire
-    fire.Fire(Inference())

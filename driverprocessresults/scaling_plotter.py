@@ -42,7 +42,9 @@ def scaling_plotter(run_cfg_path, scaling_test_name, var_input):
             showmeans = True,
             showextrema = True,        
         )
-
+    print("test")
+    #print(df['client_threads'])
+    sys.exit()
     plt.style.use('default')
 
     ordered_client_total = sorted(df['client_total'].unique())

@@ -17,7 +17,7 @@ logger = get_logger("Scaling Tests")
 
 class ProcessResults:
     def process_scaling_results(self, 
-                                scaling_results_dir="aggregation-standard-scaling-py-fs", 
+                                scaling_results_dir="inference-colocated-scaling", 
                                 overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
