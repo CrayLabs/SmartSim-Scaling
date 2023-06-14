@@ -100,7 +100,7 @@ void run_mnist(const std::string& model_name,
   if (should_set) {
     int batch_size = get_batch_size();
     int n_clients = get_client_count();
-    if (!is_colo && rank == 0) { //this only applies to non colo -> if colo == fales && rank = 0
+    if (is_colo == false && rank == 0) { //this only applies to non colo -> if colo == fales && rank = 0
       log_data(context, LLInfo, "test set res");
       std::cout<<"Setting Resnet Model from scaling app" << std::endl << std::flush;
       std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl << std::flush;

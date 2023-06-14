@@ -18,6 +18,7 @@ logger = get_logger("Scaling Tests")
 class ProcessResults:
     def process_scaling_results(self, 
                                 scaling_results_dir="inference-colocated-scaling", 
+                                plot_type="",
                                 overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
@@ -54,7 +55,7 @@ class ProcessResults:
                 # collect all written csv into dataframes to concat
                 for run in tqdm(run_list, desc="Creating plots...", ncols=80):
                     try:
-                        self._other_plots(run, scaling_results_dir)
+                        scaling_plotter(run, scaling_results_dir, plot_type)
                     # want to catch all exceptions and skip runs that may
                     # not have completed or finished b/c some reason i.e. node failure
                     except Exception as e:
@@ -125,19 +126,11 @@ class ProcessResults:
                         #is it neccessary to print all run_model values?
                     cls._make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', session_stats_dir)
                     cls._make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', session_stats_dir)
-                if "client()" in function_times:
-                    cls._make_hist_plot(function_times['client()'], 'client()', 'client_constructor_dist.pdf', session_stats_dir)
-                
-                if "put_tensor" in function_times:
-                    cls._make_hist_plot(function_times['put_tensor'], 'put_tensor()', 'put_tensor.pdf', session_stats_dir)
+                function_types = ["client()", "put_tensor", "unpack_tensor", "get_list", "main()"] 
+                for function in function_types:
+                    if function in function_times:
+                        cls._make_hist_plot(function_times[function], function, function + ".pdf", session_stats_dir)
 
-                if "unpack_tensor" in function_times:
-                    cls._make_hist_plot(function_times['unpack_tensor'], 'unpack_tensor()', 'unpack_tensor.pdf', session_stats_dir)
-
-                if "get_list" in function_times:
-                    cls._make_hist_plot(function_times['get_list'], 'get_list()', 'get_list.pdf', session_stats_dir)
-                if "main()" in function_times:
-                    cls._make_hist_plot(function_times['main()'], 'main()', 'main.pdf', session_stats_dir)
             except KeyError as e:
                 raise KeyError(f'{e} not found in function_times for run {session_name}')
             
@@ -145,13 +138,6 @@ class ProcessResults:
             data_df = pd.DataFrame(data, index=[0])
             file_name = session_stats_dir / ".".join((session_name, "csv"))
             data_df.to_csv(file_name)
-
-    @classmethod
-    def _other_plots(cls, run, exp_name):
-        if "standard" in exp_name:
-            scaling_plotter(run, exp_name, "database_nodes")
-        else:
-            scaling_plotter(run, exp_name, "client_threads")
     
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):

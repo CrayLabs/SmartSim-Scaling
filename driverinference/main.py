@@ -35,7 +35,8 @@ class Inference:
                            rebuild_model=False,
                            iterations=5,
                            languages=["cpp"],
-                           wall_time="05:00:00"):
+                           wall_time="05:00:00",
+                           plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -149,7 +150,7 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-        self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
@@ -169,6 +170,7 @@ class Inference:
                             rebuild_model=False,
                             iterations=5,
                             languages=["cpp"],
+                            plot="database_cpus"
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
         :param exp_name: name of output dir
@@ -215,20 +217,25 @@ class Inference:
         exp, result_path = create_folder(exp_name, launcher)
         write_run_config(result_path,
                         colocated=1,
+                        node_feature=node_feature,
+                        experiment_name=exp_name,
+                        launcher=launcher,
+                        nodes=nodes,
                         clients_per_node=clients_per_node,
-                        client_nodes=client_nodes,
-                        database_hosts=db_hosts,
-                        database_nodes=db_nodes,
                         database_cpus=db_cpus,
+                        database_threads_per_queue=db_tpq,
                         database_port=db_port,
+                        pin_app_cpus=pin_app_cpus,
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
+                        net_type=net_type,
+                        net_ifname=net_ifname,
+                        rebuild_model=rebuild_model,
                         iterations=iterations,
                         language=languages,
-                        db_node_feature=db_node_feature,
-                        node_feature=node_feature,
-                        wall_time=wall_time)
+                        plot=plot
+                        )
         
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for perm in perms:
@@ -257,7 +264,7 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-        self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
 
     @staticmethod
@@ -301,6 +308,7 @@ class Inference:
         run_settings.update_env({
             "SS_SET_MODEL": 0,
             "SS_ITERATIONS": str(iterations),
+            "SS_COLO": "0",
             "SS_CLUSTER": cluster,
             "SS_NUM_DEVICES": str(num_devices),
             "SS_BATCH_SIZE": str(batch_size),
@@ -313,7 +321,7 @@ class Inference:
 
         name = "-".join((
             "infer-sess",
-            str(language),
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
@@ -384,10 +392,12 @@ class Inference:
 
         name = "-".join((
             "infer-sess-colo",
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(nodes),
             "DBCPU"+str(db_cpus),
+            "ITER"+str(iterations),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -420,15 +430,20 @@ class Inference:
         write_run_config(
             model.path,
             colocated=1,
-            pin_app_cpus=int(pin_app_cpus),
+            nodes=nodes,
             client_total=tasks*nodes,
-            client_per_node=tasks,
-            client_nodes=nodes,
+            clients_per_node=tasks,
             database_cpus=db_cpus,
             database_threads_per_queue=db_tpq,
+            database_port=db_port,
+            pin_app_cpus=pin_app_cpus,
             batch_size=batch_size,
             device=device,
             num_devices=num_devices,
+            net_type=net_type,
+            net_ifname=net_ifname,
+            rebuild_model=rebuild_model,
+            iterations=iterations,
             language=language
         )
         return model
