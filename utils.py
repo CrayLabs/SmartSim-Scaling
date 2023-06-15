@@ -148,13 +148,12 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     client = Client(address=address, cluster=cluster)
     device = device.upper()
     if (device == "GPU") and (num_devices > 1):
-        client.set_model_from_file_multigpu("resnet_model_0",
+        client.set_model_from_file_multigpu("resnet_model",
                                             model,
                                             "TORCH",
                                             0, num_devices,
-                                            batch_size,
-                                            min_batch_size=batch_size)
-        client.set_script_from_file_multigpu("resnet_script_0",
+                                            batch_size)
+        client.set_script_from_file_multigpu("resnet_script",
                                              "./imagenet/data_processing_script.txt",
                                              0, num_devices)
         logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
@@ -162,17 +161,15 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
         # Redis does not accept CPU:<n>. We are either
         # setting (possibly multiple copies of) the model and script on CPU, or one
         # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
-        for i in range (num_devices):
-            client.set_model_from_file(f"resnet_model_{i}",
-                                       model,
-                                       "TORCH",
-                                       device,
-                                       batch_size,
-                                       min_batch_size=batch_size)
-            client.set_script_from_file(f"resnet_script_{i}",
-                                        "./imagenet/data_processing_script.txt",
-                                        device)
-            logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
+        client.set_model_from_file(f"resnet_model",
+                                    model,
+                                    "TORCH",
+                                    device,
+                                    batch_size)
+        client.set_script_from_file(f"resnet_script",
+                                    "./imagenet/data_processing_script.txt",
+                                    device)
+        logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 def write_run_config(path, **kwargs):
     """Write config attributes to run file.
@@ -193,7 +190,7 @@ def write_run_config(path, **kwargs):
         "smartredis_version": "0.3.1", # TODO put in smartredis __version__
         "db": get_db_backend(),
         "date": str(get_date()),
-        "language": "cpp"
+        "language": kwargs['language']
     }
     config["attributes"] = kwargs
 

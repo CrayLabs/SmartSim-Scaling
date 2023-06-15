@@ -2,29 +2,40 @@ from utils import *
 from driverprocessresults.main import *
 
 if __name__ == "__main__":
+    """ Takes the pwd, then navigates to the root to append packages.
+    Python is then able to find our *.py files in that directory.
+    """
     sys.path.append("..")
+
+if __name__ == "__main__":
+    """The file may run directly without invoking driver.py and the scaling
+    study can still be run.
+    """
+    import fire
+    fire.Fire(Throughput())
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
 
 class Throughput:
     def throughput_standard(self,
-                           exp_name="inference-standard-scaling",
+                           exp_name="throughput-standard-scaling",
                            launcher="auto",
                            run_db_as_batch=True,
                            node_feature={},
                            db_node_feature={},
                            db_hosts=[],
-                           db_nodes=[8, 12],
+                           db_nodes=[32],
                            db_cpus=[36],
                            db_port=6780,
                            net_ifname="ipogif0",
                            clients_per_node=[32],
-                           client_nodes=[128],
-                           iterations=3,
+                           client_nodes=[60],
+                           iterations=100,
                            tensor_bytes=[1024],
                            languages=["cpp"],
-                           wall_time="05:00:00"):
+                           wall_time="05:00:00",
+                           plot="database_nodes"):
 
         """Run the throughput scaling tests with standard Orchestrator deployment
 
@@ -61,6 +72,8 @@ class Throughput:
         :type languages: str
         :param wall_time: allotted time for database launcher to run
         :type wall_time: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting throughput scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -77,9 +90,9 @@ class Throughput:
                     tensor_bytes=tensor_bytes,
                     language=languages,
                     wall_time=wall_time)
-        permss = list(product(db_nodes, db_cpus))
-        for permsss in permss:
-            dbn, dbc = permsss
+        first_perms = list(product(db_nodes, db_cpus))
+        for first_perm in first_perms:
+            dbn, dbc = first_perm
             # start the database only once per value in db_nodes so all permutations
             # are executed with the same database size without bringin down the database
             db = start_database(exp,
@@ -94,9 +107,9 @@ class Throughput:
                                 wall_time)
 
 
-            perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))
-            for perm in perms:
-                c_nodes, cpn, _bytes, db_cpu, language = perm
+            second_perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))
+            for second_perm in second_perms:
+                c_nodes, cpn, _bytes, db_cpu, language = second_perm
 
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self._create_throughput_session(exp,
@@ -117,7 +130,7 @@ class Throughput:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
-        self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
     def _create_throughput_session(cls,
@@ -165,7 +178,7 @@ class Throughput:
 
         name = "-".join((
             "throughput-sess",
-            str(language),
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
@@ -193,15 +206,16 @@ class Throughput:
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[12, 24, 48],
-                           db_cpus=[12],
+                           nodes=[60],
+                           db_cpus=[32],
                            db_port=6780,
                            net_ifname="lo",
                            clients_per_node=[48],
                            pin_app_cpus=[False],
-                           iterations=3,
+                           iterations=100,
                            tensor_bytes=[1024],
-                           languages=["cpp"]):
+                           languages=["cpp"],
+                           plot="database_cpus"):
 
 
         """Run the throughput scaling tests with colocated Orchestrator deployment
@@ -230,8 +244,10 @@ class Throughput:
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
         :type tensor_bytes: list[int], optional
-        :param languages: which language to use for the tester "cpp" or "fortran"
+        :param languages: list of languages to use for the tester "cpp" and/or "fortran"
         :type languages: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting colocated throughput scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -270,7 +286,7 @@ class Throughput:
             stat = exp.get_status(throughput_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
-        self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
     def _create_colocated_throughput_session(cls,
@@ -324,7 +340,7 @@ class Throughput:
 
         name = "-".join((
             "throughput-sess-colo",
-            str(language),
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBCPU"+str(db_cpus),
@@ -357,7 +373,3 @@ class Throughput:
                     tensor_bytes=_bytes,
                     language=language)
         return model
-
-if __name__ == "__main__":
-    import fire
-    fire.Fire(Throughput())

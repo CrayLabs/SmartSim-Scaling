@@ -3,9 +3,15 @@ from driverprocessresults.main import *
 import time
 
 if __name__ == "__main__":
+    """ Takes the pwd, then navigates to the root to append packages.
+    Python is then able to find our *.py files in that directory.
+    """
     sys.path.append("..")
 
 if __name__ == "__main__":
+    """The file may run directly without invoking driver.py and the scaling
+    study can still be run.
+    """
     import fire
     fire.Fire(Inference())
 
@@ -22,18 +28,18 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8],
-                           db_cpus=[8],
-                           db_tpq=[1],
+                           db_nodes=[4,8,16],
+                           db_cpus=[8,16],
+                           db_tpq=[1,2,4],
                            db_port=6780,
-                           batch_size=[1000],
+                           batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[48],
-                           client_nodes=[8,16],
+                           client_nodes=[60],
                            rebuild_model=False,
-                           iterations=5,
+                           iterations=100,
                            languages=["cpp"],
                            wall_time="05:00:00",
                            plot="database_nodes"):
@@ -79,6 +85,8 @@ class Inference:
         :type languages: str
         :param wall_time: allotted time for database launcher to run
         :type wall_time: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -157,8 +165,8 @@ class Inference:
                             node_feature={"constraint": "P100"},
                             launcher="auto",
                             nodes=[1],
-                            clients_per_node=[2],
-                            db_cpus=[2],
+                            clients_per_node=[12,24,36,60,96],
+                            db_cpus=[12],
                             db_tpq=[1],
                             db_port=6780,
                             pin_app_cpus=[False],
@@ -168,8 +176,8 @@ class Inference:
                             net_type="uds",
                             net_ifname="lo",
                             rebuild_model=False,
-                            iterations=5,
-                            languages=["cpp"],
+                            iterations=100,
+                            languages=["fortran","cpp"],
                             plot="database_cpus"
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
@@ -207,6 +215,8 @@ class Inference:
         :type rebuild_model: bool
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -306,7 +316,7 @@ class Inference:
         # tell scaling application not to set the model from the application
         # as we will do that from the driver in non-converged deployments
         run_settings.update_env({
-            "SS_SET_MODEL": 0,
+            "SS_SET_MODEL": "0",
             "SS_ITERATIONS": str(iterations),
             "SS_COLO": "0",
             "SS_CLUSTER": cluster,

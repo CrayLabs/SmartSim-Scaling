@@ -2,7 +2,17 @@ from utils import *
 from driverprocessresults.main import *
 
 if __name__ == "__main__":
+    """ Takes the pwd, then navigates to the root to append packages.
+    Python is then able to find our *.py files in that directory.
+    """
     sys.path.append("..")
+
+if __name__ == "__main__":
+    """The file may run directly without invoking driver.py and the scaling
+    study can still be run.
+    """
+    import fire
+    fire.Fire(DataAggregation())
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -17,19 +27,21 @@ class DataAggregation:
                             prod_node_feature = {},
                             cons_node_feature = {},
                             db_hosts=[],
-                            db_nodes=[4,8],
+                            db_nodes=[16],
                             db_cpus=36,
                             db_port=6780,
                             net_ifname="ipogif0",
                             clients_per_node=[48],
-                            client_nodes=[48],
-                            iterations=3,
-                            tensor_bytes=[1024],
+                            client_nodes=[60],
+                            iterations=20,
+                            tensor_bytes=[1024,8192,16384,32769,65538,
+                                          131076,262152,524304,1024000],
                             tensors_per_dataset=[4],
                             client_threads=[8],
                             cpu_hyperthreads=2,
                             languages=["cpp"],
-                            wall_time="05:00:00"):
+                            wall_time="05:00:00",
+                            plot="database_nodes"):
 
         """Run the data aggregation scaling tests.  Permutations of the test
         include client_nodes, clients_per_node, tensor_bytes,
@@ -81,6 +93,8 @@ class DataAggregation:
         :type languages: str
         :param wall_time: allotted time for database launcher to run
         :type wall_time: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting dataset aggregation scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -151,7 +165,7 @@ class DataAggregation:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
-        self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
     def _create_aggregation_producer_session_cpp(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
@@ -217,6 +231,7 @@ class DataAggregation:
 
         name = "-".join((
             name,
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
@@ -319,6 +334,7 @@ class DataAggregation:
 
         name = "-".join((
             name,
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
@@ -352,19 +368,21 @@ class DataAggregation:
                                 prod_node_feature = {},
                                 cons_node_feature = {},
                                 db_hosts=[],
-                                db_nodes=[4,8],
-                                db_cpus=12,
+                                db_nodes=[16],
+                                db_cpus=32,
                                 db_port=6780,
                                 net_ifname="ipogif0",
                                 clients_per_node=[32],
-                                client_nodes=[128],
-                                iterations=1,
-                                tensor_bytes=[1024],
+                                client_nodes=[60],
+                                iterations=20,
+                                tensor_bytes=[1024,8192,16384,32769,65538,
+                                              131076,262152,524304,1024000],
                                 tensors_per_dataset=[4],
-                                client_threads=[32],
+                                client_threads=[1,2,4,8,16,32],
                                 cpu_hyperthreads=2,
                                 languages=["cpp"],
-                                wall_time="05:00:00"):
+                                wall_time="05:00:00",
+                                plot="database_nodes"):
             """Run the data aggregation scaling tests with python consumer.
             Permutations of the test include client_nodes, clients_per_node, 
             tensor_bytes, tensors_per_dataset, and client_threads.
@@ -415,6 +433,8 @@ class DataAggregation:
             :type languages: str
             :param wall_time: allotted time for database launcher to run
             :type wall_time: str
+            :param plot: flag to plot against in process results
+            :type plot: str
             """
             logger.info("Starting dataset aggregation scaling with python tests")
             logger.info(f"Running with database backend: {get_db_backend()}")
@@ -485,7 +505,7 @@ class DataAggregation:
 
                 # stop database after this set of permutations have finished
                 exp.stop(db)
-            self.process_scaling_results(scaling_results_dir=exp_name)
+            self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
     @classmethod
     def _create_aggregation_producer_session_python(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
@@ -534,11 +554,13 @@ class DataAggregation:
                             clients_per_node=[32],
                             client_nodes=[24, 48],
                             iterations=20,
-                            tensor_bytes=[1024],
-                            tensors_per_dataset=[4],
-                            client_threads=[16,32],
+                            tensor_bytes=[1024,8192,16384,32769,65538,
+                                          131076,262152,524304,1024000],
+                            tensors_per_dataset=[1,4],
+                            client_threads=[1,2,4,8,16,32],
                             cpu_hyperthreads=2,
-                            languages=["cpp"]):
+                            languages=["cpp"],
+                            plot="clients_per_node"):
         """Run the data aggregation scaling tests with python consumer using the
         file system in place of the orchastrator. Permutations of the test include 
         client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset,
@@ -572,6 +594,8 @@ class DataAggregation:
         :type cpu_hyperthreads: int, optional
         :param languages: list of languages to use for the tester "cpp" and/or "fortran"
         :type languages: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting dataset aggregation scaling with python on file system tests")
         logger.info(f"Running with database backend: None (data to file system)")
@@ -632,7 +656,7 @@ class DataAggregation:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"ERROR: One of the scaling tests failed \
                                 {aggregation_consumer_sessions.name}")
-        self.process_scaling_results(scaling_results_dir=exp_name)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
     @classmethod
     def _create_aggregation_producer_session_python_fs(cls, exp, prod_node_feature, nodes, tasks, iterations,
@@ -673,7 +697,3 @@ class DataAggregation:
                         client_threads=c_threads,
                         language=language)
         return model
-
-if __name__ == "__main__":
-    import fire
-    fire.Fire(DataAggregation())

@@ -26,6 +26,8 @@ class ProcessResults:
             period of time.
             :param scaling_results_dir: directory to create results from
             :type scaling_results_dir: str, optional
+            :param plot: flag to plot against in process results
+            :type plot: str
             :param overwrite: overwrite any existing results
             :type overwrite: bool, optional
             """
@@ -113,8 +115,8 @@ class ProcessResults:
                             else:
                                 function_times[vals[1]] = [float(vals[2])]
                 else:
-                    if verbose: #QUESTION: what is the meaning? right now verbose will always be false?
-                        print(file) #why do we print file()?
+                    if verbose:
+                        print(file)
             if verbose:
                 print('Min {0}'.format(min(function_times['client()'])))
                 print('Max {0}'.format(max(function_times['client()'])))
