@@ -1,12 +1,12 @@
-from utils import *
-from driverprocessresults.main import *
-import time
-
 if __name__ == "__main__":
     """ Takes the pwd, then navigates to the root to append packages.
     Python is then able to find our *.py files in that directory.
     """
     sys.path.append("..")
+
+from utils import *
+from driverprocessresults.main import *
+import time
 
 if __name__ == "__main__":
     """The file may run directly without invoking driver.py and the scaling

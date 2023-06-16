@@ -40,8 +40,7 @@ bool get_set_flag() {
 
 bool get_colo() {
   char* is_colocated = std::getenv("SS_COLO");
-  bool is_colo = is_colocated ? std::stoi(is_colocated) : false;
-  return is_colo;
+  return is_colocated ? std::stoi(is_colocated) : false;
 }
 
 bool get_cluster_flag() {
@@ -83,7 +82,7 @@ void run_mnist(const std::string& model_name,
 
   double constructor_start = MPI_Wtime();
   bool cluster = get_cluster_flag();
-  bool is_colo = get_colo();
+  bool is_colocated = get_colo();
   SmartRedis::Client client(cluster);
   double constructor_end = MPI_Wtime();
   double delta_t = constructor_end - constructor_start;
@@ -98,10 +97,10 @@ void run_mnist(const std::string& model_name,
   if (should_set) {
     int batch_size = get_batch_size();
     int n_clients = get_client_count();
-    if (is_colo == false && rank == 0) {
-      std::cout<<"Setting Resnet Model from scaling app" << std::endl << std::flush;
-      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl << std::flush;
-      std::cout<<"Setting on device: " << device << std::endl << std::flush;
+    if (!is_colocated && rank == 0) {
+      std::cout<<"Setting Resnet Model from scaling app" << std::endl;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl;
+      std::cout<<"Setting on device: " << device << std::endl;
       std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
       std::string model_filename = "./resnet50." + device + ".pt";
 
@@ -114,10 +113,10 @@ void run_mnist(const std::string& model_name,
           client.set_script_from_file(script_key, device, "./data_processing_script.txt");
       }
     }
-    if(is_colo && rank % n_clients == 0) {
-      std::cout<<"Setting Resnet Model from scaling app" << std::endl << std::flush;
-      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl << std::flush;
-      std::cout<<"Setting on device: " << device << std::endl << std::flush;
+    if(is_colocated && rank % n_clients == 0) {
+      std::cout<<"Setting Resnet Model from scaling app" << std::endl;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl;
+      std::cout<<"Setting on device: " << device << std::endl;
       std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
       std::string model_filename = "./resnet50." + device + ".pt";
 
