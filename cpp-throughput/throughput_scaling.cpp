@@ -85,7 +85,7 @@ void run_throughput(std::ofstream& timing_file,
         client.put_tensor(key,
                           array.data(),
                           {1, n_values},
-                          SRTensorTypeFloat,
+                          SRTensorTypeFloat, 
                           SRMemLayoutContiguous);
         double put_tensor_end = MPI_Wtime();
         log_data(context, LLDebug, "put_tensor ended");

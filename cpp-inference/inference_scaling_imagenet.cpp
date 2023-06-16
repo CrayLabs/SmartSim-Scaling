@@ -7,6 +7,12 @@
 
 // some helpers for handling model settings from the
 // driver script in colocated and non-colocated cases
+int get_iterations() {
+  char* iterations = std::getenv("SS_ITERATIONS");
+  int iters = iterations ? std::stoi(iterations) : 100;
+  return iters;
+}
+
 int get_batch_size() {
   char* batch_setting = std::getenv("SS_BATCH_SIZE");
   int batch_size = batch_setting ? std::stoi(batch_setting) : 1;
@@ -30,6 +36,11 @@ bool get_set_flag() {
   char* set_flag = std::getenv("SS_SET_MODEL");
   bool should_set = set_flag ? std::stoi(set_flag) : false;
   return should_set;
+}
+
+bool get_colo() {
+  char* is_colocated = std::getenv("SS_COLOCATED");
+  return is_colocated ? std::stoi(is_colocated) : false;
 }
 
 bool get_cluster_flag() {
@@ -77,7 +88,8 @@ void run_mnist(const std::string& model_name,
   //Creating client
   double constructor_start = MPI_Wtime();
   bool cluster = get_cluster_flag();
-  SmartRedis::Client client(cluster, context);
+  bool is_colocated = get_colo();
+  SmartRedis::Client client(cluster);
   double constructor_end = MPI_Wtime();
 
   //Storing client() time
@@ -93,30 +105,18 @@ void run_mnist(const std::string& model_name,
   int num_devices = get_num_devices();
   bool use_multigpu = (0 == device.compare("GPU")) && num_devices > 1;
   bool should_set = get_set_flag();
-
-  //Setting model
+  std::string model_key = "resnet_model";
+  std::string script_key = "resnet_script";
   if (should_set) {
     log_data(context, LLDebug, "Model set beginning");
 
     //Setting vars for model setup
     int batch_size = get_batch_size();
     int n_clients = get_client_count();
-
-    //Ran at very beginning of model setup, first rank
-    if (rank == 0) {
-      std::cout<<"Setting Resnet Model from scaling app" << std::endl << std::flush;
-      log_data(context, LLInfo, "Setting Resnet Model from scaling app");
-
-      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl << std::flush;
-      std::string text2 = "Setting with batch_size: ";
-      text2 += std::to_string(batch_size);
-      log_data(context, LLInfo, text2);
-
-      std::cout<<"Setting on device: " << device << std::endl << std::flush;
-      std::string text3 = "Setting on device: ";
-      text3 += device;
-      log_data(context, LLInfo, text3);
-
+    if (!is_colocated && rank == 0) {
+      std::cout<<"Setting Resnet Model from scaling app" << std::endl;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl;
+      std::cout<<"Setting on device: " << device << std::endl;
       std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
       std::string text4 = "Setting on ";
       text4 += std::to_string(num_devices);
@@ -127,29 +127,43 @@ void run_mnist(const std::string& model_name,
 
       //Ran if using mutli gpu support - set model and script
       if (use_multigpu) {
-        std::string model_key = "resnet_model_0";
-        std::string script_key = "resnet_script_0";
         client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
         log_data(context, LLDebug, "Model set from file - multigpu");
         client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
         log_data(context, LLDebug, "Script set from file - multigpu");
       }
       else {
-        //If not multi gpu - set model and script
-        for (int i=0; i<num_devices; i++ ) {
-          std::string model_key = "resnet_model_" + std::to_string(i);
-          std::string script_key = "resnet_script_" + std::to_string(i);
           client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
           log_data(context, LLDebug, "Model set from file");
           client.set_script_from_file(script_key, device, "./data_processing_script.txt");
+      }
+    }
+    if(is_colocated && rank % n_clients == 0) {
+      std::cout<<"Setting Resnet Model from scaling app" << std::endl;
+      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl;
+      std::cout<<"Setting on device: " << device << std::endl;
+      std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
+      std::string model_filename = "./resnet50." + device + ".pt";
 
-          log_data(context, LLDebug, "Script set from file");
-        }
+      if (use_multigpu) {
+        client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
+        client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
+      }
+      else {
+          client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
+          client.set_script_from_file(script_key, device, "./data_processing_script.txt");
+
+      if (use_multigpu) {
+        client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
+        client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
+      }
+      else {
+          client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
+          client.set_script_from_file(script_key, device, "./data_processing_script.txt");
       }
     }
   }
-
-  //Waiting for every MPI rank
+  int iterations = get_iterations();
   MPI_Barrier(MPI_COMM_WORLD);
   log_data(context, LLDebug, "Model setup complete");
 
@@ -174,18 +188,6 @@ void run_mnist(const std::string& model_name,
   std::vector<double> run_model_times;
   std::vector<double> unpack_tensor_times;
 
-  // create keys for models and scripts to split inferences accross mulitple
-  // CPU threads. This also covers the case for one GPU as rank%1 == 0
-  std::string model_key = "resnet_model_" + std::to_string(rank%num_devices);
-  std::string script_key = "resnet_script_" + std::to_string(rank%num_devices);
-  // On GPU, we have the multigpu support, we don't need multiple names
-  if (use_multigpu) {
-    model_key = "resnet_model_0";
-    log_data(context, LLDebug, "Model Key set for multigpu use - resnet_model_0");
-    script_key = "resnet_script_0";
-    log_data(context, LLDebug, "Script Key set for multigpu use - resnet_script_0");
-  }
-
   if (!rank)
     std::cout<<"All ranks have Resnet image"<<std::endl;
 
@@ -193,7 +195,6 @@ void run_mnist(const std::string& model_name,
   std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
   std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
   std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(-1);
-
   client.put_tensor(in_key, array, {224, 224, 3},
                     SRTensorTypeFloat,
                     SRMemLayoutNested);
@@ -203,24 +204,21 @@ void run_mnist(const std::string& model_name,
     client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
   else
     client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
-
   if (use_multigpu)
     client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
   else
     client.run_model(model_key, {script_out_key}, {out_key});
-
   client.unpack_tensor(out_key, result, {1,1000},
       SRTensorTypeFloat,
       SRMemLayoutNested);
 
   // Begin the actual iteration loop
   double loop_start = MPI_Wtime();
-  for (int i = 0; i < 101; i++) {
+  for (int i = 0; i < iterations + 1; i++) {
     MPI_Barrier(MPI_COMM_WORLD);
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);
-
     double put_tensor_start = MPI_Wtime();
     log_data(context, LLDebug, "put_tensor started");
     client.put_tensor(in_key, array, {224, 224, 3},
@@ -272,7 +270,7 @@ void run_mnist(const std::string& model_name,
   log_data(context, LLDebug, "Writing data to files");
 
   // write times to file
-  for (int i = 1; i < 101; i++) { // Skip first run as it's warmup
+  for (int i = 1; i < iterations; i++) { // Skip first run as it's warmup
     timing_file << rank << "," << "put_tensor" << ","
                 << put_tensor_times[i] << std::endl << std::flush;
 

@@ -1,9 +1,19 @@
-import sys
-
 if __name__ == "__main__":
+    """ Takes the pwd, then navigates to the root to append packages.
+    Python is then able to find our *.py files in that directory.
+    """
     sys.path.append("..")
 
 from utils import *
+from driverprocessresults.main import *
+import time
+
+if __name__ == "__main__":
+    """The file may run directly without invoking driver.py and the scaling
+    study can still be run.
+    """
+    import fire
+    fire.Fire(Inference())
 
 from smartsim.log import get_logger, log_to_file
 logger = get_logger("Scaling Tests")
@@ -18,17 +28,21 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[12],
-                           db_cpus=[2],
-                           db_tpq=[1],
+                           db_nodes=[4,8,16],
+                           db_cpus=[8,16],
+                           db_tpq=[1,2,4],
                            db_port=6780,
-                           batch_size=[1000],
+                           batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[48],
-                           client_nodes=[12],
-                           rebuild_model=False):
+                           client_nodes=[60],
+                           rebuild_model=False,
+                           iterations=100,
+                           languages=["cpp", "fortran"],
+                           wall_time="05:00:00",
+                           plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
         :type exp_name: str, optional
@@ -65,6 +79,14 @@ class Inference:
         :type client_nodes: list[int], optional
         :param rebuild_model: force rebuild of PyTorch model even if it is available
         :type rebuild_model: bool
+        :param iterations: number of put/get loops run by the applications
+        :type iterations: int
+        :param languages: list of languages to use for the tester "cpp" and/or "fortran"
+        :type languages: str
+        :param wall_time: allotted time for database launcher to run
+        :type wall_time: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -73,13 +95,28 @@ class Inference:
 
         check_model(device, force_rebuild=rebuild_model)
 
-        exp = create_folder(exp_name, launcher)
-        check_node_allocation(client_nodes, db_nodes)
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                        colocated=0,
+                        clients_per_node=clients_per_node,
+                        client_nodes=client_nodes,
+                        database_hosts=db_hosts,
+                        database_nodes=db_nodes,
+                        database_cpus=db_cpus,
+                        database_port=db_port,
+                        batch_size=batch_size,
+                        device=device,
+                        num_devices=num_devices,
+                        iterations=iterations,
+                        language=languages,
+                        db_node_feature=db_node_feature,
+                        node_feature=node_feature,
+                        wall_time=wall_time)
 
-        perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size))
+        perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size, languages))
         logger.info(f"Executing {len(perms)} permutations")
         for perm in perms:
-            c_nodes, cpn, dbn, dbc, dbtpq, batch = perm
+            c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
 
             db = start_database(exp,
                                 db_node_feature,
@@ -89,7 +126,8 @@ class Inference:
                                 dbtpq,
                                 net_ifname,
                                 run_db_as_batch,
-                                db_hosts)
+                                db_hosts,
+                                wall_time)
             # setup a an instance of the synthetic C++ app and start it
             infer_session, resnet_model = self._create_inference_session(exp,
                                                      node_feature,
@@ -101,7 +139,9 @@ class Inference:
                                                      batch,
                                                      device,
                                                      num_devices,
-                                                     rebuild_model)
+                                                     rebuild_model,
+                                                     iterations,
+                                                     language)
             address = db.get_address()[0]
             setup_resnet(resnet_model,
                         device,
@@ -119,14 +159,15 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+  
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[12],
-                            clients_per_node=[18],
-                            db_cpus=[2],
+                            nodes=[1],
+                            clients_per_node=[12,24,36,60,96],
+                            db_cpus=[12],
                             db_tpq=[1],
                             db_port=6780,
                             pin_app_cpus=[False],
@@ -136,7 +177,9 @@ class Inference:
                             net_type="uds",
                             net_ifname="lo",
                             rebuild_model=False,
+                            iterations=100,
                             languages=["cpp","fortran"],
+                            plot="database_cpus"
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
         :param exp_name: name of output dir
@@ -173,6 +216,8 @@ class Inference:
         :type rebuild_model: bool
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
+        :param plot: flag to plot against in process results
+        :type plot: str
         """
         logger.info("Starting colocated inference scaling tests")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -180,8 +225,29 @@ class Inference:
 
         check_model(device, force_rebuild=rebuild_model)
 
-        exp = create_folder(exp_name, launcher)
-
+        exp, result_path = create_folder(exp_name, launcher)
+        write_run_config(result_path,
+                        colocated=1,
+                        node_feature=node_feature,
+                        experiment_name=exp_name,
+                        launcher=launcher,
+                        nodes=nodes,
+                        clients_per_node=clients_per_node,
+                        database_cpus=db_cpus,
+                        database_threads_per_queue=db_tpq,
+                        database_port=db_port,
+                        pin_app_cpus=pin_app_cpus,
+                        batch_size=batch_size,
+                        device=device,
+                        num_devices=num_devices,
+                        net_type=net_type,
+                        net_ifname=net_ifname,
+                        rebuild_model=rebuild_model,
+                        iterations=iterations,
+                        language=languages,
+                        plot=plot
+                        )
+        
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for perm in perms:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
@@ -200,6 +266,7 @@ class Inference:
                                                                device,
                                                                num_devices,
                                                                rebuild_model,
+                                                               iterations,
                                                                language)
 
             exp.start(infer_session, block=True, summary=True)
@@ -208,6 +275,7 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
 
     @staticmethod
@@ -236,33 +304,40 @@ class Inference:
                                 batch_size,
                                 device,
                                 num_devices,
-                                rebuild_model
+                                rebuild_model,
+                                iterations,
+                                language
                                 ):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         cluster = 1 if db_nodes > 1 else 0
-        run_settings = exp.create_run_settings("./cpp-inference/build/run_resnet_inference", run_args=node_feature)
+        run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
         run_settings.set_tasks_per_node(tasks)
         run_settings.set_tasks(tasks*nodes)
         # tell scaling application not to set the model from the application
         # as we will do that from the driver in non-converged deployments
         run_settings.update_env({
-            "SS_SET_MODEL": 0,
+            "SS_SET_MODEL": "0",
+            "SS_ITERATIONS": str(iterations),
+            "SS_COLOCATED": "0",
             "SS_CLUSTER": cluster,
             "SS_NUM_DEVICES": str(num_devices),
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
             "SS_CLIENT_COUNT": str(tasks),
             "SR_LOG_FILE": "srlog.out",
-            "SR_LOG_LEVEL": "INFO"
+            "SR_LOG_LEVEL": "INFO",
+            "SR_CONN_TIMEOUT": 1000
         })
 
         name = "-".join((
             "infer-sess",
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(db_nodes),
             "DBCPU"+str(db_cpus),
+            "ITER"+str(iterations),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -282,7 +357,10 @@ class Inference:
                         database_threads_per_queue=db_tpq,
                         batch_size=batch_size,
                         device=device,
-                        num_devices=num_devices)
+                        num_devices=num_devices,
+                        language=language,
+                        iterations=iterations,
+                        node_feature=node_feature)
 
         return model, resnet_model
 
@@ -302,6 +380,7 @@ class Inference:
                                        device,
                                        num_devices,
                                        rebuild_model,
+                                       iterations,
                                        language):
         resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
@@ -311,6 +390,8 @@ class Inference:
         run_settings.set_tasks_per_node(tasks)
         run_settings.update_env({
             "SS_SET_MODEL": "1",
+            "SS_ITERATIONS": str(iterations),
+            "SS_COLOCATED": "1",
             "SS_CLUSTER": "0",
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
@@ -322,10 +403,12 @@ class Inference:
 
         name = "-".join((
             "infer-sess-colo",
+            language,
             "N"+str(nodes),
             "T"+str(tasks),
             "DBN"+str(nodes),
             "DBCPU"+str(db_cpus),
+            "ITER"+str(iterations),
             "DBTPQ"+str(db_tpq),
             get_uuid()
             ))
@@ -358,20 +441,20 @@ class Inference:
         write_run_config(
             model.path,
             colocated=1,
-            pin_app_cpus=int(pin_app_cpus),
+            nodes=nodes,
             client_total=tasks*nodes,
-            client_per_node=tasks,
-            client_nodes=nodes, #might not need client_nodes here
-            database_nodes=nodes,
+            clients_per_node=tasks,
             database_cpus=db_cpus,
             database_threads_per_queue=db_tpq,
+            database_port=db_port,
+            pin_app_cpus=pin_app_cpus,
             batch_size=batch_size,
             device=device,
             num_devices=num_devices,
+            net_type=net_type,
+            net_ifname=net_ifname,
+            rebuild_model=rebuild_model,
+            iterations=iterations,
             language=language
         )
         return model
-
-if __name__ == "__main__":
-    import fire
-    fire.Fire(DataAggregation())
