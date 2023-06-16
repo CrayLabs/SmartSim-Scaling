@@ -40,7 +40,7 @@ class Inference:
                            client_nodes=[60],
                            rebuild_model=False,
                            iterations=100,
-                           languages=["cpp"],
+                           languages=["cpp", "fortran"],
                            wall_time="05:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
@@ -177,7 +177,7 @@ class Inference:
                             net_ifname="lo",
                             rebuild_model=False,
                             iterations=100,
-                            languages=["fortran","cpp"],
+                            languages=["cpp","fortran"],
                             plot="database_cpus"
                             ):
         """Run ResNet50 inference tests with colocated Orchestrator deployment
