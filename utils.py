@@ -9,7 +9,6 @@ from itertools import product
 from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
-from process_results import create_run_csv
 from imagenet.model_saver import save_model
 
 
@@ -81,9 +80,9 @@ def create_folder(exp_name, launcher):
     exp = Experiment(name=result_path, launcher=launcher)
     exp.generate()
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
-    return exp
+    return exp, result_path
 
-def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run_as_batch, hosts):
+def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run_as_batch, hosts, wall_time):
     """Create and start the Orchestrator
 
     This function is only called if the scaling tests are
@@ -108,6 +107,8 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :type run_as_batch: bool
     :param hosts: host to use for the database
     :type hosts: int
+    :param wall_time: allotted time for database launcher to run
+    :type wall_time: str
     :return: orchestrator instance
     :rtype: Orchestrator
     """
@@ -119,7 +120,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
                             single_cmd=True,
                             hosts=hosts)
     if run_as_batch:
-        db.set_walltime("48:00:00")
+        db.set_walltime(wall_time)
         for k, v in db_node_feature.items():
             db.set_batch_arg(k, v)
     db.set_cpus(cpus)
@@ -147,13 +148,12 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     client = Client(address=address, cluster=cluster)
     device = device.upper()
     if (device == "GPU") and (num_devices > 1):
-        client.set_model_from_file_multigpu("resnet_model_0",
+        client.set_model_from_file_multigpu("resnet_model",
                                             model,
                                             "TORCH",
                                             0, num_devices,
-                                            batch_size,
-                                            min_batch_size=batch_size)
-        client.set_script_from_file_multigpu("resnet_script_0",
+                                            batch_size)
+        client.set_script_from_file_multigpu("resnet_script",
                                              "./imagenet/data_processing_script.txt",
                                              0, num_devices)
         logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
@@ -161,17 +161,15 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
         # Redis does not accept CPU:<n>. We are either
         # setting (possibly multiple copies of) the model and script on CPU, or one
         # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
-        for i in range (num_devices):
-            client.set_model_from_file(f"resnet_model_{i}",
-                                       model,
-                                       "TORCH",
-                                       device,
-                                       batch_size,
-                                       min_batch_size=batch_size)
-            client.set_script_from_file(f"resnet_script_{i}",
-                                        "./imagenet/data_processing_script.txt",
-                                        device)
-            logger.info(f"Resnet Model and Script in Orchestrator on device {device}:{i}")
+        client.set_model_from_file(f"resnet_model",
+                                    model,
+                                    "TORCH",
+                                    device,
+                                    batch_size)
+        client.set_script_from_file(f"resnet_script",
+                                    "./imagenet/data_processing_script.txt",
+                                    device)
+        logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 def write_run_config(path, **kwargs):
     """Write config attributes to run file.
@@ -191,7 +189,8 @@ def write_run_config(path, **kwargs):
         "smartsim_version": smartsim.__version__,
         "smartredis_version": "0.3.1", # TODO put in smartredis __version__
         "db": get_db_backend(),
-        "date": str(get_date())
+        "date": str(get_date()),
+        "language": kwargs['language']
     }
     config["attributes"] = kwargs
 
@@ -215,4 +214,4 @@ def get_db_backend():
     :rtype: str
     """
     db_backend_path = smartsim._core.config.CONFIG.database_exe
-    return os.path.basename(db_backend_path)
+    return os.path.basename(db_backend_path) #Will need to look into this further, will need to return a list
