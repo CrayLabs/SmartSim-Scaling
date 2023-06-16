@@ -39,7 +39,7 @@ bool get_set_flag() {
 }
 
 bool get_colo() {
-  char* is_colocated = std::getenv("SS_COLO");
+  char* is_colocated = std::getenv("SS_COLOCATED");
   return is_colocated ? std::stoi(is_colocated) : false;
 }
 

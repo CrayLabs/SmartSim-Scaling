@@ -318,7 +318,7 @@ class Inference:
         run_settings.update_env({
             "SS_SET_MODEL": "0",
             "SS_ITERATIONS": str(iterations),
-            "SS_COLO": "0",
+            "SS_COLOCATED": "0",
             "SS_CLUSTER": cluster,
             "SS_NUM_DEVICES": str(num_devices),
             "SS_BATCH_SIZE": str(batch_size),
@@ -390,7 +390,7 @@ class Inference:
         run_settings.update_env({
             "SS_SET_MODEL": "1",
             "SS_ITERATIONS": str(iterations),
-            "SS_COLO": "1",
+            "SS_COLOCATED": "1",
             "SS_CLUSTER": "0",
             "SS_BATCH_SIZE": str(batch_size),
             "SS_DEVICE": device,
