@@ -20,6 +20,7 @@ void run_throughput(std::ofstream& timing_file,
     std::string context("Run Throughput");
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
 
     if(!rank)
         log_data(context, LLInfo, "Connecting clients");
@@ -123,6 +124,7 @@ int main(int argc, char* argv[]) {
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
 
     if(argc==1)
         throw std::runtime_error("The number tensor size in "\
@@ -132,7 +134,7 @@ int main(int argc, char* argv[]) {
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
 
-    log_data(context, LLDebug, "Starting Throughput tests");
+    log_data(context, LLDebug, "Starting Throughput tests for rank: " + std::to_string(rank));
     double main_start = MPI_Wtime();
 
     //Indicating tensor size used in throughput test
@@ -164,6 +166,7 @@ int main(int argc, char* argv[]) {
     log_data(context, LLDebug, main_text);
 
     MPI_Finalize();
+    log_data(context, LLDebug, "All ranks finalized");
 
     return 0;
 }
