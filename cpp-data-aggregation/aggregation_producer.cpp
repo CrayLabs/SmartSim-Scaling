@@ -16,6 +16,7 @@ void run_aggregation_production(size_t n_bytes,
     //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
 
     //Indicate Client creation
     if (rank == 0)
@@ -93,7 +94,7 @@ void run_aggregation_production(size_t n_bytes,
 
 int main(int argc, char* argv[]) {
 
-    std::string context("Scaling tests");
+    std::string context("Data Aggregation Scaling Tests");
 
     MPI_Init(&argc, &argv);
 
@@ -120,14 +121,14 @@ int main(int argc, char* argv[]) {
     std::string s_tensors_per_dataset(argv[2]);
     int tensors_per_dataset = std::stoi(s_tensors_per_dataset);
 
-    std::string text = "Running aggregate scaling producer test with ";
-    text += "tensor size of ";
-    text += std::to_string(n_bytes);
-    text += " bytes and";
-    text += std::to_string(tensors_per_dataset);
-    text += " tensors per dataset.";
+    std::string tensor_text = "Running aggregate scaling producer test with ";
+    tensor_text += "tensor size of ";
+    tensor_text += std::to_string(n_bytes);
+    tensor_text += " bytes and";
+    tensor_text += std::to_string(tensors_per_dataset);
+    tensor_text += " tensors per dataset.";
     if(rank==0)
-        log_data(context, LLInfo, text);
+        log_data(context, LLInfo, tensor_text);
         std::cout << "Running aggregate scaling producer test with "\
                      "tensor size of " << n_bytes <<
                      " bytes and "<< tensors_per_dataset <<

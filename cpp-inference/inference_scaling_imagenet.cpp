@@ -241,7 +241,7 @@ void run_mnist(const std::string& model_name,
       SRMemLayoutNested);
 
   // Begin the actual iteration loop
-  log_data(context, LLDebug, "Beginning loop");
+  log_data(context, LLDebug, "Iteration loop starting...");
   double loop_start = MPI_Wtime();
   for (int i = 0; i < iterations + 1; i++) {
     MPI_Barrier(MPI_COMM_WORLD);

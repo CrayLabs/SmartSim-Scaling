@@ -16,6 +16,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
 
     //Indicate Client creation
     if (rank == 0)
@@ -29,6 +30,10 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     double delta_t = constructor_end - constructor_start;
     timing_file << rank << "," << "client()" << ","
                 << delta_t << "\n";
+    //print rank # storing client() for debugging
+    std::string client_text = "client() time stored for rank: ";
+    client_text += std::to_string(rank);
+    log_data(context, LLDebug, client_text);
 
     // Allocate arrays to hold timings
     std::vector<double> get_list_times;
@@ -49,15 +54,16 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
     // Perform dataset aggregation retrieval
     for (int i=0; i<iterations; i++) {
-        std::string text1 = "Running iteration: ";
-        text1 += std::to_string(i);
-        log_data(context, LLDebug, text1);
+        std::string iteration_text = "Running iteration: ";
+        iteration_text += std::to_string(i);
+        log_data(context, LLDebug, iteration_text);
 
         // Create aggregation list name
         std::string list_name = "iteration_" + std::to_string(i);
 
         if (rank == 0) {
             std::cout << "Consuming list " << i << std::endl;
+            log_data(context, LLInfo, "Consuming list " + std::to_string(i));
         }
 
         // Have rank 0 check that the aggregation list is full
@@ -77,11 +83,10 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
         // Have each rank retrieve the datasets in the aggregation list
         double get_list_start = MPI_Wtime();
-        log_data(context, LLDebug, "get_list started");
         std::vector<SmartRedis::DataSet> result =
             client.get_datasets_from_list(list_name);
         double get_list_end = MPI_Wtime();
-        log_data(context, LLDebug, "get_list ended");
+        log_data(context, LLDebug, "get_list completed for rank: " + std::to_string(rank));
         delta_t = get_list_end - get_list_start;
         get_list_times.push_back(delta_t);
 
@@ -91,20 +96,14 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         // Delete the list so the producer knows the list has been consumed
         if (rank == 0) {
             client.delete_list(list_name);
-            log_data(context, LLDebug, "Data Agg List deleted");
+            log_data(context, LLDebug, "Data Agg List " + list_name + " is deleted");
         }
-
-        std::string text2 = "Ending iteration: ";
-        text2 += std::to_string(i);
-        log_data(context, LLDebug, text2);
     }
-
     // Compute loop execution time
     double loop_end = MPI_Wtime();
     log_data(context, LLDebug, "All iterations complete");
     delta_t = loop_end - loop_start;
 
-    log_data(context, LLDebug, "Writing data to files");
     // Write aggregation times to file
     for (int i = 0; i < iterations; i++) {
         timing_file << rank << "," << "get_list" << ","

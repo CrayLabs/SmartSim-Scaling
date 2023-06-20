@@ -9,7 +9,7 @@ import typing as t
 from smartredis import Client
 
 from smartsim.log import get_logger, log_to_file
-logger = get_logger("Scaling Tests")
+logger = get_logger("Data Aggregation Py Tests")
 
 
 def get_iterations() -> int:
@@ -46,7 +46,6 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm.Barrier()
 
     # Retrive the rank-local loop start time
-    logger.debug(f"loop_time() starting")
     loop_start = MPI.Wtime()
 
     # Preform dataset aggregation retrieval
@@ -61,7 +60,6 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
             logger.info(f"Consuming list {i}")
     
         # Have rank 0 check that the aggregation list is full
-        logger.debug("Starting poll_time()")
         poll_time_start = MPI.Wtime()
         if rank == 0:
             list_is_ready: bool = client.poll_list_length(
@@ -80,16 +78,15 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
         # Have all ranks wait until the aggregation list is full
         comm.Barrier()
         poll_time_end = MPI.Wtime()
-        logger.debug("Ended poll_time()")
+        logger.debug(f"Ended poll_time() for iteration {i}")
         delta_t = poll_time_end - poll_time_start
         poll_list_times.append(delta_t)
 
         # Have each rank retrieve the datasets in the aggregation list
-        logger.debug("Starting get_list()")
         get_list_start = MPI.Wtime()
         _result = client.get_datasets_from_list(list_name)
         get_list_end = MPI.Wtime()
-        logger.debug("Ended get_list()")
+        logger.debug(f"Ended get_list() for iteration {i}")
         delta_t = get_list_end - get_list_start
         get_list_times.append(delta_t)
 
@@ -99,6 +96,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
         # Delete the list so the producer knows the list has been consumed
         if rank == 0:
             client.delete_list(list_name)
+            logger.debug(f"list_name: {list_name} has been deleted")
 
     # Compute loop execution time
     loop_end = MPI.Wtime()
@@ -128,7 +126,6 @@ def main() -> int:
 
     # Get command line arguments
     if len(sys.argv) == 1:
-        #Add
         raise RuntimeError("The expected list length must be passed in")
     list_length = int(sys.argv[1])
 

@@ -62,7 +62,7 @@ void run_throughput(std::ofstream& timing_file,
     // for large messages.
     double loop_start = MPI_Wtime();
 
-
+    log_data(context, LLDebug, "Iteration loop starting...");
     for (int i=0; i<iterations; i++) {
         //print out iteration # and rank # for debugging
         std::string iteration_debug = "Running iteration: ";
