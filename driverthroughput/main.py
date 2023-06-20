@@ -6,6 +6,7 @@ if __name__ == "__main__":
 
 from utils import *
 from driverprocessresults.main import *
+import sys
 
 if __name__ == "__main__":
     """The file may run directly without invoking driver.py and the scaling
@@ -25,14 +26,17 @@ class Throughput:
                            node_feature={},
                            db_node_feature={},
                            db_hosts=[],
-                           db_nodes=[8,12],
-                           db_cpus=36,
+                           db_nodes=[5],
+                           db_cpus=[2],
                            db_port=6780,
                            net_ifname="ipogif0",
                            clients_per_node=[32],
-                           client_nodes=[30],
-                           iterations=10,
-                           tensor_bytes=[1024]):
+                           client_nodes=[10],
+                           iterations=3,
+                           tensor_bytes=[1024],
+                           languages=["cpp"],
+                           wall_time="05:00:00",
+                           plot="database_nodes"):
 
         """Run the throughput scaling tests with standard Orchestrator deployment
 
@@ -73,11 +77,29 @@ class Throughput:
         :type plot: str
         """
         logger.info("Starting throughput standard scaling tests\n")
-        logger.info(f"Running with Experiment name: {exp_name}")
+        logger.info(f"Running with experiment name: {exp_name}")
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
+        logger.info(f"Running database as batch: {run_db_as_batch}")
+        logger.info(f"Running with node feature: {node_feature}")
+        logger.info(f"Running with database node feature: {db_node_feature}")
+        logger.info(f"Running with database hosts: {db_hosts}")
+        logger.info(f"Running with database nodes: {db_nodes}")
+        logger.info(f"Running with database cpus: {db_cpus}")
+        logger.info(f"Running with database port: {db_port}")
+        logger.info(f"Running with network: {net_ifname}")
+        logger.info(f"Running with clients per node: {clients_per_node}")
+        logger.info(f"Running with client nodes: {client_nodes}")
+        logger.info(f"Running with iterations: {iterations}")
+        logger.info(f"Running with tensor bytes: {tensor_bytes}")
+        logger.info(f"Running with languages: {languages}")
+        logger.info(f"Running with database wall time: {wall_time}")
+        logger.info(f"Running with plot: {plot}\n")
+        
+        check_node_allocation(client_nodes, db_nodes)
+        logger.info("Experiment allocation passed check")
 
-        exp, result_path = create_folder(exp_name, launcher)
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
         write_run_config(result_path,
                     colocated=0,
                     client_per_node=clients_per_node,
@@ -89,7 +111,7 @@ class Throughput:
                     language=languages,
                     wall_time=wall_time)
         first_perms = list(product(db_nodes, db_cpus))
-        for first_perm in first_perms:
+        for i, first_perm in enumerate(first_perms, start=1):
             dbn, dbc = first_perm
             # start the database only once per value in db_nodes so all permutations
             # are executed with the same database size without bringin down the database
@@ -103,12 +125,12 @@ class Throughput:
                                 run_db_as_batch,
                                 db_hosts,
                                 wall_time)
-
-
+            logger.debug("database created and returned")
+            
             second_perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))
-            for second_perm in second_perms:
+            for j, second_perm in enumerate(second_perms, start=1):
                 c_nodes, cpn, _bytes, db_cpu, language = second_perm
-
+                logger.info(f"Running permutation {i} of {len(second_perms)} for database node index {j} of {len(first_perms)}")
                 # setup a an instance of the C++ driver and start it
                 throughput_session = self._create_throughput_session(exp,
                                                                node_feature,
@@ -119,14 +141,15 @@ class Throughput:
                                                                iterations,
                                                                _bytes,
                                                                language)
+                logger.debug("session created and returned")
                 exp.start(throughput_session, summary=True)
-                logger.debug("Waiting for Experiment to complete...")
+                logger.debug("experiment started")
                 # confirm scaling test run successfully
                 stat = exp.get_status(throughput_session)
                 if stat[0] != status.STATUS_COMPLETED: # might need to add error check to inference tests
-                    logger.error(f"ERROR: The following scaling test failed: {throughput_session.name} with status error {stat}")
+                    logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
 
-                # stop database after this set of permutations have finished
+            # stop database after this set of permutations have finished
             exp.stop(db)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
@@ -199,33 +222,18 @@ class Throughput:
                     tensor_bytes=_bytes,
                     language=language)
         return model
-            model = exp.create_model(name, settings)
-            exp.generate(model, overwrite=True)
-            write_run_config(model.path,
-                        colocated=0,
-                        client_total=tasks*nodes,
-                        client_per_node=tasks,
-                        client_nodes=nodes,
-                        database_nodes=db_nodes,
-                        database_cpus=db_cpus,
-                        iterations=iterations,
-                        tensor_bytes=_bytes)
-            return model
-        except Exception as e:
-            logger.error(e)
-            raise
     
     def throughput_colocated(self,
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[60],
-                           db_cpus=[32],
+                           nodes=[10],
+                           db_cpus=[5],
                            db_port=6780,
                            net_ifname="lo",
                            clients_per_node=[48],
                            pin_app_cpus=[False],
-                           iterations=100,
+                           iterations=3,
                            tensor_bytes=[1024],
                            languages=["cpp"],
                            plot="database_cpus"):
@@ -262,12 +270,26 @@ class Throughput:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting colocated throughput scaling tests")
-        logger.info(f"Running with Experiment name: {exp_name}")
+        logger.info("Starting throughput colocated scaling tests\n")
+        logger.info(f"Running with experiment name: {exp_name}")
         logger.info(f"Running with database backend: {get_db_backend()}")
         logger.info(f"Running with launcher: {launcher}")
-
-        exp, result_path = create_folder(exp_name, launcher)
+        logger.info(f"Running with node feature: {node_feature}")
+        logger.info(f"Running with nodes: {nodes}")
+        logger.info(f"Running with database cpus: {db_cpus}")
+        logger.info(f"Running with database port: {db_port}")
+        logger.info(f"Running with network: {net_ifname}")
+        logger.info(f"Running with clients per node: {clients_per_node}")
+        logger.info(f"Running with pin app to cpus: {pin_app_cpus}")
+        logger.info(f"Running with iterations: {iterations}")
+        logger.info(f"Running with tensor bytes: {tensor_bytes}")
+        logger.info(f"Running with languages: {languages}")
+        logger.info(f"Running with plot: {plot}\n")
+        
+        check_node_allocation(nodes, [0])
+        logger.info("Experiment allocation passed check")
+        
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
         write_run_config(result_path,
                     colocated=1,
                     pin_app_cpus=str(pin_app_cpus),
@@ -279,8 +301,9 @@ class Throughput:
                     language=languages)
 
         perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus, languages))
-        for perm in perms:
+        for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbc, _bytes, pin_app, language = perm
+            logger.info(f"Running permutation {i} of {len(perms)}")
 
             # setup a an instance of the C++ driver and start it
             throughput_session = self._create_colocated_throughput_session(exp,
@@ -295,7 +318,7 @@ class Throughput:
                                                             net_ifname,
                                                             language)
             exp.start(throughput_session, block = True, summary=True)
-            logger.debug("Waiting for Experiment to complete...")
+
             # confirm scaling test run successfully
             stat = exp.get_status(throughput_session)
             if stat[0] != status.STATUS_COMPLETED:
