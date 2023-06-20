@@ -115,6 +115,7 @@ class Inference:
         logger.info("Experiment allocation passed check")
 
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=0,
                         clients_per_node=clients_per_node,
@@ -162,6 +163,7 @@ class Inference:
                                                      rebuild_model,
                                                      iterations,
                                                      language)
+            logger.debug("Inference session created")
             address = db.get_address()[0]
             setup_resnet(resnet_model,
                         device,
@@ -169,7 +171,7 @@ class Inference:
                         batch,
                         address,
                         cluster=dbn>1)
-
+            logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
 
@@ -267,6 +269,7 @@ class Inference:
         logger.info("Experiment allocation passed check")
 
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=1,
                         node_feature=node_feature,
@@ -310,6 +313,7 @@ class Inference:
                                                                rebuild_model,
                                                                iterations,
                                                                language)
+            logger.debug("Inference session created")
 
             exp.start(infer_session, block=True, summary=True)
 

@@ -36,7 +36,8 @@ class Throughput:
                            tensor_bytes=[1024],
                            languages=["cpp"],
                            wall_time="05:00:00",
-                           plot="database_nodes"):
+                           plot="database_nodes",
+                           smartsim_logging=False):
 
         """Run the throughput scaling tests with standard Orchestrator deployment
 
@@ -76,6 +77,9 @@ class Throughput:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        
+            
+            
         logger.info("Starting throughput standard scaling tests\n")
         logger.info(f"Running with experiment name: {exp_name}")
         logger.info(f"Running with database backend: {get_db_backend()}")
@@ -141,7 +145,7 @@ class Throughput:
                                                                iterations,
                                                                _bytes,
                                                                language)
-                logger.debug("session created and returned")
+                logger.debug("Throughput session created")
                 exp.start(throughput_session, summary=True)
                 logger.debug("experiment started")
                 # confirm scaling test run successfully
@@ -317,6 +321,7 @@ class Throughput:
                                                             pin_app,
                                                             net_ifname,
                                                             language)
+            logger.debug("Throughput session created")
             exp.start(throughput_session, block = True, summary=True)
 
             # confirm scaling test run successfully

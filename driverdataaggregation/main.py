@@ -162,6 +162,7 @@ class DataAggregation:
                                                         db_node_count,
                                                         db_cpus, iterations,
                                                         _bytes, t_per_dataset, language)
+                logger.debug("Producer session created")
 
                 # setup a an instance of the C++ driver and start it
                 aggregation_consumer_sessions = \
@@ -169,7 +170,7 @@ class DataAggregation:
                                                         db_node_count, db_cpus,
                                                         iterations, _bytes, t_per_dataset,
                                                         c_threads, cpu_hyperthreads, language)
-
+                logger.debug("Consumer session created")
                 exp.start(aggregation_producer_sessions,
                           aggregation_consumer_sessions,
                            summary=True)
@@ -523,7 +524,7 @@ class DataAggregation:
                                                                 db_node_count,
                                                                 db_cpus, iterations,
                                                                 bytes_, t_per_dataset, language)
-
+                    logger.debug("Producer session created")
                     # setup a an instance of the python consumer and start it
                     aggregation_consumer_sessions = \
                         self._create_aggregation_consumer_session_python(exp, cons_node_feature, c_nodes, cpn,
@@ -531,7 +532,7 @@ class DataAggregation:
                                                                 iterations, bytes_,
                                                                 t_per_dataset, c_threads,
                                                                 cpu_hyperthreads, language)
-
+                    logger.debug("Consumer session created")
                     exp.start(aggregation_producer_sessions,
                             aggregation_consumer_sessions,
                             summary=True)
@@ -679,14 +680,14 @@ class DataAggregation:
                 self._create_aggregation_producer_session_python_fs(exp, prod_node_feature, c_nodes, cpn,
                                                               iterations, bytes_,
                                                               t_per_dataset, language)
-
+            logger.debug("Producer session created")
             # setup a an instance of the python consumer and start it
             aggregation_consumer_sessions = \
                 self._create_aggregation_consumer_session_python_fs(exp, cons_node_feature, c_nodes, cpn,
                                                               iterations, bytes_,
                                                               t_per_dataset, c_threads,
                                                               cpu_hyperthreads, language)
-
+            logger.debug("Consumer session created")
             # Bad SmartSim access to set up env vars
             # so that producer writes files to same location
             # that the consumer reads files

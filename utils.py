@@ -11,6 +11,7 @@ from uuid import uuid4
 import pandas as pd
 from imagenet.model_saver import save_model
 from smartsim.error.errors import *
+from smartsim.wlm import detect_launcher
 
 
 import smartsim
@@ -241,7 +242,11 @@ def check_node_allocation(client_nodes, db_nodes):
         raise ValueError("db_nodes cannot be empty")
     if not client_nodes:
         raise ValueError("client_nodes cannot be empty")
-    total_nodes = os.getenv("SLURM_NNODES")
+    
+    if detect_launcher() == "slurm":
+        total_nodes = os.getenv("SLURM_NNODES")
+    else:
+        total_nodes = os.getenv("PBS_NNODES")
     for perm in list(product(client_nodes, db_nodes)):
         one, two = perm
         val = one + two
