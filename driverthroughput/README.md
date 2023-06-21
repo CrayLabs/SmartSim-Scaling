@@ -5,7 +5,7 @@ SmartSim-Scaling offers two throughput test versions listed below:
  1. Throughput Co-located     (c++ client and SmartRedis Orchestrator)
  2. Throughput Standard       (c++ client and SmartRedis Orchestrator)
 
-Follow along for more information on all respective tests.
+Continue below for more information on all respective tests.
 
 ## Client Description
 
