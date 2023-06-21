@@ -7,7 +7,7 @@ SmartSim-Scaling offers two throughput test versions listed below:
 
 Follow along for more information on all respective tests.
 
-# Client Description
+## Client Description
 
 The throughput tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
@@ -20,7 +20,7 @@ Each client performs 10 executions of the following commands
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-### Co-located throughput
+## Co-located throughput
 
 Co-located Orchestrators are deployed on the same nodes as the
 application. This improves throughput performance as no data movement
@@ -111,7 +111,7 @@ python driver.py throughput_colocated --nodes=[20,40,60] --db_tpq=[1,2,4] \
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
-### Standard throughput
+## Standard throughput
 
 Co-locacated deployment is the preferred method for running tightly coupled
 throughput workloads with SmartSim, however, if you want to deploy the Orchestrator
