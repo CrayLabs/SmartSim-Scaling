@@ -7,7 +7,7 @@ SmartSim-Scaling currently offers two inference versions listed below.
 
 You may follow along below for more information on a respective test.
 
-# Description
+# Client Description
 
 The inference tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
