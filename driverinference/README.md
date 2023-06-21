@@ -119,7 +119,7 @@ FLAGS
         Default: 100
         number of put/get loops run by the applications
     --languages=LANGUAGES
-        Default: ['cpp']
+        Default: ['cpp','fortran']
         list of languages to use for the tester "cpp" and/or "fortran"
     --plot=PLOT
         Default: 'database_cpus'
@@ -242,7 +242,7 @@ FLAGS
         Default: "05:00:00"
         allotted time for database launcher to run
     --languages=LANGUAGES
-        Default: ['cpp']
+        Default: ['cpp','fortran']
         list of languages to use for the tester "cpp" and/or "fortran"
     --plot=PLOT
         Default: 'database_nodes'
