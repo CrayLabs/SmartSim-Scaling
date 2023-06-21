@@ -1,6 +1,6 @@
 # Inference Scaling Test
 
-SmartSim-Scaling currently offers two inference versions listed below.
+SmartSim-Scaling offers two inference versions listed below.
 
  1. Inference Standard
  2. Inference Co-located Python
