@@ -206,10 +206,10 @@ FLAGS
       Default: []
       optionally supply hosts to launch the database on
   --db_nodes=DB_NODES
-      Default: []
+      Default: [16]
       number of compute hosts to use for the database
   --db_cpus=DB_CPUS
-      Default: #
+      Default: 36
       number of cpus per compute host for the database
   --db_port=DB_PORT
       Default: 6780
@@ -219,28 +219,28 @@ FLAGS
       network interface to use i.e. "ib0" for infiniband or
                             "ipogif0" aries networks
   --clients_per_node=CLIENTS_PER_NODE
-      Default: []
+      Default: [48]
       client tasks per compute node for the aggregation
                                     producer app
   --client_nodes=CLIENT_NODES
-      Default: []
+      Default: [128, 256, 512]
       number of compute nodes to use for the aggregation
                                 producer app
   --iterations=ITERATIONS
-      Default: #
+      Default: 20
       number of append/retrieve loops run by the applications
   --tensor_bytes=TENSOR_BYTES
       Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
       list of tensor sizes in bytes
   --tensors_per_dataset=TENSORS_PER_DATASET
-      Default: []
+      Default: [1, 2, 4]
       list of number of tensors per dataset
   --client_threads=CLIENT_THREADS
-      Default: []
+      Default: [1, 2, 4, 8, 16, 32]
       list of the number of client threads used for data
                                 aggregation
   --cpu_hyperthreads=CPU_HYPERTHREADS
-      Default: #
+      Default: 2
       the number of hyperthreads per cpu.  This is done
                                     to request that the consumer application utilizes
                                     all physical cores for each client thread
@@ -332,28 +332,28 @@ FLAGS
       Default: {}
       dict of runsettings for the consumer
   --clients_per_node=CLIENTS_PER_NODE
-      Default: []
+      Default: [48]
       client tasks per compute node for the aggregation
                                  producer app
   --client_nodes=CLIENT_NODES
-      Default: []
+      Default: [128, 256, 512]
       number of compute nodes to use for the aggregation
                              producer app
   --iterations=ITERATIONS
-      Default: #
+      Default: 20
       number of append/retrieve loops run by the applications
   --tensor_bytes=TENSOR_BYTES
       Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
       list of tensor sizes in bytes
   --tensors_per_dataset=TENSORS_PER_DATASET
-      Default: []
+      Default: [1, 2, 4]
       list of number of tensors per dataset
   --client_threads=CLIENT_THREADS
-      Default: []
+      Default: [1, 2, 4, 8, 16, 32]
       list of the number of client threads used for data
                                aggregation
   --cpu_hyperthreads=CPU_HYPERTHREADS
-      Default: #
+      Default: 2
       the number of hyperthreads per cpu.  This is done
                                  to request that the consumer application utilizes
                                  all physical cores for each client thread
