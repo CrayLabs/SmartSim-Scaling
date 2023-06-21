@@ -80,7 +80,7 @@ FLAGS
         Default: ['cpp']
         which language to use for the tester "cpp" or "fortran"
     --plot=PLOT
-        Default: 'database_nodes'
+        Default: 'database_cpus'
         flag to plot against in process results
 ```
 
