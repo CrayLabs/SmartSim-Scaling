@@ -6,7 +6,7 @@ SmartSim-Scaling currently offers three data aggregation test versions listed be
  2. Data Aggregation Standard Python        (python client and SmartRedis Orchestrator)
  3. Data Aggregation Standard File System   (python client and file system)
 
-Follow along for more information on all respective tests.
+Continue below for more information on all respective tests.
 
 ## Client Description
 
@@ -38,7 +38,7 @@ invokes the following SmartRedis commands:
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-## Why only Standard Deployement?
+## Why only Standard Deployement for Data Aggregation?
 
 SmartSim-Scaling supports standard deployment for all three data aggregation tests. Standard deployement means that the Orchestrator database and the application will be launched on different nodes. Data aggregation requires each thread be assigned to a single database shard. Furthermore, multiple nodes are needed so that a single shard of the database may run on a single node. 
 
