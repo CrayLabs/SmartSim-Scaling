@@ -63,7 +63,7 @@ DESCRIPTION
 
 FLAGS
     --exp_name=EXP_NAME
-        Default: 'aggregation-scaling'
+        Default: 'aggregation-standard-scaling'
         name of output dir
     --launcher=LAUNCHER
         Default: 'auto'
@@ -71,14 +71,20 @@ FLAGS
     --run_db_as_batch=RUN_DB_AS_BATCH
         Default: True
         run database as separate batch submission each iteration
-    --batch_args=BATCH_ARGS
+    --db_node_feature=DB_NODE_FEATURE
         Default: {}
-        additional batch args for the database
+        dict of runsettings for the db
+    --prod_node_feature=PROD_NODE_FEATURE
+        Default: {}
+        dict of runsettings for the producer
+    --cons_node_feature=CONS_NODE_FEATURE
+        Default: {}
+        dict of runsettings for the consumer
     --db_hosts=DB_HOSTS
         Default: []
         optionally supply hosts to launch the database on
     --db_nodes=DB_NODES
-        Default: [12]
+        Default: [16]
         number of compute hosts to use for the database
     --db_cpus=DB_CPUS
         Default: 36
@@ -90,7 +96,7 @@ FLAGS
         Default: 'ipogif0'
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
     --clients_per_node=CLIENTS_PER_NODE
-        Default: [32]
+        Default: [48]
         client tasks per compute node for the synthetic scaling app
     --client_nodes=CLIENT_NODES
       Default: [128, 256, 512]
@@ -107,6 +113,20 @@ FLAGS
     --client_threads=CLIENT_THREADS
         Default: [1, 2, 4, 8, 16, 32]
         list of the number of client threads used for data aggregation
+    --cpu_hyperthreads==CPU_HYPERTHREADS
+        Default: 2
+        the number of hyperthreads per cpu.  This is done
+                                 to request that the consumer application utilizes
+                                 all physical cores for each client thread.
+    --languages=LANGUAGES
+        Default: ['cpp']
+        list of languages to use for the tester "cpp" and/or "fortran"
+    --wall_time=WALL_TIME
+        Default: '05:00:00'
+        allotted time for database launcher to run
+    --plot=PLOT
+        Default: 'database_nodes'
+        flag to plot against in process results
 ```
 For example, the following command could be run to execute a battery of
 tests in the same allocation. The battery of test will be determined by the number 
@@ -210,7 +230,7 @@ FLAGS
       Default: #
       number of append/retrieve loops run by the applications
   --tensor_bytes=TENSOR_BYTES
-      Default: []
+      Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
       list of tensor sizes in bytes
   --tensors_per_dataset=TENSORS_PER_DATASET
       Default: []
@@ -224,6 +244,15 @@ FLAGS
       the number of hyperthreads per cpu.  This is done
                                     to request that the consumer application utilizes
                                     all physical cores for each client thread
+    --languages=LANGUAGES
+        Default: ['cpp']
+        list of languages to use for the tester "cpp" and/or "fortran"
+    --wall_time=WALL_TIME
+        Default: '05:00:00'
+        allotted time for database launcher to run
+    --plot=PLOT
+        Default: 'database_nodes'
+        flag to plot against in process results
 ```
 
 For example, the following command could be run to execute a battery of
@@ -314,7 +343,7 @@ FLAGS
       Default: #
       number of append/retrieve loops run by the applications
   --tensor_bytes=TENSOR_BYTES
-      Default: []
+      Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
       list of tensor sizes in bytes
   --tensors_per_dataset=TENSORS_PER_DATASET
       Default: []
