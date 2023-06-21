@@ -7,7 +7,7 @@ SmartSim-Scaling currently offers two inference versions listed below.
 
 You may follow along below for more information on a respective test.
 
-# Client Description
+## Client Description
 
 The inference tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
@@ -27,7 +27,7 @@ the next 100 are measured for inference throughput.
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-# The model
+## The model
 As Neural Network, we use Pytorch's implementation of Resnet50. The script `imagenet/model_saver.py`
 can be used to generate the model for CPU or GPU. By navigating to the `imagenet` folder, the CPU model
 can be created running 
