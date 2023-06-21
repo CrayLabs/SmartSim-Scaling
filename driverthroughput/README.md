@@ -51,11 +51,11 @@ FLAGS
         Default: {}
         dict of runsettings for both app and db
     --nodes=NODES
-        Default: []
+        Default: [60]
         compute nodes to use for synthetic scaling app with
                       a co-located orchestrator database
     --db_cpus=DB_CPUS
-        Default: []
+        Default: [36]
         number of cpus per compute host for the database
     --db_port_DB_PORT
         Default: 6780
@@ -74,11 +74,14 @@ FLAGS
         Default: 100
         number of put/get loops run by the applications
     --tensor_bytes=TENSOR_BYTES
-        Default: []
+        Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
         list of tensor sizes in bytes
     --languages=LANGUAGES
-        Default: []
+        Default: ['cpp']
         which language to use for the tester "cpp" or "fortran"
+    --plot=PLOT
+        Default: 'database_nodes'
+        flag to plot against in process results
 ```
 
 For demonstration, the following command could be run to execute a battery of
@@ -155,10 +158,10 @@ FLAGS
         Default: []
         optionally supply hosts to launch the database on
     --db_nodes=DB_NODES
-        Default: [12]
+        Default: [32]
         number of compute hosts to use for the database
     --db_cpus=DB_CPUS
-        Default: [2]
+        Default: [36]
         number of cpus per compute host for the database
     --db_port=DB_PORT
         Default: 6780
@@ -179,11 +182,14 @@ FLAGS
         Default: [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 10...
         list of tensor sizes in bytes
     --languages=LANGUAGES
-        Default: []
+        Default: ['cpp']
         which language to use for the tester "cpp" or "fortran"
     --wall_time=WALL_TIME
         Default: '05:00:00'
         allotted time for database launcher to run
+    --plot=PLOT
+        Default: 'database_nodes'
+        flag to plot against in process results
 ```
 
 The standard throughput tests will spin up a database for each iteration in the
