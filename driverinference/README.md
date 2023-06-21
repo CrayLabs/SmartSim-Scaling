@@ -83,10 +83,10 @@ FLAGS
         Default: [12]
         compute nodes to use for synthetic scaling app with a co-located orchestrator database
     --clients_per_node=CLIENTS_PER_NODE
-        Default: [18]
+        Default: [12,24,36,60,96]
         client tasks per compute node for the synthetic scaling app
     --db_cpus=DB_CPUS
-        Default: [2]
+        Default: [12]
         number of cpus per compute host for the database
     --db_tpq=DB_TPQ
         Default: [1]
@@ -98,7 +98,7 @@ FLAGS
         Default: [False]
         pin the threads of the application to 0-(n-db_cpus)
     --batch_size=BATCH_SIZE
-        Default: [1]
+        Default: [96]
         batch size to set Resnet50 model with
     --device=DEVICE
         Default: 'GPU'
@@ -106,6 +106,9 @@ FLAGS
     --num_devices=NUM_DEVICES
         Default: 1
         number of devices per compute node to use to run ResNet
+    --net_type=NET_TYPE
+        Default: 'uds'
+        type of connection to use ("tcp" or "uds")
     --net_ifname=NET_IFNAME
         Default: 'ipogif0'
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
@@ -115,6 +118,12 @@ FLAGS
     --iterations=ITERATIONS
         Default: 100
         number of put/get loops run by the applications
+    --languages=LANGUAGES
+        Default: ['cpp']
+        list of languages to use for the tester "cpp" and/or "fortran"
+    --plot=PLOT
+        Default: 'database_cpus'
+        flag to plot against in process results
 ```
 
 So for example, the following command could be run to execute a battery of
@@ -194,13 +203,13 @@ FLAGS
         Default: []
         optionally supply hosts to launch the database on
     --db_nodes=DB_NODES
-        Default: [12]
+        Default: [4,8,16]
         number of compute hosts to use for the database
     --db_cpus=DB_CPUS
-        Default: [2]
+        Default: [8,16]
         number of cpus per compute host for the database
     --db_tpq=DB_TPQ
-        Default: [1]
+        Default: [1,2,4]
         number of device threads to use for the database
     --db_port=DB_PORT
         Default: 6780
@@ -221,7 +230,7 @@ FLAGS
         Default: [48]
         client tasks per compute node for the synthetic scaling app
     --client_nodes=CLIENT_NODES
-        Default: [12]
+        Default: [60]
         number of compute nodes to use for the synthetic scaling app
     --rebuild_model=FORCE_REBUILD
         Default: False
@@ -235,6 +244,9 @@ FLAGS
     --languages=LANGUAGES
         Default: ['cpp']
         list of languages to use for the tester "cpp" and/or "fortran"
+    --plot=PLOT
+        Default: 'database_nodes'
+        flag to plot against in process results
 ```
 
 The standard inference tests will spin up a database for each iteration in the
