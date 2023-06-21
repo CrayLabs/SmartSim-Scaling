@@ -357,6 +357,12 @@ FLAGS
       the number of hyperthreads per cpu.  This is done
                                  to request that the consumer application utilizes
                                  all physical cores for each client thread
+  --languages=LANGUAGES
+        Default: ['cpp']
+        list of languages to use for the tester "cpp" and/or "fortran"
+    --plot=PLOT
+        Default: 'clients_per_node'
+        flag to plot against in process results
 ```
 
 For example, the following command could be run to execute a battery of
