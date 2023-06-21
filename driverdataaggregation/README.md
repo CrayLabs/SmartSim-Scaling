@@ -8,7 +8,7 @@ SmartSim-Scaling currently offers three data aggregation test versions listed be
 
 Follow along for more information on all respective tests.
 
-# Client Description
+## Client Description
 
 The data aggregation scaling test runs two applications. The first application
 is an MPI application that produces datasets that are added to an aggregation list.
@@ -38,13 +38,13 @@ invokes the following SmartRedis commands:
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-# Why only Standard Deployement?
+## Why only Standard Deployement?
 
 SmartSim-Scaling supports standard deployment for all three data aggregation tests. Standard deployement means that the Orchestrator database and the application will be launched on different nodes. Data aggregation requires each thread be assigned to a single database shard. Furthermore, multiple nodes are needed so that a single shard of the database may run on a single node. 
 
 Since co-located deployment allots a singlular database, there is no performance benefit with co-located deployement since it would aggregate the data in serial. For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time.
 
-### Data Aggregation Standard - C++ client
+## Data Aggregation Standard - C++ client
 
 The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. If your application is written c++, you may want to run data aggregation with a c++ client.
 
@@ -166,7 +166,7 @@ python driver.py aggregation_scaling --client_nodes=[60] \
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 
-### Data Aggregation Standard - Python Client
+## Data Aggregation Standard - Python Client
 
 The ``aggregation_scaling_python`` test uses a python client and a SmartRedis Orchestrator. Depending on your user application, you may want to run the scaling test with a python client.
 
@@ -303,7 +303,7 @@ python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-b
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 
-### Data Aggregation Standard - Python Client and File System
+## Data Aggregation Standard - Python Client and File System
 
 The ``aggregation_scaling_python_fs`` test uses a python client with the file system in replacement of SmartRedis. This test demonstrates a significant performance hit from using the file system instead of the SmartRedis Orchestrator.
 
