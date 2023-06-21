@@ -1,11 +1,11 @@
 # Inference Scaling Test
 
-SmartSim-Scaling offers two inference versions listed below.
+SmartSim-Scaling offers two inference versions listed below:
 
- 1. Inference Standard
- 2. Inference Co-located Python
+ 1. Inference Standard              (c++ client and SmartRedis Orchestrator)
+ 2. Inference Co-located Python     (c++ client and SmartRedis Orchestrator)
 
-You may follow along below for more information on a respective test.
+Continue below for more information on all respective tests.
 
 ## Client Description
 
