@@ -5,15 +5,16 @@ the scaling of SmartSim and the SmartRedis clients.
 
 ## Scaling Tests
 
-There are two types of scaling tests in the repository.
+There are three types of scaling tests in the repository:
 
  1. [Inference](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverinference)
  2. [Throughput](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverthroughput)
  3. [Data Aggregation](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverdataaggregation)
 
-All applications use a MPI + C++ application to mimic an HPC workload
-making calls to SmartSim infrastructure. These applications are used
-to test the performance of SmartSim across various system types.
+All inference apps, all throughput apps and one data aggregation application, use a MPI + C++ 
+application to mimic an HPC workload making calls to SmartSim infrastructure. 
+Two out of three data aggregtion tests are written using a MPI + python application. 
+These applications are used to test the performance of SmartSim across various system types.
 
 ## Building
 
@@ -32,7 +33,7 @@ pip install smartsim
 smart build --device gpu
 ```
 
-But please consult the documentation for other peices like specifying compilers,
+But please consult the documentation for other pieces like specifying compilers,
 CUDA, cuDNN, and other build settings.
 
 Once SmartSim is installed, the Python dependencies for the scaling test and
