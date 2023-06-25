@@ -124,6 +124,7 @@ int main(int argc, char* argv[]) {
 
     std::string context("Data Aggregation Tests Consumer Rank " + std::to_string(rank));
     log_data(context, LLDebug, "Rank initialized");
+    log_data(context, LLDebug, "Starting Data Aggregation tests");
     double main_start = MPI_Wtime();
 
     // Get command line arguments

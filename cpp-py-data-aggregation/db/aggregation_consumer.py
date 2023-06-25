@@ -9,7 +9,6 @@ import typing as t
 from smartredis import Client
 
 from smartsim.log import get_logger, log_to_file
-logger = get_logger("Data Aggregation PY MPI Rank Consumer")
 
 
 def get_iterations() -> int:
@@ -22,6 +21,7 @@ def get_iterations() -> int:
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
+    logger = get_logger(f"Data Aggregation PY Consumer MPI Rank {rank}")
     logger.debug(f"Initialized Rank")
 
     if rank == 0:
@@ -121,7 +121,7 @@ def main() -> int:
     #Initializing rank
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-
+    logger = get_logger(f"Data Aggregation Tests Consumer Rank {rank}")
     logger.debug("Starting Data Aggregation Consumer Py test")
     main_start = MPI.Wtime()
 

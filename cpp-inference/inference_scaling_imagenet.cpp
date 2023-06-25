@@ -108,6 +108,7 @@ void run_mnist(const std::string& model_name,
   log_data(context, LLDebug, program_vars);
   
   if (should_set) {
+    log_data(context, LLDebug, "Entered should_set code block")
     int batch_size = get_batch_size();
     int n_clients = get_client_count();
     std::string should_set_vars = "Running rank with batch_size: ";
@@ -132,22 +133,22 @@ void run_mnist(const std::string& model_name,
 
       if (use_multigpu) {
         client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
-        std::string std_model_use_multigpu_vars = "Use_multigpu - model_key: " + model_key + " model_filename: ";
-        std_model_use_multigpu_vars += model_filename + " num_devices: " + std::to_string(num_devices) + " batch_size: ";
+        std::string std_model_use_multigpu_vars = "Use_multigpu - model_key:" + model_key + " model_filename:";
+        std_model_use_multigpu_vars += model_filename + " num_devices:" + std::to_string(num_devices) + " batch_size:";
         std_model_use_multigpu_vars += std::to_string(batch_size);
         log_data(context, LLDebug, std_model_use_multigpu_vars);
         client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-        std::string std_script_use_multigpu_vars = "Use_multigpu - script_key: " + script_key + " script_filename: ";
-        std_script_use_multigpu_vars += "./data_processing_script.txt num_devices: " + std::to_string(num_devices);
+        std::string std_script_use_multigpu_vars = "Use_multigpu - script_key:" + script_key + " script_filename:";
+        std_script_use_multigpu_vars += "./data_processing_script.txt num_devices:" + std::to_string(num_devices);
       }
       else {
         client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
-        std::string std_model_vars =  "Not multigpu - model_key: " + model_key + " model_filename: ";
-        std_model_vars += model_filename + " device: " + device + " batch_size: " + std::to_string(batch_size);
+        std::string std_model_vars =  "Not multigpu - model_key:" + model_key + " model_filename:";
+        std_model_vars += model_filename + " device:" + device + " batch_size:" + std::to_string(batch_size);
         log_data(context, LLDebug, std_model_vars);
         client.set_script_from_file(script_key, device, "./data_processing_script.txt");
-        std::string std_script_vars = "Not multigpu - script_key: " + script_key + " script_filename: ";
-        std_script_vars += "./data_processing_script.txt device: " + device;
+        std::string std_script_vars = "Not multigpu - script_key:" + script_key + " script_filename:";
+        std_script_vars += "./data_processing_script.txt device:" + device;
         log_data(context, LLDebug, std_script_vars);
       }
     }
@@ -170,23 +171,23 @@ void run_mnist(const std::string& model_name,
 
       if (use_multigpu) {
         client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
-        std::string colo_model_use_multigpu_vars = "Use_multigpu=True - model_key: " + model_key + " model_filename: ";
-        colo_model_use_multigpu_vars += model_filename + " num_devices: " + std::to_string(num_devices) + " batch_size: ";
+        std::string colo_model_use_multigpu_vars = "Use_multigpu=True - model_key:" + model_key + " model_filename:";
+        colo_model_use_multigpu_vars += model_filename + " num_devices:" + std::to_string(num_devices) + " batch_size:";
         colo_model_use_multigpu_vars += std::to_string(batch_size);
         log_data(context, LLDebug, colo_model_use_multigpu_vars);
         client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-        std::string colo_script_use_multigpu_vars = "Use_multigpu=True - script_key: " + script_key + " script_filename: ";
-        colo_script_use_multigpu_vars += "./data_processing_script.txt num_devices: " + std::to_string(num_devices);
+        std::string colo_script_use_multigpu_vars = "Use_multigpu=True - script_key:" + script_key + " script_filename:";
+        colo_script_use_multigpu_vars += "./data_processing_script.txt num_devices:" + std::to_string(num_devices);
         log_data(context, LLDebug, colo_script_use_multigpu_vars);
       }
       else {
         client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
-        std::string colo_model_vars = "Use_multigpu=False - model_key: " + model_key + " model_filename: ";
-        colo_model_vars += model_filename + " device: " + device + " batch_size: " + std::to_string(batch_size);
+        std::string colo_model_vars = "Use_multigpu=False - model_key:" + model_key + " model_filename:";
+        colo_model_vars += model_filename + " device:" + device + " batch_size:" + std::to_string(batch_size);
         log_data(context, LLDebug, colo_model_vars);
         client.set_script_from_file(script_key, device, "./data_processing_script.txt");
         std::string colo_script_vars = "Use_multigpu=False - script_key: " + script_key;
-        colo_script_vars += " script_filename: ./data_processing_script.txt device: " + device;
+        colo_script_vars += " script_filename:./data_processing_script.txt device:" + device;
         log_data(context, LLDebug, colo_script_vars);
       }
     }
@@ -232,28 +233,28 @@ void run_mnist(const std::string& model_name,
   log_data(context, LLDebug, "put_tensor completed");
   if (use_multigpu) {
     client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
-    std::string use_multi_run_script_vars = "Use_multigpu=True - script_key: " + script_key + " in_key: ";
-    use_multi_run_script_vars += in_key + "script_out_key: " + script_out_key + " rank: " + std::to_string(rank);
-    use_multi_run_script_vars += " num_devices: " + std::to_string(num_devices);
+    std::string use_multi_run_script_vars = "Use_multigpu=True - script_key:" + script_key + " in_key:";
+    use_multi_run_script_vars += in_key + " script_out_key:" + script_out_key + " rank:" + std::to_string(rank);
+    use_multi_run_script_vars += " num_devices:" + std::to_string(num_devices);
     log_data(context, LLDebug, use_multi_run_script_vars);
   }
   else {
     client.run_script(script_key, "pre_process_3ch", {in_key}, {script_out_key});
-    std::string run_script_vars = "Use_multigpu=False - script_key: " + script_key + " in_key: ";
-    run_script_vars += in_key + "script_out_key: " + script_out_key;
+    std::string run_script_vars = "Use_multigpu=False - script_key:" + script_key + " in_key:";
+    run_script_vars += in_key + " script_out_key:" + script_out_key;
     log_data(context, LLDebug, run_script_vars);
   }
   if (use_multigpu) {
     client.run_model_multigpu(model_key, {script_out_key}, {out_key}, rank, 0, num_devices);
-    std::string use_multi_run_model_vars = "Use_multigpu=True - model_key: " + model_key + " out_key: " + out_key;
-    use_multi_run_model_vars += "script_out_key: " + script_out_key + " rank: " + std::to_string(rank);
-    use_multi_run_model_vars += " num_devices: " + std::to_string(num_devices);
+    std::string use_multi_run_model_vars = "Use_multigpu=True - model_key:" + model_key + " out_key:" + out_key;
+    use_multi_run_model_vars += " script_out_key:" + script_out_key + " rank:" + std::to_string(rank);
+    use_multi_run_model_vars += " num_devices:" + std::to_string(num_devices);
     log_data(context, LLDebug, use_multi_run_model_vars);
   }
   else {
     client.run_model(model_key, {script_out_key}, {out_key});
-    std::string run_model_vars = "Use_multigpu=False - model_key: " + model_key + " out_key: ";
-    run_model_vars += out_key + "script_out_key: " + script_out_key;
+    std::string run_model_vars = "Use_multigpu=False - model_key:" + model_key + " out_key:";
+    run_model_vars += out_key + " script_out_key:" + script_out_key;
     log_data(context, LLDebug, run_model_vars);
   }
   client.unpack_tensor(out_key, result, {1,1000},
@@ -359,7 +360,7 @@ int main(int argc, char* argv[]) {
 
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  std::string context("Inference Scaling Tests Rank" + std::to_string(rank));
+  std::string context("Inference Tests Rank " + std::to_string(rank));
   log_data(context, LLDebug, "Rank Initialized");
 
   //Open Timing file
@@ -368,7 +369,7 @@ int main(int argc, char* argv[]) {
 
   // Run timing tests
   run_mnist("resnet_model", "resnet_script", timing_file);
-  if(rank==0)
+  if(rank==0) //I might move this to after MPI_Wtime like in data agg
     log_data(context, LLInfo, "Finished Resnet test.");
     std::cout<<"Finished Resnet test."<<std::endl;
 

@@ -12,7 +12,6 @@ from mpi4py import MPI
 import typing as t
 
 from smartsim.log import get_logger, log_to_file
-logger = get_logger("Data Aggregation FS MPI Rank Consumer")
 
 if t.TYPE_CHECKING:
     import numpy.typing as npt
@@ -137,7 +136,8 @@ def parse_dataset_bytes(
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    logger.debug(f"Initialized rank: {rank}")
+    logger = get_logger(f"Data Aggregation FS Consumer MPI Rank {rank}")
+    logger.debug(f"Initialized Rank")
 
     if rank == 0:
         logger.info("Connecting clients")
@@ -233,7 +233,7 @@ def main() -> int:
     #Initializing rank
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    
+    logger = get_logger(f"Data Aggregation Tests Consumer Rank {rank}")
     logger.debug("Starting Data Aggregation Consumer fs test")
     main_start = MPI.Wtime()
 
