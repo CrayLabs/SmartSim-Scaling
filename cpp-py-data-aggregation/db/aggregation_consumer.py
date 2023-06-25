@@ -9,7 +9,7 @@ import typing as t
 from smartredis import Client
 
 from smartsim.log import get_logger, log_to_file
-logger = get_logger("Data Aggregation Py Tests")
+logger = get_logger("Data Aggregation PY MPI Rank Consumer")
 
 
 def get_iterations() -> int:
@@ -22,6 +22,7 @@ def get_iterations() -> int:
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
+    logger.debug(f"Initialized Rank")
 
     if rank == 0:
         logger.info("Connecting clients")
@@ -33,14 +34,14 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     constructor_stop = MPI.Wtime()
     delta_t = constructor_stop - constructor_start
     timing_file.write(f"{rank},client(),{delta_t}\n")
-
+    logger.debug(f"client() time stored for rank: {rank}")
     # Allocate lists to hold timings
     poll_list_times: list[float] = []
     get_list_times: list[float] = []
 
     # Retrieve the number of iterations to run
     iterations = get_iterations()
-    logger.debug(f"Running with {iterations} iterations")
+    logger.debug(f"Running with iterations: {iterations}")
 
     # Block to make sure all clients connected
     comm.Barrier()
@@ -50,7 +51,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Preform dataset aggregation retrieval
     for i in range(iterations):
-        logger.debug(f"Running iteration {i} out of {iterations}")
+        logger.debug(f"Running iteration {i} of rank {rank}")
 
         # Create aggregation list name
         list_name = f"iteration_{i}"

@@ -17,10 +17,10 @@ bool get_cluster_flag() {
 void run_throughput(std::ofstream& timing_file,
                     size_t n_bytes)
 {
-    std::string context("Run Throughput");
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
+    std::string context("Throughput MPI Rank: " + std::to_string(rank));
+    log_data(context, LLDebug, "Initialized rank");
 
     if(!rank)
         log_data(context, LLInfo, "Connecting clients");
@@ -35,8 +35,7 @@ void run_throughput(std::ofstream& timing_file,
                 << delta_t << "\n";
 
     //print rank # storing client() for debugging
-    std::string client_text = "client() time stored for rank: ";
-    client_text += std::to_string(rank);
+    std::string client_text = "client() time stored";
     log_data(context, LLDebug, client_text);
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -51,11 +50,12 @@ void run_throughput(std::ofstream& timing_file,
     std::vector<double> unpack_tensor_times;
 
     int iterations = get_iterations();
+    log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
 
     MPI_Barrier(MPI_COMM_WORLD);
 
     //print cluster flag and rank for debug, signal start of iteration loop
-    log_data(context, LLDebug, "Starting iterations with flags: cluster = " + std::to_string(cluster) + " for rank = " + std::to_string(rank));
+    log_data(context, LLDebug, "Starting iterations with flags: cluster = " + std::to_string(cluster));
 
     // Keys are overwritten in order to help
     // ensure that the database does not run out of memory
@@ -65,10 +65,7 @@ void run_throughput(std::ofstream& timing_file,
     log_data(context, LLDebug, "Iteration loop starting...");
     for (int i=0; i<iterations; i++) {
         //print out iteration # and rank # for debugging
-        std::string iteration_debug = "Running iteration: ";
-        iteration_debug += std::to_string(i);
-        iteration_debug += " of rank: " + rank;
-        log_data(context, LLDebug, iteration_debug);
+        log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
 
         std::string key = "throughput_rank_" +
                           std::to_string(rank);
@@ -82,7 +79,7 @@ void run_throughput(std::ofstream& timing_file,
         double put_tensor_end = MPI_Wtime();
         delta_t = put_tensor_end - put_tensor_start;
         put_tensor_times.push_back(delta_t);
-        log_data(context, LLDebug, "put_tensor completed for iteration: " + std::to_string(i) + "rank: " + std::to_string(rank));
+        log_data(context, LLDebug, "put_tensor completed");
 
         double unpack_tensor_start = MPI_Wtime();
         client.unpack_tensor(key,
@@ -93,7 +90,7 @@ void run_throughput(std::ofstream& timing_file,
         double unpack_tensor_end = MPI_Wtime();
         delta_t = unpack_tensor_end - unpack_tensor_start;
         unpack_tensor_times.push_back(delta_t);
-        log_data(context, LLDebug, "unpack_tensor completed for iteration: " + std::to_string(i) + "rank: " + std::to_string(rank));
+        log_data(context, LLDebug, "unpack_tensor completed");
     }
 
     double loop_end = MPI_Wtime();
@@ -119,12 +116,12 @@ void run_throughput(std::ofstream& timing_file,
 }
 
 int main(int argc, char* argv[]) {
-    std::string context("Throughput Scaling Tests");
     MPI_Init(&argc, &argv);
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
+    std::string context("Throughput Scaling Tests Rank " + std::to_string(rank));
+    log_data(context, LLDebug, "Rank initialized");
 
     if(argc==1)
         throw std::runtime_error("The number tensor size in "\
@@ -134,18 +131,17 @@ int main(int argc, char* argv[]) {
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
 
-    log_data(context, LLDebug, "Starting Throughput tests for rank: " + std::to_string(rank));
+    log_data(context, LLDebug, "Starting Throughput tests");
     double main_start = MPI_Wtime();
 
     //Indicating tensor size used in throughput test
-    std::string tensor_text = "Running throughput scaling test with tensor size of ";
-    tensor_text += std::to_string(n_bytes);
-    tensor_text += " bytes.";
-    if(rank==0)
+    if(rank==0) {
+        std::string tensor_text = "Running throughput scaling test with tensor size of ";
+        tensor_text += std::to_string(n_bytes) + " bytes.";
         log_data(context, LLInfo, tensor_text);
         std::cout<<"Running throughput scaling test with tensor size of "
                  <<n_bytes<<"bytes."<<std::endl;
-
+    }
 
     std::ofstream timing_file;
     timing_file.open("rank_" + std::to_string(rank) + "_timing.csv");
@@ -161,9 +157,7 @@ int main(int argc, char* argv[]) {
     timing_file << rank << "," << "main()" << ","
                 << delta_t << std::endl << std::flush;
     //print rank # storing client() for debugging
-    std::string main_text = "main() time stored for rank: ";
-    main_text += std::to_string(rank);
-    log_data(context, LLDebug, main_text);
+    log_data(context, LLDebug, "main() time stored");
 
     MPI_Finalize();
     log_data(context, LLDebug, "All ranks finalized");

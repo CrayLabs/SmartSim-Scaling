@@ -11,12 +11,11 @@ int get_iterations() {
 void run_aggregation_consumer(std::ofstream& timing_file,
                               int list_length)
 {
-    std::string context("Run Data Aggregation consumer");
-
     //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    log_data(context, LLDebug, "rank: " + std::to_string(rank) + " initiated");
+    std::string context("Data Aggregation MPI Consumer Rank" + std::to_string(rank));
+    log_data(context, LLDebug, "Initialized rank");
 
     //Indicate Client creation
     if (rank == 0)
@@ -31,18 +30,14 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     timing_file << rank << "," << "client()" << ","
                 << delta_t << "\n";
     //print rank # storing client() for debugging
-    std::string client_text = "client() time stored for rank: ";
-    client_text += std::to_string(rank);
-    log_data(context, LLDebug, client_text);
+    log_data(context, LLDebug, "client() time stored");
 
     // Allocate arrays to hold timings
     std::vector<double> get_list_times;
 
     // Retrieve the number of iterations to run
     int iterations = get_iterations();
-    std::string text = "Running with iterations: ";
-    text += std::to_string(iterations);
-    log_data(context, LLDebug, text);
+    log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
 
     // Block to make sure all clients are connected
     MPI_Barrier(MPI_COMM_WORLD);
@@ -54,9 +49,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
     // Perform dataset aggregation retrieval
     for (int i=0; i<iterations; i++) {
-        std::string iteration_text = "Running iteration: ";
-        iteration_text += std::to_string(i);
-        log_data(context, LLDebug, iteration_text);
+        log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
 
         // Create aggregation list name
         std::string list_name = "iteration_" + std::to_string(i);
@@ -86,7 +79,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
         std::vector<SmartRedis::DataSet> result =
             client.get_datasets_from_list(list_name);
         double get_list_end = MPI_Wtime();
-        log_data(context, LLDebug, "get_list completed for rank: " + std::to_string(rank));
+        log_data(context, LLDebug, "get_list completed");
         delta_t = get_list_end - get_list_start;
         get_list_times.push_back(delta_t);
 
@@ -123,15 +116,14 @@ void run_aggregation_consumer(std::ofstream& timing_file,
 
 int main(int argc, char* argv[]) {
 
-    std::string context("Scaling tests");
-
     MPI_Init(&argc, &argv);
 
     //initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    log_data(context, LLDebug, "Starting Data Aggregation test");
+    std::string context("Data Aggregation Tests Consumer Rank " + std::to_string(rank));
+    log_data(context, LLDebug, "Rank initialized");
     double main_start = MPI_Wtime();
 
     // Get command line arguments

@@ -12,7 +12,7 @@ from mpi4py import MPI
 import typing as t
 
 from smartsim.log import get_logger, log_to_file
-logger = get_logger("Scaling Tests")
+logger = get_logger("Data Aggregation FS MPI Rank Consumer")
 
 if t.TYPE_CHECKING:
     import numpy.typing as npt
@@ -137,6 +137,7 @@ def parse_dataset_bytes(
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
+    logger.debug(f"Initialized rank: {rank}")
 
     if rank == 0:
         logger.info("Connecting clients")
@@ -145,6 +146,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     # We will spend no time connecting a SR client bc we are not using SR
     delta_t = float(0)
     timing_file.write(f"{rank},client(),{delta_t}\n")
+    logger.debug(f"client() time stored for rank: {rank}")
 
     # Allocate lists to hold timings
     get_list_times: list[float] = []
@@ -152,7 +154,8 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Retrieve the number of iterations
     iterations = get_iterations()
-    logger.debug(f"Running with {iterations} iterations")
+    # std::string iteration_num = "Running with iterations: " + std::to_string(iterations);
+    logger.debug(f"Running with iterations: {iterations}")
 
     # Block to make sure all clients connected
     comm.Barrier()
@@ -163,7 +166,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     
     # Preform dataset aggregation retrieval
     for i in range(iterations):
-        logger.debug(f"Running iteration {i} out of {iterations}")
+        logger.debug(f"Running iteration {i} of rank {rank}")
         
         # Create aggregation list name
         list_name = f"iteration_{i}"

@@ -29,6 +29,8 @@ void run_aggregation_production(size_t n_bytes,
 {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::string context("Data Aggregation FS MPI Producer Rank: " + std::to_string(rank));
+    log_data(context, LLDebug, "Initialized rank");
 
     // Block for all clients to be connected
     MPI_Barrier(MPI_COMM_WORLD);
@@ -73,12 +75,14 @@ void run_aggregation_production(size_t n_bytes,
     fout.close();
     
     int iterations = get_iterations();
+    log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
 
     // A new list (dir of datasets) is created for each iteration
     // to measure dataset aggregation throughput
     std::string list_name = "iteration_" + std::to_string(0);
     fs::create_directory(get_write_to_dir() / list_name);
     for (int i = 0; i < iterations; i++) {
+        log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
 
         // Set the list name (not MPI rank dependent)
         list_name = "iteration_" + std::to_string(i);
@@ -112,6 +116,8 @@ int main(int argc, char* argv[]) {
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::string context("Data Aggregation FS Producer Rank " + std::to_string(rank));
+    log_data(context, LLDebug, "Rank initialized");
 
     // Get command line arguments
     if(argc==1)
