@@ -88,29 +88,6 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting inference standard scaling tests\n")
-        logger.info(f"Running with experiment name: {exp_name}")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
-        logger.info(f"Running database as batch: {run_db_as_batch}")
-        logger.info(f"Running with node feature: {node_feature}")
-        logger.info(f"Running with database node feature: {db_node_feature}")
-        logger.info(f"Running with database hosts: {db_hosts}")
-        logger.info(f"Running with database nodes: {db_nodes}")
-        logger.info(f"Running with database cpus: {db_cpus}")
-        logger.info(f"Running with database tensors per queue: {db_tpq}")
-        logger.info(f"Running with database port: {db_port}")
-        logger.info(f"Running with batch size: {batch_size}")
-        logger.info(f"Running with device: {device}")
-        logger.info(f"Running with number of device: {num_devices}")
-        logger.info(f"Running with network: {net_ifname}")
-        logger.info(f"Running with clients per node: {clients_per_node}")
-        logger.info(f"Running with client nodes: {client_nodes}")
-        logger.info(f"Running with iterations: {iterations}")
-        logger.info(f"Running with languages: {languages}")
-        logger.info(f"Running with database wall time: {wall_time}")
-        logger.info(f"Running with plot: {plot}\n")
-
         check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
@@ -132,7 +109,8 @@ class Inference:
                         db_node_feature=db_node_feature,
                         node_feature=node_feature,
                         wall_time=wall_time)
-
+        print_yml_file(Path(result_path) / "run.cfg", logger)
+        
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size, languages))
         logger.info(f"Executing {len(perms)} permutations")
         for i, perm in enumerate(perms, start=1):
@@ -241,28 +219,6 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting inference colocated scaling tests\n")
-        logger.info(f"Running with experiment name: {exp_name}")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
-        logger.info(f"Running with node feature: {node_feature}")
-        logger.info(f"Running with nodes: {nodes}")
-        logger.info(f"Running with database cpus: {db_cpus}")
-        logger.info(f"Running with database tensors per queue: {db_tpq}")
-        logger.info(f"Running with database port: {db_port}")
-        logger.info(f"Running with batch size: {batch_size}")
-        logger.info(f"Running with device: {device}")
-        logger.info(f"Running with number of device: {num_devices}")
-        logger.info(f"Running with network type: {net_type}")
-        logger.info(f"Running with network: {net_ifname}")
-        logger.info(f"Running with clients per node: {clients_per_node}")
-        logger.info(f"Running with pin app to cpus: {pin_app_cpus}")
-        logger.info(f"Running with rebuild model set to: {rebuild_model}")
-        logger.info(f"Running with iterations: {iterations}")
-        logger.info(f"Running with tensor bytes: {tensor_bytes}")
-        logger.info(f"Running with languages: {languages}")
-        logger.info(f"Running with plot: {plot}\n")
-
         check_model(device, force_rebuild=rebuild_model)
         
         check_node_allocation(client_nodes, db_nodes)
@@ -291,7 +247,7 @@ class Inference:
                         language=languages,
                         plot=plot
                         )
-        
+        print_yml_file(Path(result_path) / "run.cfg", logger)
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm

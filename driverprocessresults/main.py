@@ -42,7 +42,6 @@ class ProcessResults:
                 if 'run' in run_folder:
                     session_folders += ["results/" + scaling_results_dir + "/" + run_folder + 
                                         "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
-                    logger.debug(f"Running with session_folders: {session_folder} for run_folder: {run_folder}")
                     run_list += [Path("results") / scaling_results_dir / run_folder]
                     logger.debug(f"Running with run_list: {run_list} for run_folder: {run_folder}")
             try:

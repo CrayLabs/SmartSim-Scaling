@@ -34,7 +34,8 @@ class DataAggregation:
                             clients_per_node=[48],
                             client_nodes=[10],
                             iterations=3,
-                            tensor_bytes=[1024],
+                            tensor_bytes=[1024,8192,16384,32769,65538,
+                                              131076,262152,524304,1024000],
                             tensors_per_dataset=[4],
                             client_threads=[8],
                             cpu_hyperthreads=2,
@@ -95,29 +96,6 @@ class DataAggregation:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting data aggregation standard scaling tests\n")
-        logger.info(f"Running with experiment name: {exp_name}")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
-        logger.info(f"Running database as batch: {run_db_as_batch}")
-        logger.info(f"Running with producer node feature: {prod_node_feature}")
-        logger.info(f"Running with consumer node feature: {cons_node_feature}")
-        logger.info(f"Running with database hosts: {db_hosts}")
-        logger.info(f"Running with database nodes: {db_nodes}")
-        logger.info(f"Running with database cpus: {db_cpus}")
-        logger.info(f"Running with database port: {db_port}")
-        logger.info(f"Running with network: {net_ifname}")
-        logger.info(f"Running with clients per node: {clients_per_node}")
-        logger.info(f"Running with client nodes: {client_nodes}")
-        logger.info(f"Running with iterations: {iterations}")
-        logger.info(f"Running with tensor bytes: {tensor_bytes}")
-        logger.info(f"Running with tensor per dataset: {tensors_per_dataset}")
-        logger.info(f"Running with client threads: {client_threads}")
-        logger.info(f"Running with cpu hyperthreads: {cpu_hyperthreads}")
-        logger.info(f"Running with languages: {languages}")
-        logger.info(f"Running with database wall time: {wall_time}")
-        logger.info(f"Running with plot: {plot}\n")
-        
         check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
@@ -134,6 +112,7 @@ class DataAggregation:
                     cpu_hyperthreads=cpu_hyperthreads,
                     language=languages,
                     wall_time=wall_time)
+        print_yml_file(Path(result_path) / "run.cfg", logger)
 
         for i, db_node_count in enumerate(db_nodes, start=1):
             logger.info(f"Running permutation {i} of {len(db_nodes)}")
@@ -458,33 +437,9 @@ class DataAggregation:
             :param plot: flag to plot against in process results
             :type plot: str
             """
-            logger.info("Starting data aggregation standard python scaling tests\n")
-            logger.info(f"Running with experiment name: {exp_name}")
-            logger.info(f"Running with database backend: {get_db_backend()}")
-            logger.info(f"Running with launcher: {launcher}")
-            logger.info(f"Running database as batch: {run_db_as_batch}")
-            logger.info(f"Running with database node feature: {db_node_feature}")
-            logger.info(f"Running with producer node feature: {prod_node_feature}")
-            logger.info(f"Running with consumer node feature: {cons_node_feature}")
-            logger.info(f"Running with database hosts: {db_hosts}")
-            logger.info(f"Running with database nodes: {db_nodes}")
-            logger.info(f"Running with database cpus: {db_cpus}")
-            logger.info(f"Running with database port: {db_port}")
-            logger.info(f"Running with network: {net_ifname}")
-            logger.info(f"Running with clients per node: {clients_per_node}")
-            logger.info(f"Running with client nodes: {client_nodes}")
-            logger.info(f"Running with iterations: {iterations}")
-            logger.info(f"Running with tensor bytes: {tensor_bytes}")
-            logger.info(f"Running with tensor per dataset: {tensors_per_dataset}")
-            logger.info(f"Running with client threads: {client_threads}")
-            logger.info(f"Running with cpu hyperthreads: {cpu_hyperthreads}")
-            logger.info(f"Running with languages: {languages}")
-            logger.info(f"Running with database wall time: {wall_time}")
-            logger.info(f"Running with plot: {plot}\n")
-
             check_node_allocation(client_nodes, db_nodes)
             logger.info("Experiment allocation passed check")
-            
+            exp, result_path = create_experiment_and_dir(exp_name, launcher)
             write_run_config(result_path,
                     colocated=0,
                     client_per_node=clients_per_node,
@@ -495,8 +450,9 @@ class DataAggregation:
                     tensors_per_dataset=tensors_per_dataset,
                     client_threads=client_threads,
                     cpu_hyperthreads=cpu_hyperthreads,
-                    languages=languages,
+                    language=languages,
                     wall_time=wall_time)
+            print_yml_file(Path(result_path) / "run.cfg", logger)
 
             for i, db_node_count in enumerate(db_nodes, start=1):
                 logger.info(f"Running permutation {i} of {len(db_nodes)}")
@@ -641,22 +597,6 @@ class DataAggregation:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting dataset aggregation scaling with python on file system\n")
-        logger.info(f"Running with experiment name: {exp_name}")
-        logger.info(f"Running with database backend: None (data to file system)")
-        logger.info(f"Running with launcher: {launcher}")
-        logger.info(f"Running with producer node feature: {prod_node_feature}")
-        logger.info(f"Running with consumer node feature: {cons_node_feature}")
-        logger.info(f"Running with clients per node: {clients_per_node}")
-        logger.info(f"Running with client nodes: {client_nodes}")
-        logger.info(f"Running with iterations: {iterations}")
-        logger.info(f"Running with tensor bytes: {tensor_bytes}")
-        logger.info(f"Running with tensor per dataset: {tensors_per_dataset}")
-        logger.info(f"Running with client threads: {client_threads}")
-        logger.info(f"Running with cpu hyperthreads: {cpu_hyperthreads}")
-        logger.info(f"Running with languages: {languages}")
-        logger.info(f"Running with plot: {plot}\n")
-
         check_node_allocation(client_nodes, [0])
         logger.info("Experiment allocation passed check")
         
@@ -670,6 +610,7 @@ class DataAggregation:
                     client_threads=client_threads,
                     cpu_hyperthreads=cpu_hyperthreads,
                     language=languages)
+        print_yml_file(Path(result_path) / "run.cfg", logger)
 
         for c_nodes, cpn, bytes_, t_per_dataset, c_threads, language in product(
             client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads, languages

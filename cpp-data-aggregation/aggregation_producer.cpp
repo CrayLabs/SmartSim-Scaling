@@ -99,11 +99,13 @@ int main(int argc, char* argv[]) {
 
     // Get command line arguments
     if(argc==1)
+        log_error(context, LLDebug, "Error thrown 1");
         throw std::runtime_error("The number tensor size in "\
                                  "bytes must be provided as "\
                                  "a command line argument.");
 
     if(argc==2)
+        log_error(context, LLDebug, "Error thrown 2");
         throw std::runtime_error("The number of tensors per "\
                                  "dataset must be provided as "\
                                  "a command line argument.");

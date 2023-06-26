@@ -55,7 +55,7 @@ void run_throughput(std::ofstream& timing_file,
     MPI_Barrier(MPI_COMM_WORLD);
 
     //print cluster flag and rank for debug, signal start of iteration loop
-    log_data(context, LLDebug, "Starting iterations with flags: cluster = " + std::to_string(cluster));
+    log_data(context, LLDebug, "cluster = " + std::to_string(cluster));
 
     // Keys are overwritten in order to help
     // ensure that the database does not run out of memory
@@ -111,7 +111,7 @@ void run_throughput(std::ofstream& timing_file,
 
     timing_file << std::flush;
     MPI_Barrier(MPI_COMM_WORLD);
-    log_data(context, LLDebug, "run_throughput() method completed and all tensor times written to file");
+    log_data(context, LLDebug, "run_throughput() method completed");
     return;
 }
 
@@ -123,11 +123,12 @@ int main(int argc, char* argv[]) {
     std::string context("Throughput Scaling Tests Rank " + std::to_string(rank));
     log_data(context, LLDebug, "Rank initialized");
 
-    if(argc==1)
+    if(argc==1) {
+        log_error(context, LLInfo, "Error thrown");
         throw std::runtime_error("The number tensor size in "\
                                  "bytes must be provided as "\
                                  "a command line argument.");
-
+    }
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
 

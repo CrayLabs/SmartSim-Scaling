@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(SYSTEM
     /usr/local/include
     ${MPI_INCLUDE_PATH}
+    ${SMARTREDIS}/install/include
 )
 
 # tests need MPI

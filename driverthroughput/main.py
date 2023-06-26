@@ -77,29 +77,6 @@ class Throughput:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        
-            
-            
-        logger.info("Starting throughput standard scaling tests\n")
-        logger.info(f"Running with experiment name: {exp_name}")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
-        logger.info(f"Running database as batch: {run_db_as_batch}")
-        logger.info(f"Running with node feature: {node_feature}")
-        logger.info(f"Running with database node feature: {db_node_feature}")
-        logger.info(f"Running with database hosts: {db_hosts}")
-        logger.info(f"Running with database nodes: {db_nodes}")
-        logger.info(f"Running with database cpus: {db_cpus}")
-        logger.info(f"Running with database port: {db_port}")
-        logger.info(f"Running with network: {net_ifname}")
-        logger.info(f"Running with clients per node: {clients_per_node}")
-        logger.info(f"Running with client nodes: {client_nodes}")
-        logger.info(f"Running with iterations: {iterations}")
-        logger.info(f"Running with tensor bytes: {tensor_bytes}")
-        logger.info(f"Running with languages: {languages}")
-        logger.info(f"Running with database wall time: {wall_time}")
-        logger.info(f"Running with plot: {plot}\n")
-        
         check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
@@ -114,6 +91,7 @@ class Throughput:
                     tensor_bytes=tensor_bytes,
                     language=languages,
                     wall_time=wall_time)
+        print_yml_file(Path(result_path) / "run.cfg", logger)
         first_perms = list(product(db_nodes, db_cpus))
         for i, first_perm in enumerate(first_perms, start=1):
             dbn, dbc = first_perm
@@ -274,22 +252,6 @@ class Throughput:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting throughput colocated scaling tests\n")
-        logger.info(f"Running with experiment name: {exp_name}")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
-        logger.info(f"Running with node feature: {node_feature}")
-        logger.info(f"Running with nodes: {nodes}")
-        logger.info(f"Running with database cpus: {db_cpus}")
-        logger.info(f"Running with database port: {db_port}")
-        logger.info(f"Running with network: {net_ifname}")
-        logger.info(f"Running with clients per node: {clients_per_node}")
-        logger.info(f"Running with pin app to cpus: {pin_app_cpus}")
-        logger.info(f"Running with iterations: {iterations}")
-        logger.info(f"Running with tensor bytes: {tensor_bytes}")
-        logger.info(f"Running with languages: {languages}")
-        logger.info(f"Running with plot: {plot}\n")
-        
         check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
         
@@ -303,6 +265,7 @@ class Throughput:
                     iterations=iterations,
                     tensor_bytes=tensor_bytes,
                     language=languages)
+        print_yml_file(Path(result_path) / "run.cfg", logger)
 
         perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus, languages))
         for i, perm in enumerate(perms, start=1):

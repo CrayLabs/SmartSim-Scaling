@@ -154,7 +154,6 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Retrieve the number of iterations
     iterations = get_iterations()
-    # std::string iteration_num = "Running with iterations: " + std::to_string(iterations);
     logger.debug(f"Running with iterations: {iterations}")
 
     # Block to make sure all clients connected

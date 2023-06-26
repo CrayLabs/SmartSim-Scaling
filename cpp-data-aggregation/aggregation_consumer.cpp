@@ -65,6 +65,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
                                                          list_length,
                                                          5, 100000);
             if(!list_is_ready)
+                log_error(context, LLDebug, "Test 3");
                 throw std::runtime_error("There was an error in the "\
                                          "aggregation scaling test.  "\
                                          "The list never reached size of " +
@@ -129,9 +130,9 @@ int main(int argc, char* argv[]) {
 
     // Get command line arguments
     if(argc==1)
-        // log_error(context, LLInfo, "The number tensor size in "\
-        //                          "bytes must be provided as "\
-        //                          "a command line argument.");
+        log_error(context, LLInfo, "The number tensor size in " \
+                                 "bytes must be provided as " \
+                                 "a command line argument.");
         throw std::runtime_error("The expected list length must be "
                                  "passed in.");
 

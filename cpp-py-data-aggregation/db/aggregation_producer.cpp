@@ -11,11 +11,11 @@ int get_iterations() {
 void run_aggregation_production(size_t n_bytes,
                                 size_t tensors_per_dataset)
 {
-
     //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string context("Data Aggregation PY MPI Producer Rank: " + std::to_string(rank));
+    std::string context("Data Aggregation PY MPI Producer Rank: ");
+    context += std::to_string(rank);
     log_data(context, LLDebug, "Initialized rank");
 
     //Indicate Client creation
@@ -101,11 +101,13 @@ int main(int argc, char* argv[]) {
 
     // Get command line arguments
     if(argc==1)
+        log_error(context, LLDebug, "test1");
         throw std::runtime_error("The number tensor size in "\
                                  "bytes must be provided as "\
                                  "a command line argument.");
 
     if(argc==2)
+        log_error(context, LLDebug, "test1");
         throw std::runtime_error("The number of tensors per "\
                                  "dataset must be provided as "\
                                  "a command line argument.");

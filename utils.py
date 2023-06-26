@@ -12,6 +12,7 @@ import pandas as pd
 from imagenet.model_saver import save_model
 from smartsim.error.errors import *
 from smartsim.wlm import detect_launcher
+import configparser
 
 
 import smartsim
@@ -238,6 +239,9 @@ def get_db_backend():
         raise
 
 def check_node_allocation(client_nodes, db_nodes):
+    """Check if a user has the correct node allocation on a machine.
+
+    """
     if not db_nodes:
         raise ValueError("db_nodes cannot be empty")
     if not client_nodes:
@@ -252,3 +256,14 @@ def check_node_allocation(client_nodes, db_nodes):
         val = one + two
         if val > int(total_nodes):
             raise AllocationError(f"Addition of db_nodes and client_nodes is {val} nodes but you allocated only {total_nodes} nodes")
+
+def print_yml_file(path, logger):
+    """Print the YML file contents to terminal for user.
+
+    """
+    config = configparser.ConfigParser()
+    config.read(path)
+    for key, value in config._sections['run'].items():
+        logger.info(f"Running {key} with value: {value}")
+    for key, value in config._sections['attributes'].items():
+        logger.info(f"Running {key} with value: {value}")

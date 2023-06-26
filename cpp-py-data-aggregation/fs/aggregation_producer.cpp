@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <thread>
 #include <stdexcept>
+#include "client.h"
 #include <mpi.h>
 
 
