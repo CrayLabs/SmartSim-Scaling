@@ -51,7 +51,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Preform dataset aggregation retrieval
     for i in range(iterations):
-        logger.debug(f"Running iteration {i} of rank {rank}")
+        logger.debug(f"Running iteration {i}")
 
         # Create aggregation list name
         list_name = f"iteration_{i}"

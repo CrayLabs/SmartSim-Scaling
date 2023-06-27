@@ -19,10 +19,10 @@ void run_aggregation_production(size_t n_bytes,
     log_data(context, LLDebug, "Initialized rank");
 
     //Indicate Client creation
-    if (rank == 0)
+    if (rank == 0) {
         log_data(context, LLInfo, "Connecting clients");
         std::cout << "Connecting clients" << std::endl;
-
+    }
     // Connect a client for each MPI rank
     SmartRedis::Client client(true, context);
 
@@ -100,18 +100,22 @@ int main(int argc, char* argv[]) {
     log_data(context, LLDebug, "Rank initialized");
 
     // Get command line arguments
-    if(argc==1)
-        log_error(context, LLDebug, "test1");
+    if(argc==1) {
+        log_error(context, LLDebug, "The number tensor size in "\
+                                 "bytes must be provided as "\
+                                 "a command line argument.");
         throw std::runtime_error("The number tensor size in "\
                                  "bytes must be provided as "\
                                  "a command line argument.");
-
-    if(argc==2)
-        log_error(context, LLDebug, "test1");
+    }
+    if(argc==2) {
+        log_error(context, LLDebug, "The number of tensors per "\
+                                 "dataset must be provided as "\
+                                 "a command line argument.");
         throw std::runtime_error("The number of tensors per "\
                                  "dataset must be provided as "\
                                  "a command line argument.");
-
+    }
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
 
@@ -131,10 +135,10 @@ int main(int argc, char* argv[]) {
     // Run the dataset and aggregation list production
     run_aggregation_production(n_bytes, tensors_per_dataset);
 
-    if(rank==0)
+    if(rank==0) {
         log_data(context, LLInfo, "Finished data aggregation production.");
         std::cout << "Finished data aggregation production." << std::endl;
-
+    }
     MPI_Finalize();
 
     return 0;

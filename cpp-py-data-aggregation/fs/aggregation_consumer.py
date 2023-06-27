@@ -238,7 +238,6 @@ def main() -> int:
 
     # Get command line arguments
     if len(sys.argv) == 1:
-        #Add
         raise RuntimeError("The expected list length must be passed in")
     list_length = int(sys.argv[1])
 

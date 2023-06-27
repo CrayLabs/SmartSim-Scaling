@@ -88,6 +88,7 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        logger.info("Starting inference standard scaling tests")
         check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
@@ -219,9 +220,11 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        logger.info("Starting inference colocated scaling tests")
+        
         check_model(device, force_rebuild=rebuild_model)
         
-        check_node_allocation(client_nodes, db_nodes)
+        check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
 
         exp, result_path = create_experiment_and_dir(exp_name, launcher)

@@ -121,34 +121,45 @@ int main(int argc, char* argv[]) {
     log_data(context, LLDebug, "Rank initialized");
 
     // Get command line arguments
-    if(argc==1)
+    if(argc==1) {
+        log_error(context, LLInfo, "The number tensor size in "\
+                                 "bytes must be provided as "\
+                                 "a command line argument.");
         throw std::runtime_error("The number tensor size in "\
                                  "bytes must be provided as "\
                                  "a command line argument.");
-
-    if(argc==2)
+    }
+    if(argc==2) {
+        log_error(context, LLInfo, "The number of tensors per "\
+                                 "dataset must be provided as "\
+                                 "a command line argument.");
         throw std::runtime_error("The number of tensors per "\
                                  "dataset must be provided as "\
                                  "a command line argument.");
-
+    }
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
 
     std::string s_tensors_per_dataset(argv[2]);
     int tensors_per_dataset = std::stoi(s_tensors_per_dataset);
 
-    if(rank==0)
+    if(rank==0) {
+        log_data(context, LLInfo, "Running aggregate scaling producer test with "\
+                     "tensor size of " + std::to_string(n_bytes) +
+                     " bytes and " + std::to_string(tensors_per_dataset) +
+                     " tensors per dataset.");
         std::cout << "Running aggregate scaling producer test with "\
                      "tensor size of " << n_bytes <<
                      " bytes and "<< tensors_per_dataset <<
                      " tensors per dataset." << std::endl;
-
+    }
     // Run the dataset and aggregation list production
     run_aggregation_production(n_bytes, tensors_per_dataset);
 
-    if(rank==0)
+    if(rank==0) {
+        log_data(context, LLInfo, "Finished data aggregation production.");
         std::cout << "Finished data aggregation production." << std::endl;
-
+    }
     MPI_Finalize();
 
     return 0;

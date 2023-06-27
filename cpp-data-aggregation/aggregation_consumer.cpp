@@ -64,12 +64,16 @@ void run_aggregation_consumer(std::ofstream& timing_file,
             bool list_is_ready = client.poll_list_length(list_name,
                                                          list_length,
                                                          5, 100000);
-            if(!list_is_ready)
-                log_error(context, LLDebug, "Test 3");
+            if(!list_is_ready) {
+                log_error(context, LLDebug, "There was an error in the "\
+                                         "aggregation scaling test.  "\
+                                         "The list never reached size of " +
+                                         std::to_string(list_length));
                 throw std::runtime_error("There was an error in the "\
                                          "aggregation scaling test.  "\
                                          "The list never reached size of " +
                                          std::to_string(list_length));
+            }
         }
 
         // Have all ranks wait until the aggregation list is full
@@ -129,20 +133,20 @@ int main(int argc, char* argv[]) {
     double main_start = MPI_Wtime();
 
     // Get command line arguments
-    if(argc==1)
+    if(argc==1) {
         log_error(context, LLInfo, "The number tensor size in " \
                                  "bytes must be provided as " \
                                  "a command line argument.");
         throw std::runtime_error("The expected list length must be "
                                  "passed in.");
-
+    }
     std::string s_list_length(argv[1]);
     int list_length = std::stoi(s_list_length);
 
-    if(rank==0)
+    if(rank==0) {
         log_data(context, LLInfo, "Running aggregate scaling test consumer.");
         std::cout << "Running aggregate scaling test consumer." << std::endl;
-
+    }
     // Open Timing file
     std::ofstream timing_file;
     timing_file.open("rank_" + std::to_string(rank) + "_timing.csv");
@@ -154,10 +158,10 @@ int main(int argc, char* argv[]) {
     double main_end = MPI_Wtime();
 
     //Indicate test end to user
-    if(rank==0)
+    if(rank==0) {
         log_data(context, LLInfo, "Finished aggregation scaling consumer.");
         std::cout << "Finished aggregation scaling consumer." << std::endl;
-    
+    }
     //Logging total Data Agg time to file
     double delta_t = main_end - main_start;
     timing_file << rank << "," << "main()" << ","

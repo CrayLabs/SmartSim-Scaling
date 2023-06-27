@@ -27,13 +27,13 @@ class DataAggregation:
                             prod_node_feature = {},
                             cons_node_feature = {},
                             db_hosts=[],
-                            db_nodes=[5],
+                            db_nodes=[16],
                             db_cpus=36,
                             db_port=6780,
                             net_ifname="ipogif0",
                             clients_per_node=[48],
-                            client_nodes=[10],
-                            iterations=3,
+                            client_nodes=[60],
+                            iterations=20,
                             tensor_bytes=[1024,8192,16384,32769,65538,
                                               131076,262152,524304,1024000],
                             tensors_per_dataset=[4],
@@ -96,6 +96,7 @@ class DataAggregation:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        logger.info("Starting dataset aggregation scaling tests")
         check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
@@ -377,7 +378,7 @@ class DataAggregation:
                                 client_nodes=[60],
                                 iterations=20,
                                 tensor_bytes=[1024,8192,16384,32769,65538,
-                                              131076,262152,524304,1024000],
+                                          131076,262152,524304,1024000],
                                 tensors_per_dataset=[4],
                                 client_threads=[1,2,4,8,16,32],
                                 cpu_hyperthreads=2,
@@ -437,6 +438,7 @@ class DataAggregation:
             :param plot: flag to plot against in process results
             :type plot: str
             """
+            logger.info("Starting dataset aggregation scaling with python tests")
             check_node_allocation(client_nodes, db_nodes)
             logger.info("Experiment allocation passed check")
             exp, result_path = create_experiment_and_dir(exp_name, launcher)
@@ -597,8 +599,11 @@ class DataAggregation:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        logger.info("Starting dataset aggregation scaling with python on file system tests")
+        logger.info(f"Running with database backend: None (data to file system)")
         check_node_allocation(client_nodes, [0])
         logger.info("Experiment allocation passed check")
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
         
         write_run_config(result_path,
                     colocated=0,

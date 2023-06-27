@@ -33,7 +33,8 @@ class Throughput:
                            clients_per_node=[32],
                            client_nodes=[10],
                            iterations=3,
-                           tensor_bytes=[1024],
+                           tensor_bytes=[1024,8192,16384,32769,65538,
+                                          131076,262152,524304,1024000],
                            languages=["cpp"],
                            wall_time="05:00:00",
                            plot="database_nodes",
@@ -77,6 +78,7 @@ class Throughput:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        logger.info("Starting throughput standard scaling tests")
         check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
@@ -216,7 +218,8 @@ class Throughput:
                            clients_per_node=[48],
                            pin_app_cpus=[False],
                            iterations=3,
-                           tensor_bytes=[1024],
+                           tensor_bytes=[1024,8192,16384,32769,65538,
+                                          131076,262152,524304,1024000],
                            languages=["cpp"],
                            plot="database_cpus"):
 
@@ -252,6 +255,7 @@ class Throughput:
         :param plot: flag to plot against in process results
         :type plot: str
         """
+        logger.info("Starting throughput colocated scaling tests")
         check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
         
