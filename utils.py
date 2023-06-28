@@ -121,24 +121,19 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :return: orchestrator instance
     :rtype: Orchestrator
     """
-    #Ask Bill about this right here
-    try:
-        db = exp.create_database(port=port,
+    db = exp.create_database(port=port,
                             db_nodes=nodes,
                             batch=run_as_batch,
                             interface=net_ifname,
                             threads_per_queue=tpq,
                             single_cmd=True,
                             hosts=hosts)
-    except SmartSimError as e:
-        logger.error(e)
-        raise
     if run_as_batch:
         db.set_walltime(wall_time)
         for k, v in db_node_feature.items():
             db.set_batch_arg(k, v)
     db.set_cpus(cpus)
-    exp.generate(db)
+    exp.generate(db, overwrite=True)
     exp.start(db)
     logger.info("Orchestrator Database created and running")
     return db
@@ -218,12 +213,9 @@ def get_uuid():
     :return: uid str
     :rtype: str
     """
-    try:
-        uid = str(uuid4())
-        return uid[:4]
-    except SmartSimError as e:
-        logger.error(e)
-        raise
+    uid = str(uuid4())
+    return uid[:4]
+    
 
 def get_db_backend():
     """Return database backend.
@@ -231,12 +223,8 @@ def get_db_backend():
     :return: db backend name str
     :rtype: str
     """
-    try:
-        db_backend_path = smartsim._core.config.CONFIG.database_exe
-        return os.path.basename(db_backend_path)
-    except SmartSimError as e:
-        logger.error(e)
-        raise
+    db_backend_path = smartsim._core.config.CONFIG.database_exe
+    return os.path.basename(db_backend_path)
 
 def check_node_allocation(client_nodes, db_nodes):
     """Check if a user has the correct node allocation on a machine.

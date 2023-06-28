@@ -28,18 +28,18 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8,16],
-                           db_cpus=[8,16],
-                           db_tpq=[1,2,4],
+                           db_nodes=[4,8],
+                           db_cpus=[8],
+                           db_tpq=[1],
                            db_port=6780,
                            batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
-                           clients_per_node=[48],
-                           client_nodes=[60],
+                           clients_per_node=[24, 48],
+                           client_nodes=[1],
                            rebuild_model=False,
-                           iterations=100,
+                           iterations=2,
                            languages=["cpp", "fortran"],
                            wall_time="05:00:00",
                            plot="database_nodes"):
@@ -117,6 +117,7 @@ class Inference:
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
+            print(perm)
 
             db = start_database(exp,
                                 db_node_feature,
@@ -153,13 +154,19 @@ class Inference:
             logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
-
-            exp.stop(db)
-
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
+            exp.stop(db)
+            #Added to clean up db folder bc of issue with exp.stop()
+            time.sleep(10)
+            rdb_folders = os.listdir(Path(result_path) / "database")
+            for fold in rdb_folders:
+                if '.rdb' in fold:
+                    print(fold)
+                    os.remove(Path(result_path) / "database" / fold)
+            print(f"langauge:{language} exp.stop={i}")
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
   
     def inference_colocated(self,

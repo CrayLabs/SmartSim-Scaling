@@ -26,7 +26,7 @@ class Throughput:
                            node_feature={},
                            db_node_feature={},
                            db_hosts=[],
-                           db_nodes=[5],
+                           db_nodes=[4,8,16],
                            db_cpus=[2],
                            db_port=6780,
                            net_ifname="ipogif0",
@@ -135,6 +135,13 @@ class Throughput:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
+            #Added to clean up db folder bc of issue with exp.stop()
+            time.sleep(10)
+            rdb_folders = os.listdir(Path(result_path) / "database")
+            for fold in rdb_folders:
+                if '.rdb' in fold:
+                    print(fold)
+                    os.remove(Path(result_path) / "database" / fold)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
