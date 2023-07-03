@@ -9,9 +9,12 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_BUILD_TYPE RELEASE)
 set(CMAKE_CXX_STANDARD 17)
 
+find_library(SR_LIB smartredis PATHS ${SMARTREDIS}/install/lib NO_DEFAULT_PATH REQUIRED)
+
 include_directories(SYSTEM
     /usr/local/include
     ${MPI_INCLUDE_PATH}
+    ${SMARTREDIS}/install/include
 )
 
 # tests need MPI
@@ -22,4 +25,5 @@ add_executable(aggregation_producer
 )
 target_link_libraries(aggregation_producer
 	MPI::MPI_CXX
+    ${SR_LIB}
 )

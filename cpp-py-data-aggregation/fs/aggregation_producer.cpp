@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <thread>
 #include <stdexcept>
+#include "client.h"
 #include <mpi.h>
 
 
@@ -29,6 +30,8 @@ void run_aggregation_production(size_t n_bytes,
 {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::string context("Data Aggregation FS MPI Producer Rank: " + std::to_string(rank));
+    log_data(context, LLDebug, "Initialized rank");
 
     // Block for all clients to be connected
     MPI_Barrier(MPI_COMM_WORLD);
@@ -73,12 +76,14 @@ void run_aggregation_production(size_t n_bytes,
     fout.close();
     
     int iterations = get_iterations();
+    log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
 
     // A new list (dir of datasets) is created for each iteration
     // to measure dataset aggregation throughput
     std::string list_name = "iteration_" + std::to_string(0);
     fs::create_directory(get_write_to_dir() / list_name);
     for (int i = 0; i < iterations; i++) {
+        log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
 
         // Set the list name (not MPI rank dependent)
         list_name = "iteration_" + std::to_string(i);
@@ -112,36 +117,45 @@ int main(int argc, char* argv[]) {
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::string context("Data Aggregation FS Producer Rank: " + std::to_string(rank));
+    log_data(context, LLDebug, "Rank initialized");
 
     // Get command line arguments
-    if(argc==1)
-        throw std::runtime_error("The number tensor size in "\
+    if(argc==1) {
+        std::string tensor_size_error = "The number tensor size in "\
                                  "bytes must be provided as "\
-                                 "a command line argument.");
-
-    if(argc==2)
-        throw std::runtime_error("The number of tensors per "\
+                                 "a command line argument.";
+        log_error(context, LLInfo, tensor_size_error);
+        throw std::runtime_error(tensor_size_error);
+    }
+    if(argc==2) {
+        std::string tensor_per_error = "The number of tensors per "\
                                  "dataset must be provided as "\
-                                 "a command line argument.");
-
+                                 "a command line argument.";
+        log_error(context, LLInfo, tensor_per_error);
+        throw std::runtime_error(tensor_per_error);
+    }
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
 
     std::string s_tensors_per_dataset(argv[2]);
     int tensors_per_dataset = std::stoi(s_tensors_per_dataset);
 
-    if(rank==0)
-        std::cout << "Running aggregate scaling producer test with "\
-                     "tensor size of " << n_bytes <<
-                     " bytes and "<< tensors_per_dataset <<
-                     " tensors per dataset." << std::endl;
-
+    if(rank==0) {
+        std::string rank_text = "Running aggregate scaling producer test with "\
+                     "tensor size of " + std::to_string(n_bytes) +
+                     " bytes and " + std::to_string(tensors_per_dataset) +
+                     " tensors per dataset.";
+        log_data(context, LLInfo, rank_text);
+        std::cout << rank_text << std::endl;
+    }
     // Run the dataset and aggregation list production
     run_aggregation_production(n_bytes, tensors_per_dataset);
 
-    if(rank==0)
+    if(rank==0) {
+        log_data(context, LLInfo, "Finished data aggregation production.");
         std::cout << "Finished data aggregation production." << std::endl;
-
+    }
     MPI_Finalize();
 
     return 0;

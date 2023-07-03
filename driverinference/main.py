@@ -6,7 +6,6 @@ if __name__ == "__main__":
 
 from utils import *
 from driverprocessresults.main import *
-import time
 
 if __name__ == "__main__":
     """The file may run directly without invoking driver.py and the scaling
@@ -28,18 +27,18 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8,16],
-                           db_cpus=[8,16],
-                           db_tpq=[1,2,4],
+                           db_nodes=[4,8],
+                           db_cpus=[8],
+                           db_tpq=[1],
                            db_port=6780,
                            batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[48],
-                           client_nodes=[60],
+                           client_nodes=[1],
                            rebuild_model=False,
-                           iterations=100,
+                           iterations=2,
                            languages=["cpp", "fortran"],
                            wall_time="05:00:00",
                            plot="database_nodes"):
@@ -88,13 +87,12 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting inference scaling tests")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
+        logger.info("Starting inference standard scaling tests")
+        check_node_allocation(client_nodes, db_nodes)
+        logger.info("Experiment allocation passed check")
 
-        check_model(device, force_rebuild=rebuild_model)
-
-        exp, result_path = create_folder(exp_name, launcher)
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=0,
                         clients_per_node=clients_per_node,
@@ -111,11 +109,14 @@ class Inference:
                         db_node_feature=db_node_feature,
                         node_feature=node_feature,
                         wall_time=wall_time)
-
+        print_yml_file(Path(result_path) / "run.cfg", logger)
+        
         perms = list(product(client_nodes, clients_per_node, db_nodes, db_cpus, db_tpq, batch_size, languages))
         logger.info(f"Executing {len(perms)} permutations")
-        for perm in perms:
+        for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
+            logger.info(f"Running permutation {i} of {len(perms)}")
+            print(perm)
 
             db = start_database(exp,
                                 db_node_feature,
@@ -141,6 +142,7 @@ class Inference:
                                                      rebuild_model,
                                                      iterations,
                                                      language)
+            logger.debug("Inference session created")
             address = db.get_address()[0]
             setup_resnet(resnet_model,
                         device,
@@ -148,16 +150,15 @@ class Inference:
                         batch,
                         address,
                         cluster=dbn>1)
-
+            logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
-
-            exp.stop(db)
-
             # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
+            exp.stop(db)
+            check_database_folder(result_path, logger)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
   
     def inference_colocated(self,
@@ -218,13 +219,15 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting colocated inference scaling tests")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
-
+        logger.info("Starting inference colocated scaling tests")
+        
         check_model(device, force_rebuild=rebuild_model)
+        
+        check_node_allocation(nodes, [0])
+        logger.info("Experiment allocation passed check")
 
-        exp, result_path = create_folder(exp_name, launcher)
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=1,
                         node_feature=node_feature,
@@ -246,10 +249,11 @@ class Inference:
                         language=languages,
                         plot=plot
                         )
-        
+        print_yml_file(Path(result_path) / "run.cfg", logger)
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
-        for perm in perms:
+        for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
+            logger.info(f"Running permutation {i} of {len(perms)}")
 
             infer_session = self._create_colocated_inference_session(exp,
                                                                node_feature,
@@ -267,6 +271,7 @@ class Inference:
                                                                rebuild_model,
                                                                iterations,
                                                                language)
+            logger.debug("Inference session created")
 
             exp.start(infer_session, block=True, summary=True)
 

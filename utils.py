@@ -10,6 +10,10 @@ from tqdm import tqdm
 from uuid import uuid4
 import pandas as pd
 from imagenet.model_saver import save_model
+from smartsim.error.errors import *
+from smartsim.wlm import detect_launcher
+import configparser
+import time
 
 
 import smartsim
@@ -62,7 +66,7 @@ def check_model(device, force_rebuild=False):
             logger.error(message)
             sys.exit(1)
 
-def create_folder(exp_name, launcher):
+def create_experiment_and_dir(exp_name, launcher):
     """Create and generate Experiment as well as create results folder.
 
     This function is called for every scaling test. It creates an Experiment per scaling test
@@ -77,8 +81,14 @@ def create_folder(exp_name, launcher):
     """
     result_path = osp.join("results", exp_name, "run-" + get_date()+ "-" + get_time()) #autoincrement
     os.makedirs(result_path)
-    exp = Experiment(name=result_path, launcher=launcher)
-    exp.generate()
+    #Ask Bill if I need a try/except block here even tho exp.generate has a try/except
+    try:
+        exp = Experiment(name=result_path, launcher=launcher)
+        exp.generate()
+    except Exception as e:
+        logger.error(e)
+        raise
+    
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
     return exp, result_path
 
@@ -124,7 +134,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
         for k, v in db_node_feature.items():
             db.set_batch_arg(k, v)
     db.set_cpus(cpus)
-    exp.generate(db)
+    exp.generate(db, overwrite=True)
     exp.start(db)
     logger.info("Orchestrator Database created and running")
     return db
@@ -206,6 +216,7 @@ def get_uuid():
     """
     uid = str(uuid4())
     return uid[:4]
+    
 
 def get_db_backend():
     """Return database backend.
@@ -214,4 +225,60 @@ def get_db_backend():
     :rtype: str
     """
     db_backend_path = smartsim._core.config.CONFIG.database_exe
-    return os.path.basename(db_backend_path) #Will need to look into this further, will need to return a list
+    return os.path.basename(db_backend_path)
+
+def check_node_allocation(client_nodes, db_nodes):
+    """Check if a user has the correct node allocation on a machine.
+
+    :param client_nodes: list of nodes
+    :type client_nodes: list<int>
+    :param db_nodes: list of db nodes
+    :type db_nodes: list<int>
+    """
+    if not db_nodes:
+        raise ValueError("db_nodes cannot be empty")
+    if not client_nodes:
+        raise ValueError("client_nodes cannot be empty")
+    
+    if detect_launcher() == "slurm":
+        total_nodes = os.getenv("SLURM_NNODES")
+    else:
+        total_nodes = os.getenv("PBS_NNODES")
+    for perm in list(product(client_nodes, db_nodes)):
+        one, two = perm
+        val = one + two
+        if val > int(total_nodes):
+            raise AllocationError(f"Addition of db_nodes and client_nodes is {val} nodes but you allocated only {total_nodes} nodes")
+
+def print_yml_file(path, logger):
+    """Print the YML file contents to terminal for user.
+
+    :param path: path to yml file
+    :type path: str
+    :param logger: name of logger
+    :type logger: str
+    """
+    config = configparser.ConfigParser()
+    config.read(path)
+    for key, value in config._sections['run'].items():
+        logger.info(f"Running {key} with value: {value}")
+    for key, value in config._sections['attributes'].items():
+        logger.info(f"Running {key} with value: {value}")
+
+def check_database_folder(result_path, logger):
+    """Cleans the database folder within results.
+
+    :param result_path: path to results folder
+    :type result_path: str
+    :param logger: name of logger
+    :type logger: str
+    """
+    time.sleep(5)
+    for _ in range(5):
+        rdb_folders = os.listdir(Path(result_path) / "database")
+        for fold in rdb_folders:
+            if '.rdb' in fold:
+                logger.debug(f"Database folder removed: {fold}")
+                os.remove(Path(result_path) / "database" / fold)
+                break
+        time.sleep(1)

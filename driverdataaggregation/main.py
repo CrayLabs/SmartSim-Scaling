@@ -35,7 +35,7 @@ class DataAggregation:
                             client_nodes=[60],
                             iterations=20,
                             tensor_bytes=[1024,8192,16384,32769,65538,
-                                          131076,262152,524304,1024000],
+                                              131076,262152,524304,1024000],
                             tensors_per_dataset=[4],
                             client_threads=[8],
                             cpu_hyperthreads=2,
@@ -97,10 +97,10 @@ class DataAggregation:
         :type plot: str
         """
         logger.info("Starting dataset aggregation scaling tests")
-        logger.info(f"Running with database backend: {get_db_backend()}")
-        logger.info(f"Running with launcher: {launcher}")
+        check_node_allocation(client_nodes, db_nodes)
+        logger.info("Experiment allocation passed check")
 
-        exp, result_path = create_folder(exp_name, launcher)
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
         write_run_config(result_path,
                     colocated=0,
                     client_per_node=clients_per_node,
@@ -113,8 +113,10 @@ class DataAggregation:
                     cpu_hyperthreads=cpu_hyperthreads,
                     language=languages,
                     wall_time=wall_time)
+        print_yml_file(Path(result_path) / "run.cfg", logger)
 
-        for db_node_count in db_nodes:
+        for i, db_node_count in enumerate(db_nodes, start=1):
+            logger.info(f"Running permutation {i} of {len(db_nodes)}")
 
             # start the database only once per value in db_nodes so all permutations
             # are executed with the same database size without bringin down the database
@@ -129,7 +131,6 @@ class DataAggregation:
                                 db_hosts,
                                 wall_time)
 
-
             for c_nodes, cpn, _bytes, t_per_dataset, c_threads, language in product(
                 client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads, languages
             ):
@@ -141,6 +142,7 @@ class DataAggregation:
                                                         db_node_count,
                                                         db_cpus, iterations,
                                                         _bytes, t_per_dataset, language)
+                logger.debug("Producer session created")
 
                 # setup a an instance of the C++ driver and start it
                 aggregation_consumer_sessions = \
@@ -148,7 +150,7 @@ class DataAggregation:
                                                         db_node_count, db_cpus,
                                                         iterations, _bytes, t_per_dataset,
                                                         c_threads, cpu_hyperthreads, language)
-
+                logger.debug("Consumer session created")
                 exp.start(aggregation_producer_sessions,
                           aggregation_consumer_sessions,
                            summary=True)
@@ -165,6 +167,9 @@ class DataAggregation:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
+            #Added to clean up db folder bc of issue with exp.stop()
+            time.sleep(5)
+            check_database_folder(result_path, logger)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
@@ -376,7 +381,7 @@ class DataAggregation:
                                 client_nodes=[60],
                                 iterations=20,
                                 tensor_bytes=[1024,8192,16384,32769,65538,
-                                              131076,262152,524304,1024000],
+                                          131076,262152,524304,1024000],
                                 tensors_per_dataset=[4],
                                 client_threads=[1,2,4,8,16,32],
                                 cpu_hyperthreads=2,
@@ -437,11 +442,9 @@ class DataAggregation:
             :type plot: str
             """
             logger.info("Starting dataset aggregation scaling with python tests")
-            logger.info(f"Running with database backend: {get_db_backend()}")
-            logger.info(f"Running with launcher: {launcher}")
-
-            exp, result_path = create_folder(exp_name, launcher)
-            
+            check_node_allocation(client_nodes, db_nodes)
+            logger.info("Experiment allocation passed check")
+            exp, result_path = create_experiment_and_dir(exp_name, launcher)
             write_run_config(result_path,
                     colocated=0,
                     client_per_node=clients_per_node,
@@ -452,10 +455,12 @@ class DataAggregation:
                     tensors_per_dataset=tensors_per_dataset,
                     client_threads=client_threads,
                     cpu_hyperthreads=cpu_hyperthreads,
-                    languages=languages,
+                    language=languages,
                     wall_time=wall_time)
+            print_yml_file(Path(result_path) / "run.cfg", logger)
 
-            for db_node_count in db_nodes:
+            for i, db_node_count in enumerate(db_nodes, start=1):
+                logger.info(f"Running permutation {i} of {len(db_nodes)}")
 
                 # start the database only once per value in db_nodes so all permutations
                 # are executed with the same database size without bringin down the database
@@ -480,7 +485,7 @@ class DataAggregation:
                                                                 db_node_count,
                                                                 db_cpus, iterations,
                                                                 bytes_, t_per_dataset, language)
-
+                    logger.debug("Producer session created")
                     # setup a an instance of the python consumer and start it
                     aggregation_consumer_sessions = \
                         self._create_aggregation_consumer_session_python(exp, cons_node_feature, c_nodes, cpn,
@@ -488,7 +493,7 @@ class DataAggregation:
                                                                 iterations, bytes_,
                                                                 t_per_dataset, c_threads,
                                                                 cpu_hyperthreads, language)
-
+                    logger.debug("Consumer session created")
                     exp.start(aggregation_producer_sessions,
                             aggregation_consumer_sessions,
                             summary=True)
@@ -505,6 +510,9 @@ class DataAggregation:
 
                 # stop database after this set of permutations have finished
                 exp.stop(db)
+                #Added to clean up db folder bc of issue with exp.stop()
+                time.sleep(5)
+                check_database_folder(result_path, logger)
             self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
     @classmethod
@@ -599,9 +607,10 @@ class DataAggregation:
         """
         logger.info("Starting dataset aggregation scaling with python on file system tests")
         logger.info(f"Running with database backend: None (data to file system)")
-        logger.info(f"Running with launcher: {launcher}")
-
-        exp, result_path = create_folder(exp_name, launcher)
+        check_node_allocation(client_nodes, [0])
+        logger.info("Experiment allocation passed check")
+        exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        
         write_run_config(result_path,
                     colocated=0,
                     client_per_node=clients_per_node,
@@ -612,6 +621,7 @@ class DataAggregation:
                     client_threads=client_threads,
                     cpu_hyperthreads=cpu_hyperthreads,
                     language=languages)
+        print_yml_file(Path(result_path) / "run.cfg", logger)
 
         for c_nodes, cpn, bytes_, t_per_dataset, c_threads, language in product(
             client_nodes, clients_per_node, tensor_bytes, tensors_per_dataset, client_threads, languages
@@ -622,14 +632,14 @@ class DataAggregation:
                 self._create_aggregation_producer_session_python_fs(exp, prod_node_feature, c_nodes, cpn,
                                                               iterations, bytes_,
                                                               t_per_dataset, language)
-
+            logger.debug("Producer session created")
             # setup a an instance of the python consumer and start it
             aggregation_consumer_sessions = \
                 self._create_aggregation_consumer_session_python_fs(exp, cons_node_feature, c_nodes, cpn,
                                                               iterations, bytes_,
                                                               t_per_dataset, c_threads,
                                                               cpu_hyperthreads, language)
-
+            logger.debug("Consumer session created")
             # Bad SmartSim access to set up env vars
             # so that producer writes files to same location
             # that the consumer reads files

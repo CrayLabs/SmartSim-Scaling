@@ -50,13 +50,8 @@ open(newunit = timing_unit, &
 call init_client(client, rank, use_cluster, timing_unit)
 if (should_set .and. rank == 0) call set_model(client, device_type, num_devices, batch_size)
 
-if (num_devices > 1 .and. device_type == "GPU") then
-    model_key = "resnet_model_0"
-    script_key = "resnet_script_0"
-else
-    write(model_key,'(A,I0)') 'resnet_model_',mod(rank,num_devices)
-    write(script_key,'(A,I0)') 'resnet_script_',mod(rank,num_devices)
-endif
+model_key = "resnet_model"
+script_key = "resnet_script"
 
 call MPI_Barrier(MPI_COMM_WORLD, ierror)
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
@@ -104,8 +99,8 @@ subroutine set_model(client, device_type, num_devices, batch_size)
     script_filename = "./data_processing_script.txt"
 
     if (num_devices > 1 .and. device_type == 'GPU') then
-        model_key = 'resnet_model_0'
-        script_key = 'resnet_script_0'
+        model_key = 'resnet_model'
+        script_key = 'resnet_script'
         return_code = client%set_model_from_file_multigpu( &
             model_key, model_filename, "TORCH", 0, num_devices, batch_size)
         if (return_code /= SRNoError) then
@@ -117,8 +112,8 @@ subroutine set_model(client, device_type, num_devices, batch_size)
         endif
     else
         do i=1,num_devices
-            write(model_key,'(A,I0)') 'resnet_model_',i-1
-            write(script_key,'(A,I0)') 'resnet_script_',i-1
+            model_key = 'resnet_model'
+            script_key = 'resnet_script'
             return_code = client%set_model_from_file(model_key, model_filename, "TORCH", device_type, batch_size)
             if (return_code /= SRNoError) then
                 call print_last_error()

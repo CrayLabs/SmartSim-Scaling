@@ -34,6 +34,8 @@ class ProcessResults:
             dataframes = []
             final_stat_dir = "results" / Path(scaling_results_dir) / "stats"
             run_folders = os.listdir("results" / Path(scaling_results_dir))
+            logger.debug(f"Running with final_stat_dir: {final_stat_dir}")
+            logger.debug(f"Running with run_folders: {run_folders}")
             session_folders = []
             run_list = []
             for run_folder in run_folders:
@@ -41,6 +43,7 @@ class ProcessResults:
                     session_folders += ["results/" + scaling_results_dir + "/" + run_folder + 
                                         "/" + d for d in os.listdir("results/" + scaling_results_dir + "/" + run_folder) if "sess" in d]
                     run_list += [Path("results") / scaling_results_dir / run_folder]
+                    logger.debug(f"Running with run_list: {run_list} for run_folder: {run_folder}")
             try:
                 # write csv each so this function is idempotent
                 # csv's will not be written if they are already created
@@ -48,6 +51,7 @@ class ProcessResults:
                 for session_folder in tqdm(session_folders, desc="Processing scaling results...", ncols=80):
                     try:
                         self._create_run_csv(session_folder, delete_previous=overwrite)
+                        logger.debug(f"csv created for session_folder: {session_folder}")
                     # want to catch all exceptions and skip runs that may
                     # not have completed or finished b/c some reason i.e. node failure
                     except Exception as e:
@@ -55,9 +59,10 @@ class ProcessResults:
                         logger.error(e)
                         continue
                 # collect all written csv into dataframes to concat
-                for run in tqdm(run_list, desc="Creating plots...", ncols=80):
+                for run in tqdm(run_list, desc="Creating scaling plots...", ncols=80):
                     try:
                         scaling_plotter(run, scaling_results_dir, plot_type)
+                        logger.debug(f"Plots created for run: {run}")
                     # want to catch all exceptions and skip runs that may
                     # not have completed or finished b/c some reason i.e. node failure
                     except Exception as e:
@@ -72,6 +77,7 @@ class ProcessResults:
                         stats_path = os.path.join(final_stat_dir, run_name, session_name, session_name + ".csv")
                         run_df = pd.read_csv(str(stats_path))
                         dataframes.append(run_df)
+                        logger.debug(f"Results collected for session: {session}")
                     
                     # catch all and skip for reason listed above
                     except Exception as e:
@@ -94,7 +100,10 @@ class ProcessResults:
         run_name = os.path.basename(split)
         all_stats_dir = cls._create_stats_dir(session_path)
         session_stats_dir = all_stats_dir / run_name / session_name
-        
+        logger.debug(f"Running with session_name: {session_name}")
+        logger.debug(f"Running with run_name: {run_name}")
+        logger.debug(f"Running with session stats dir: {session_stats_dir}")
+        logger.debug(f"Running with all stats dir: {all_stats_dir}")
         if delete_previous and session_stats_dir.is_dir():
             shutil.rmtree(session_stats_dir)
         
@@ -102,6 +111,7 @@ class ProcessResults:
             os.makedirs(session_stats_dir)
             function_times = {}
             files = os.listdir(Path(session_path))
+            logger.debug("Beginning to loop through files")
             for file in files: 
                 if '.csv' in file:
                     fp = os.path.join(session_path, file)
@@ -117,21 +127,26 @@ class ProcessResults:
                 else:
                     if verbose:
                         print(file)
+            logger.debug("Finished to loop through files")
             if verbose:
                 print('Min {0}'.format(min(function_times['client()'])))
                 print('Max {0}'.format(max(function_times['client()'])))
             try:
                 if "run_model" in function_times:
+                    logger.debug("Run model started")
                     if verbose:
                         num_run = len(function_times['run_model'])
                         print(f'there are {num_run} values in the run_model entries')
                         #is it neccessary to print all run_model values?
                     cls._make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', session_stats_dir)
                     cls._make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', session_stats_dir)
+                    logger.debug("Run model completed")
                 function_types = ["client()", "put_tensor", "unpack_tensor", "get_list", "main()"] 
                 for function in function_types:
                     if function in function_times:
+                        logger.debug(f"{function} started")
                         cls._make_hist_plot(function_times[function], function, function + ".pdf", session_stats_dir)
+                        logger.debug(f"{function} completed")
 
             except KeyError as e:
                 raise KeyError(f'{e} not found in function_times for run {session_name}')

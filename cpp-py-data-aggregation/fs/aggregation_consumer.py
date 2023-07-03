@@ -11,6 +11,8 @@ from multiprocessing.pool import ThreadPool
 from mpi4py import MPI
 import typing as t
 
+from smartsim.log import get_logger, log_to_file
+
 if t.TYPE_CHECKING:
     import numpy.typing as npt
 
@@ -134,13 +136,17 @@ def parse_dataset_bytes(
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
+    logger = get_logger(f"Data Aggregation FS Consumer MPI Rank: {rank}")
+    logger.debug(f"Initialized Rank")
 
     if rank == 0:
+        logger.info("Connecting clients")
         print("Connecting clients")
 
     # We will spend no time connecting a SR client bc we are not using SR
     delta_t = float(0)
     timing_file.write(f"{rank},client(),{delta_t}\n")
+    logger.debug(f"client() time stored")
 
     # Allocate lists to hold timings
     get_list_times: list[float] = []
@@ -148,22 +154,26 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Retrieve the number of iterations
     iterations = get_iterations()
+    logger.debug(f"Running with iterations: {iterations}")
 
     # Block to make sure all clients connected
     comm.Barrier()
 
     # Retrive the rank-local loop start time
+    logger.debug(f"loop_time() starting")
     loop_start = MPI.Wtime()
     
     # Preform dataset aggregation retrieval
     for i in range(iterations):
-
+        logger.debug(f"Running iteration {i} of rank {rank}")
+        
         # Create aggregation list name
         list_name = f"iteration_{i}"
         if rank == 0:
             print(f"Consuming list {i}")
 
         # Have rank 0 check that the aggregation list is full
+        logger.debug("Starting poll_time()")
         poll_time_start = MPI.Wtime()
         if rank == 0:
             list_is_ready = poll_list_length(
@@ -181,13 +191,16 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
         # Have all ranks wait until the aggregation list is full
         comm.Barrier()
         poll_list_end = MPI.Wtime()
+        logger.debug("Ended poll_time()")
         delta_t = poll_list_end - poll_time_start
         poll_list_times.append(delta_t)
 
         # Have each rank retrieve the datasets in the aggregation list
+        logger.debug("Starting get_list()")
         get_list_start = MPI.Wtime()
         _result = get_datasets_from_list(list_name)
         get_list_end = MPI.Wtime()
+        logger.debug("Ended get_list()")
         delta_t = get_list_end - get_list_start
         get_list_times.append(delta_t)
 
@@ -200,13 +213,14 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Compute loop execution time
     loop_end = MPI.Wtime()
+    logger.debug("Ended loop_time()")
     delta_t = loop_end - loop_start
 
     # Write aggregation times to file
     for write_time, read_time in zip(poll_list_times, get_list_times):
         timing_file.write(f"{rank},poll_list,{write_time}\n")
         timing_file.write(f"{rank},get_list,{read_time}\n")
-
+    logger.debug("Data written to files")
     # Write loop times to file
     timing_file.write(f"{rank},loop_time,{delta_t}\n")
 
@@ -215,9 +229,11 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
 
 def main() -> int:
+    #Initializing rank
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-
+    logger = get_logger(f"Data Aggregation Tests Consumer Rank: {rank}")
+    logger.debug("Starting Data Aggregation Consumer fs test")
     main_start = MPI.Wtime()
 
     # Get command line arguments
@@ -230,10 +246,12 @@ def main() -> int:
         # Run the aggregation scaling study
         run_aggregation_consumer(timing_file, list_length)
         if rank == 0:
-            print("Finished aggregation scaling consumer.\n")
+            logger.info("Finished aggregation scaling fs consumer.\n")
+            print("Finished aggregation scaling fs consumer.\n")
 
         # Save time it took to run the main function
         main_end = MPI.Wtime()
+        logger.debug("Ended Data Aggregation Consumer fs test")
         delta_t = main_end - main_start
         timing_file.write(f"{rank},main(),{delta_t}\n")
         timing_file.flush()
