@@ -120,14 +120,15 @@ int main(int argc, char* argv[]) {
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string context("Throughput Scaling Tests Rank " + std::to_string(rank));
+    std::string context("Throughput Scaling Tests Rank: " + std::to_string(rank));
     log_data(context, LLDebug, "Rank initialized");
 
     if(argc==1) {
-        log_error(context, LLInfo, "Error thrown");
-        throw std::runtime_error("The number tensor size in "\
+        std:: string tensor_size_error = "The number tensor size in "\
                                  "bytes must be provided as "\
-                                 "a command line argument.");
+                                 "a command line argument.";
+        log_error(context, LLInfo, tensor_size_error);
+        throw std::runtime_error(tensor_size_error);
     }
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
@@ -140,8 +141,7 @@ int main(int argc, char* argv[]) {
         std::string tensor_text = "Running throughput scaling test with tensor size of ";
         tensor_text += std::to_string(n_bytes) + " bytes.";
         log_data(context, LLInfo, tensor_text);
-        std::cout<<"Running throughput scaling test with tensor size of "
-                 <<n_bytes<<"bytes."<<std::endl;
+        std::cout<<tensor_text<<std::endl;
     }
 
     std::ofstream timing_file;

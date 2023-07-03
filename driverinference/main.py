@@ -6,7 +6,6 @@ if __name__ == "__main__":
 
 from utils import *
 from driverprocessresults.main import *
-import time
 
 if __name__ == "__main__":
     """The file may run directly without invoking driver.py and the scaling
@@ -36,7 +35,7 @@ class Inference:
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
-                           clients_per_node=[24, 48],
+                           clients_per_node=[48],
                            client_nodes=[1],
                            rebuild_model=False,
                            iterations=2,
@@ -159,14 +158,7 @@ class Inference:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
-            #Added to clean up db folder bc of issue with exp.stop()
-            time.sleep(10)
-            rdb_folders = os.listdir(Path(result_path) / "database")
-            for fold in rdb_folders:
-                if '.rdb' in fold:
-                    print(fold)
-                    os.remove(Path(result_path) / "database" / fold)
-            print(f"langauge:{language} exp.stop={i}")
+            check_database_folder(result_path, logger)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
   
     def inference_colocated(self,

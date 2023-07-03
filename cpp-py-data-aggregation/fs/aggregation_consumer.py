@@ -136,7 +136,7 @@ def parse_dataset_bytes(
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    logger = get_logger(f"Data Aggregation FS Consumer MPI Rank {rank}")
+    logger = get_logger(f"Data Aggregation FS Consumer MPI Rank: {rank}")
     logger.debug(f"Initialized Rank")
 
     if rank == 0:
@@ -146,7 +146,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     # We will spend no time connecting a SR client bc we are not using SR
     delta_t = float(0)
     timing_file.write(f"{rank},client(),{delta_t}\n")
-    logger.debug(f"client() time stored for rank: {rank}")
+    logger.debug(f"client() time stored")
 
     # Allocate lists to hold timings
     get_list_times: list[float] = []
@@ -232,7 +232,7 @@ def main() -> int:
     #Initializing rank
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    logger = get_logger(f"Data Aggregation Tests Consumer Rank {rank}")
+    logger = get_logger(f"Data Aggregation Tests Consumer Rank: {rank}")
     logger.debug("Starting Data Aggregation Consumer fs test")
     main_start = MPI.Wtime()
 

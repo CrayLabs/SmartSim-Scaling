@@ -136,12 +136,8 @@ class Throughput:
             # stop database after this set of permutations have finished
             exp.stop(db)
             #Added to clean up db folder bc of issue with exp.stop()
-            time.sleep(10)
-            rdb_folders = os.listdir(Path(result_path) / "database")
-            for fold in rdb_folders:
-                if '.rdb' in fold:
-                    print(fold)
-                    os.remove(Path(result_path) / "database" / fold)
+            time.sleep(5)
+            check_database_folder(result_path, logger)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod

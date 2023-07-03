@@ -117,7 +117,7 @@ void run_mnist(const std::string& model_name,
     should_set_vars += std::to_string(n_clients);
     log_data(context, LLDebug, should_set_vars);
     if (!is_colocated && rank == 0) {
-      log_data(context, LLDebug, "Rank entered non-colocated if block to set script/model");
+      log_data(context, LLDebug, "Setting script/model for Standard test");
 
       std::cout<<"Setting Resnet Model from scaling app" << std::endl;
       log_data(context, LLInfo, "Setting Resnet Model from scaling app");
@@ -161,7 +161,7 @@ void run_mnist(const std::string& model_name,
       }
     }
     if(is_colocated && rank % n_clients == 0) {
-      log_data(context, LLDebug, "Rank entered colocated if block to set script/model");
+      log_data(context, LLDebug, "Setting script/model for Colocated test");
 
       std::cout<<"Setting Resnet Model from scaling app" << std::endl;
       log_data(context, LLInfo, "Setting Resnet Model from scaling app");
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]) {
 
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  std::string context("Inference Tests Rank " + std::to_string(rank));
+  std::string context("Inference Tests Rank: " + std::to_string(rank));
   log_data(context, LLDebug, "Rank Initialized");
 
   //Open Timing file
@@ -386,7 +386,7 @@ int main(int argc, char* argv[]) {
 
   // Run timing tests
   run_mnist("resnet_model", "resnet_script", timing_file);
-  if(rank==0) //I might move this to after MPI_Wtime like in data agg
+  if(rank==0)
     log_data(context, LLInfo, "Finished Resnet test.");
     std::cout<<"Finished Resnet test."<<std::endl;
 

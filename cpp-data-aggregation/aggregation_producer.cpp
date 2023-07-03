@@ -14,7 +14,7 @@ void run_aggregation_production(size_t n_bytes,
     //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string context("Data Aggregation MPI Producer Rank" + std::to_string(rank));
+    std::string context("Data Aggregation MPI Producer Rank: " + std::to_string(rank));
     log_data(context, LLDebug, "Initialized rank");
 
     //Indicate Client creation
@@ -94,25 +94,23 @@ int main(int argc, char* argv[]) {
     //initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string context("Data Aggregation Tests Producer Rank " + std::to_string(rank));
+    std::string context("Data Aggregation Tests Producer Rank: " + std::to_string(rank));
     log_data(context, LLDebug, "Rank initialized");
 
     // Get command line arguments
     if(argc==1) {
-        log_error(context, LLDebug, "The number tensor size in "\
+        std::string tensor_size_error = "The number tensor size in "\
                                  "bytes must be provided as "\
-                                 "a command line argument.");
-        throw std::runtime_error("The number tensor size in "\
-                                 "bytes must be provided as "\
-                                 "a command line argument.");
+                                 "a command line argument.";
+        log_error(context, LLDebug, tensor_size_error);
+        throw std::runtime_error(tensor_size_error);
     }
     if(argc==2) {
-        log_error(context, LLDebug, "The number of tensors per "\
+        std::string tensor_per_error = "The number of tensors per "\
                                  "dataset must be provided as "\
-                                 "a command line argument.");
-        throw std::runtime_error("The number of tensors per "\
-                                 "dataset must be provided as "\
-                                 "a command line argument.");
+                                 "a command line argument.";
+        log_error(context, LLDebug, tensor_per_error);
+        throw std::runtime_error(tensor_per_error);
     }
     std::string s_bytes(argv[1]);
     int n_bytes = std::stoi(s_bytes);
@@ -125,10 +123,7 @@ int main(int argc, char* argv[]) {
         tensor_text += std::to_string(n_bytes) + " bytes and " + std::to_string(tensors_per_dataset);
         tensor_text += " tensors per dataset.";
         log_data(context, LLInfo, tensor_text);
-        std::cout << "Running aggregate scaling producer test with "\
-                     "tensor size of " << n_bytes <<
-                     " bytes and "<< tensors_per_dataset <<
-                     " tensors per dataset." << std::endl;
+        std::cout << tensor_text << std::endl;
     }
     // Run the dataset and aggregation list production
     run_aggregation_production(n_bytes, tensors_per_dataset);

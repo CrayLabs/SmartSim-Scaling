@@ -21,7 +21,7 @@ def get_iterations() -> int:
 def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    logger = get_logger(f"Data Aggregation PY Consumer MPI Rank {rank}")
+    logger = get_logger(f"Data Aggregation PY Consumer MPI Rank: {rank}")
     logger.debug(f"Initialized Rank")
 
     if rank == 0:
@@ -30,7 +30,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Connect a client and save connection time
     constructor_start = MPI.Wtime()
-    client = Client(cluster=True)
+    client = Client(cluster=True, logger)
     constructor_stop = MPI.Wtime()
     delta_t = constructor_stop - constructor_start
     timing_file.write(f"{rank},client(),{delta_t}\n")
@@ -121,7 +121,7 @@ def main() -> int:
     #Initializing rank
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    logger = get_logger(f"Data Aggregation Tests Consumer Rank {rank}")
+    logger = get_logger(f"Data Aggregation Tests Consumer Rank: {rank}")
     logger.debug("Starting Data Aggregation Consumer Py test")
     main_start = MPI.Wtime()
 

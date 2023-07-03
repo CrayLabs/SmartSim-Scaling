@@ -13,6 +13,7 @@ from imagenet.model_saver import save_model
 from smartsim.error.errors import *
 from smartsim.wlm import detect_launcher
 import configparser
+import time
 
 
 import smartsim
@@ -229,6 +230,10 @@ def get_db_backend():
 def check_node_allocation(client_nodes, db_nodes):
     """Check if a user has the correct node allocation on a machine.
 
+    :param client_nodes: list of nodes
+    :type client_nodes: list<int>
+    :param db_nodes: list of db nodes
+    :type db_nodes: list<int>
     """
     if not db_nodes:
         raise ValueError("db_nodes cannot be empty")
@@ -248,6 +253,10 @@ def check_node_allocation(client_nodes, db_nodes):
 def print_yml_file(path, logger):
     """Print the YML file contents to terminal for user.
 
+    :param path: path to yml file
+    :type path: str
+    :param logger: name of logger
+    :type logger: str
     """
     config = configparser.ConfigParser()
     config.read(path)
@@ -255,3 +264,21 @@ def print_yml_file(path, logger):
         logger.info(f"Running {key} with value: {value}")
     for key, value in config._sections['attributes'].items():
         logger.info(f"Running {key} with value: {value}")
+
+def check_database_folder(result_path, logger):
+    """Cleans the database folder within results.
+
+    :param result_path: path to results folder
+    :type result_path: str
+    :param logger: name of logger
+    :type logger: str
+    """
+    time.sleep(5)
+    for _ in range(5):
+        rdb_folders = os.listdir(Path(result_path) / "database")
+        for fold in rdb_folders:
+            if '.rdb' in fold:
+                logger.debug(f"Database folder removed: {fold}")
+                os.remove(Path(result_path) / "database" / fold)
+                break
+        time.sleep(1)

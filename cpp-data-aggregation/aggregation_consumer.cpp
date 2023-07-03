@@ -14,7 +14,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     //Initializing rank
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string context("Data Aggregation MPI Consumer Rank" + std::to_string(rank));
+    std::string context("Data Aggregation MPI Consumer Rank: " + std::to_string(rank));
     log_data(context, LLDebug, "Initialized rank");
 
     //Indicate Client creation
@@ -65,14 +65,12 @@ void run_aggregation_consumer(std::ofstream& timing_file,
                                                          list_length,
                                                          5, 100000);
             if(!list_is_ready) {
-                log_error(context, LLDebug, "There was an error in the "\
+                std::string list_size_error = "There was an error in the "\
                                          "aggregation scaling test.  "\
                                          "The list never reached size of " +
-                                         std::to_string(list_length));
-                throw std::runtime_error("There was an error in the "\
-                                         "aggregation scaling test.  "\
-                                         "The list never reached size of " +
-                                         std::to_string(list_length));
+                                         std::to_string(list_length);
+                log_error(context, LLDebug, list_size_error);
+                throw std::runtime_error(list_size_error);
             }
         }
 
@@ -127,18 +125,16 @@ int main(int argc, char* argv[]) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    std::string context("Data Aggregation Tests Consumer Rank " + std::to_string(rank));
+    std::string context("Data Aggregation Tests Consumer Rank: " + std::to_string(rank));
     log_data(context, LLDebug, "Rank initialized");
     log_data(context, LLDebug, "Starting Data Aggregation tests");
     double main_start = MPI_Wtime();
 
     // Get command line arguments
     if(argc==1) {
-        log_error(context, LLInfo, "The number tensor size in " \
-                                 "bytes must be provided as " \
-                                 "a command line argument.");
-        throw std::runtime_error("The expected list length must be "
-                                 "passed in.");
+        std::string list_length_error = "The expected list length must be passed in.";
+        log_error(context, LLInfo, list_length_error);
+        throw std::runtime_error(list_length_error);
     }
     std::string s_list_length(argv[1]);
     int list_length = std::stoi(s_list_length);
