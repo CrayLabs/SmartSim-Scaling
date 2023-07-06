@@ -1,11 +1,11 @@
 # Throughput Scaling Tests
 
-SmartSim-Scaling offers two throughput test versions listed below:
+SmartSim-Scaling offers two throughput test versions:
 
- 1. Throughput Co-located     (c++ client and SmartRedis Orchestrator)
- 2. Throughput Standard       (c++ client and SmartRedis Orchestrator)
+ 1. Throughput Co-located     (C++ Client and SmartRedis Orchestrator)
+ 2. Throughput Standard       (C++ Client and SmartRedis Orchestrator)
 
-Continue below for more information on all respective tests.
+Continue below for more information on respective tests.
 
 ## Client Description
 
@@ -32,13 +32,13 @@ the possible permutations that will be run.
 
 ```text
 NAME
-    driver.py throughput_colocated - 
+    driver.py throughput_colocated - Run throughput tests with colocated Orchestrator deployment
 
 SYNOPSIS
     driver.py throughput_colocated <flags>
 
 DESCRIPTION
-    Run ResNet50 inference tests with colocated Orchestrator deployment
+    Run throughput tests with colocated Orchestrator deployment
 
 FLAGS
     --exp_name=EXP_NAME
@@ -51,11 +51,11 @@ FLAGS
         Default: {}
         dict of runsettings for both app and db
     --nodes=NODES
-        Default: [60]
+        Default: [4,8,16,32,64,128]
         compute nodes to use for synthetic scaling app with
                       a co-located orchestrator database
     --db_cpus=DB_CPUS
-        Default: [36]
+        Default: [8]
         number of cpus per compute host for the database
     --db_port_DB_PORT
         Default: 6780
@@ -88,9 +88,10 @@ For demonstration, the following command could be run to execute a battery of
 tests in the same allocation
 
 ```bash
+# alloc must contain at least 60 (max client_nodes)
 python driver.py throughput_colocated --nodes=[20,40,60] --db_tpq=[1,2,4] \
-                                     --db_cpus=[8,16] --tensor_bytes=[] \
-                                     --clients_per_node=[16,48]
+                                     --db_cpus=[8,16] --tensor_bytes=[1024] \
+                                     --clients_per_node=[48]
 ```
 
 This command can be executed in a terminal with an interactive allocation
@@ -99,14 +100,14 @@ or used in a batch script such as the following for Slurm based systems
 ```bash
 #!/bin/bash
 
-#SBATCH -N 16
+#SBATCH -N 60
 #SBATCH --exclusive
 #SBATCH -t 10:00:00
 
 module load slurm
 python driver.py throughput_colocated --nodes=[20,40,60] --db_tpq=[1,2,4] \
-                                     --db_cpus=[8,16] --tensor_bytes=[] \
-                                     --clients_per_node=[16,48]
+                                     --db_cpus=[8,16] --tensor_bytes=[1024] \
+                                     --clients_per_node=[48]
 ```
 
 Examples of batch scripts to use are provided in the ``batch_scripts`` directory
@@ -130,13 +131,13 @@ The arguments which are lists control the possible permutations that will be run
 ```text
 
 NAME
-    driver.py throughput_standard - Run the throughput scaling tests
+    driver.py throughput_standard - Run throughput tests with standard Orchestrator deployment
 
 SYNOPSIS
     driver.py throughput_standard <flags>
 
 DESCRIPTION
-    Run the throughput scaling tests
+    Run throughput tests with standard Orchestrator deployment
 
 FLAGS
     --exp_name=EXP_NAME
@@ -158,10 +159,10 @@ FLAGS
         Default: []
         optionally supply hosts to launch the database on
     --db_nodes=DB_NODES
-        Default: [32]
+        Default: [4,8,16]
         number of compute hosts to use for the database
     --db_cpus=DB_CPUS
-        Default: [36]
+        Default: [8]
         number of cpus per compute host for the database
     --db_port=DB_PORT
         Default: 6780
@@ -170,10 +171,10 @@ FLAGS
         Default: 'ipogif0'
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
     --clients_per_node=CLIENTS_PER_NODE
-        Default: [32]
+        Default: [48]
         client tasks per compute node for the synthetic scaling producer app
     --client_nodes=CLIENT_NODES
-        Default: [128, 256, 512]
+        Default: [4,8,16,32,64,128]
         number of compute nodes to use for the synthetic scaling producer app
     --iterations=ITERATIONS
         Default: 100
@@ -201,7 +202,7 @@ battery of tests chosen by the user. There are multiple ways to run this.
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
-                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --db_cpus=[32] --net_ifname="ipogif0" \
                                     --run_db_as_batch=False
 ```
 
@@ -226,7 +227,7 @@ module load slurm
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
-                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --db_cpus=[32] --net_ifname="ipogif0" \
                                     --run_db_as_batch=False
 ```
 
@@ -237,9 +238,9 @@ python driver.py throughput_standard --client_nodes=[60] \
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
-                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --db_cpus=[32] --net_ifname="ipogif0" \
                                     --run_db_as_batch=False \
-                                    --db_hosts=[nid0001, ...]
+                                    --db_hosts=["nid0001", ...]
 
 ```
 
@@ -250,7 +251,7 @@ python driver.py throughput_standard --client_nodes=[60] \
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
-                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --db_cpus=[32] --net_ifname="ipogif0" \
                                     --run_db_as_batch=False \
                                     --db_node_feature='{"C":"V100", "exclusive": None}' \
 ```
