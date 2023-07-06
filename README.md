@@ -5,15 +5,15 @@ the scaling of SmartSim and the SmartRedis clients.
 
 ## Scaling Tests
 
-There are three types of scaling tests in the repository:
+There are three types of scaling tests in this repository:
 
  1. [Inference](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverinference)
  2. [Throughput](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverthroughput)
  3. [Data Aggregation](https://github.com/CrayLabs/SmartSim-Scaling/tree/usability-documentation/driverdataaggregation)
 
-All inference apps, all throughput apps and one data aggregation application, use a MPI + C++ 
+Both inference tests, both throughput tests and one data aggregation test, use a MPI + C++ 
 application to mimic an HPC workload making calls to SmartSim infrastructure. 
-Two out of three data aggregtion tests are written using a MPI + python application. 
+Two out of three data aggregtion tests use a MPI + Python application.
 These applications are used to test the performance of SmartSim across various system types.
 
 ## Building
@@ -54,7 +54,7 @@ the top level of the directory where you built or installed the SmartRedis libra
 After the cmake edit, both tests can be built by running
 
 ```bash
-  cd cpp-<test name> # ex. cpp-inference for the inference tests
+  cd <language name>-<test name> # ex. cpp-inference for the inference tests
   mkdir build && cd build
   cmake ..
   make
@@ -72,12 +72,6 @@ SYNOPSIS
 COMMANDS
     COMMAND is one of the following:
 
-     process_scaling_results
-       Create a results directory with performance data and plots
-       
-     scaling_plotter
-       Create a results directory with performance data and plots
-
      inference_colocated
        Run ResNet50 inference tests with colocated Orchestrator deployment
        Client: C++
@@ -94,7 +88,7 @@ COMMANDS
        Run throughput scaling tests with standard Orchestrator deployment
        Client: C++
        
-     aggregation-scaling
+     aggregation_scaling
        Run aggregation scaling tests with standard Orchestrator deployment
        Client: C++
        
@@ -103,8 +97,16 @@ COMMANDS
        Client: Python
        
      aggregation_scaling_python_fs
-       Run aggregation scaling tests with standard file system deployment
+       Run aggregation scaling tests with standard File System deployment
        Client: Python
+
+     process_scaling_results
+       Create a results directory with performance data and performance plots
+       Client: None
+       
+     scaling_plotter
+       Create just performance plots
+       Client:  None
      
 ```
 
