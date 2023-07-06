@@ -1,10 +1,10 @@
 # Data Aggregation Scaling Tests
 
-SmartSim-Scaling currently offers three data aggregation test versions listed below:
+SmartSim-Scaling currently offers three data aggregation test versions:
 
- 1. Data Aggregation Standard               (c++ client and SmartRedis Orchestrator)
- 2. Data Aggregation Standard Python        (python client and SmartRedis Orchestrator)
- 3. Data Aggregation Standard File System   (python client and file system)
+ 1. Data Aggregation Standard               (C++ Client and SmartRedis Orchestrator)
+ 2. Data Aggregation Standard Python        (Python Client and SmartRedis Orchestrator)
+ 3. Data Aggregation Standard File System   (Python Client and File System)
 
 Continue below for more information on all respective tests.
 
@@ -53,13 +53,13 @@ Note that data aggregation requires multiple threads.
 ```text
 
 NAME
-    driver.py aggregation_scaling - Run the data aggregation scaling tests
+    driver.py aggregation_scaling - Run the data aggregation scaling tests with standard Orchestrator deployment
 
 SYNOPSIS
     driver.py aggregation-scaling <flags>
 
 DESCRIPTION
-    Run the data aggregation scaling tests
+    Run the data aggregation scaling tests with standard Orchestrator deployment
 
 FLAGS
     --exp_name=EXP_NAME
@@ -136,7 +136,7 @@ of permutations computed based on the list inputs.
 python driver.py aggregation_scaling --client_nodes=[60] \
                                      --clients_per_node=[48] \
                                      --db_nodes=[16,32] \
-                                     --db_cpus=32 --net_ifname=ipogif0 \
+                                     --db_cpus=32 --net_ifname="ipogif0" \
                                      --run_db_as_batch=False \
                                      --tensors_per_dataset=[1,4]
 ```
@@ -158,7 +158,7 @@ module load slurm
 python driver.py aggregation_scaling --client_nodes=[60] \
                                      --clients_per_node=[48] \
                                      --db_nodes=[16,32] \
-                                     --db_cpus=32 --net_ifname=ipogif0 \
+                                     --db_cpus=32 --net_ifname="ipogif0" \
                                      --run_db_as_batch=False \
                                      --tensors_per_dataset=[1,4]
 ```
@@ -174,13 +174,13 @@ The ``aggregation_scaling_python`` test uses a python client and a SmartRedis Or
 ```text
 
 NAME
-    driver.py aggregation_scaling_python - Run the data aggregation scaling tests
+    driver.py aggregation_scaling_python - Run the data aggregation scaling tests with standard Orchestrator deployment
 
 SYNOPSIS
     driver.py aggregation_scaling_python <flags>
 
 DESCRIPTION
-    Run the data aggregation scaling tests
+    Run the data aggregation scaling tests with standard Orchestrator deployment
 
 FLAGS
   --exp_name=EXP_NAME
@@ -265,7 +265,7 @@ python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-b
                                             --clients_per_node=[48] \
                                             --db_nodes=[16] \
                                             --db_cpus=32 \
-                                            --net_ifname=ipogif0 \
+                                            --net_ifname="ipogif0" \
                                             --run_db_as_batch=False \
                                             --tensors_per_dataset=[1,4] \
                                             --tensor_bytes=[1024,8192,16384,32769,65538,131076,262152,524304,1024000] \
@@ -291,7 +291,7 @@ python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-b
                                             --clients_per_node=[48] \
                                             --db_nodes=[16] \
                                             --db_cpus=32 \
-                                            --net_ifname=ipogif0 \
+                                            --net_ifname="ipogif0" \
                                             --run_db_as_batch=False \
                                             --tensors_per_dataset=[1,4] \
                                             --tensor_bytes=[1024,8192,16384,32769,65538,131076,262152,524304,1024000] \
@@ -310,13 +310,13 @@ The ``aggregation_scaling_python_fs`` test uses a python client with the file sy
 ```text
 
 NAME
-    aggregation_scaling_python_fs - Run the data aggregation scaling tests
+    aggregation_scaling_python_fs - Run the data aggregation scaling tests with standard File System deployment
 
 SYNOPSIS
     driver.py aggregation_scaling_python_fs <flags>
 
 DESCRIPTION
-    Run the data aggregation scaling tests
+    Run the data aggregation scaling tests with standard File System deployment
 
 FLAGS
   --exp_name=EXP_NAME
