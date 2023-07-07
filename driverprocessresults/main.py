@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from utils import *
 from driverprocessresults.scaling_plotter import *
+import sys
 
 from pathlib import Path
 from statistics import median
@@ -17,8 +18,8 @@ logger = get_logger("Scaling Tests")
 
 class ProcessResults:
     def process_scaling_results(self, 
-                                scaling_results_dir="inference-colocated-scaling", 
-                                plot_type="",
+                                scaling_results_dir="inference-standard-scaling", 
+                                plot_type="database_nodes",
                                 overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
@@ -58,7 +59,7 @@ class ProcessResults:
                         logger.warning(f"Skipping {session_folder} could not process results")
                         logger.error(e)
                         continue
-                # collect all written csv into dataframes to concat
+                #collect all written csv into dataframes to concat
                 for run in tqdm(run_list, desc="Creating scaling plots...", ncols=80):
                     try:
                         scaling_plotter(run, scaling_results_dir, plot_type)
@@ -106,7 +107,6 @@ class ProcessResults:
         logger.debug(f"Running with all stats dir: {all_stats_dir}")
         if delete_previous and session_stats_dir.is_dir():
             shutil.rmtree(session_stats_dir)
-        
         if not session_stats_dir.is_dir():
             os.makedirs(session_stats_dir)
             function_times = {}
@@ -141,7 +141,7 @@ class ProcessResults:
                     cls._make_hist_plot(function_times['run_script'], 'run_script()', 'run_script.pdf', session_stats_dir)
                     cls._make_hist_plot(function_times['run_model'], 'run_model()', 'run_model.pdf', session_stats_dir)
                     logger.debug("Run model completed")
-                function_types = ["client()", "put_tensor", "unpack_tensor", "get_list", "main()"] 
+                function_types = ["put_tensor", "unpack_tensor", "get_list", "main()"] 
                 for function in function_types:
                     if function in function_times:
                         logger.debug(f"{function} started")
@@ -150,7 +150,6 @@ class ProcessResults:
 
             except KeyError as e:
                 raise KeyError(f'{e} not found in function_times for run {session_name}')
-            
             data = cls._make_stats(session_path, function_times)
             data_df = pd.DataFrame(data, index=[0])
             file_name = session_stats_dir / ".".join((session_name, "csv"))
@@ -159,14 +158,13 @@ class ProcessResults:
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):
         x = plt.hist(data, color = 'blue', edgecolor = 'black', bins = 500)
-        plt.title(title)
+        plt.title(title)                                   
         plt.xlabel('Time (s)')
         plt.ylabel('MPI Ranks')
         med = median(data)
         min_ylim, max_ylim = plt.ylim()
         plt.axvline(med, color='red', linestyle='dashed', linewidth=1)
         plt.text(med, max_ylim*0.9, '   Median: {:.2f}'.format(med))
-
         # save the figure in the result dir
         file_path = Path(session_stats_dir) / fname
         plt.savefig(file_path)

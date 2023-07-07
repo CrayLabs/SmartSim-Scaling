@@ -27,20 +27,20 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8],
+                           db_nodes=[4,8,16],
                            db_cpus=[8],
-                           db_tpq=[1],
+                           db_tpq=[8],
                            db_port=6780,
                            batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
-                           clients_per_node=[48],
-                           client_nodes=[1],
+                           clients_per_node=[18],
+                           client_nodes=[4,8,16,32,64,128],
                            rebuild_model=False,
-                           iterations=2,
+                           iterations=100,
                            languages=["cpp", "fortran"],
-                           wall_time="05:00:00",
+                           wall_time="15:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
