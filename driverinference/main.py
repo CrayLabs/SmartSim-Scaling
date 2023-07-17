@@ -159,7 +159,7 @@ class Inference:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
             check_database_folder(result_path, logger)
-        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",

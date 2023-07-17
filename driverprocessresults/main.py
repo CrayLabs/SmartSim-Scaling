@@ -18,7 +18,7 @@ logger = get_logger("Scaling Tests")
 
 class ProcessResults:
     def process_scaling_results(self, 
-                                scaling_results_dir="inference-standard-scaling", 
+                                scaling_results_dir="throughput-standard-scaling", 
                                 plot_type="database_nodes",
                                 overwrite=True):
             """Create a results directory with performance data and plots
@@ -49,46 +49,46 @@ class ProcessResults:
                 # write csv each so this function is idempotent
                 # csv's will not be written if they are already created
                 #tqdm creates a smart progress bar for the loops
-                for session_folder in tqdm(session_folders, desc="Processing scaling results...", ncols=80):
-                    try:
-                        self._create_run_csv(session_folder, delete_previous=overwrite)
-                        logger.debug(f"csv created for session_folder: {session_folder}")
-                    # want to catch all exceptions and skip runs that may
-                    # not have completed or finished b/c some reason i.e. node failure
-                    except Exception as e:
-                        logger.warning(f"Skipping {session_folder} could not process results")
-                        logger.error(e)
-                        continue
+                # for session_folder in tqdm(session_folders, desc="Processing scaling results...", ncols=80):
+                #     try:
+                #         self._create_run_csv(session_folder, delete_previous=overwrite)
+                #         logger.debug(f"csv created for session_folder: {session_folder}")
+                #     # want to catch all exceptions and skip runs that may
+                #     # not have completed or finished b/c some reason i.e. node failure
+                #     except Exception as e:
+                #         logger.warning(f"Skipping {session_folder} could not process results")
+                #         logger.error(e)
+                #         continue
                 #collect all written csv into dataframes to concat
                 for run in tqdm(run_list, desc="Creating scaling plots...", ncols=80):
                     try:
                         scaling_plotter(run, scaling_results_dir, plot_type)
-                        logger.debug(f"Plots created for run: {run}")
+                        logger.debug(f"Data read and saved for: {run}")
                     # want to catch all exceptions and skip runs that may
                     # not have completed or finished b/c some reason i.e. node failure
                     except Exception as e:
                         logger.warning(f"Skipping {run} in {scaling_results_dir}: could not process results")
                         logger.error(e)
                         continue
-                for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80):
-                    try:
-                        session_name = os.path.basename(session)
-                        split = os.path.dirname(session)
-                        run_name = os.path.basename(split)
-                        stats_path = os.path.join(final_stat_dir, run_name, session_name, session_name + ".csv")
-                        run_df = pd.read_csv(str(stats_path))
-                        dataframes.append(run_df)
-                        logger.debug(f"Results collected for session: {session}")
+                # for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80):
+                #     try:
+                #         session_name = os.path.basename(session)
+                #         split = os.path.dirname(session)
+                #         run_name = os.path.basename(split)
+                #         stats_path = os.path.join(final_stat_dir, run_name, session_name, session_name + ".csv")
+                #         run_df = pd.read_csv(str(stats_path))
+                #         dataframes.append(run_df)
+                #         logger.debug(f"Results collected for session: {session}")
                     
-                    # catch all and skip for reason listed above
-                    except Exception as e:
-                        logger.warning(f"Skipping path {session}: could not read results csv")
-                        logger.error(e)
-                        continue
-                final_df = pd.concat(dataframes, join="outer")
-                exp_name = os.path.basename(scaling_results_dir)
-                csv_path = final_stat_dir / f"{exp_name}-{get_date()}.csv"
-                final_df.to_csv(str(csv_path))
+                #     # catch all and skip for reason listed above
+                #     except Exception as e:
+                #         logger.warning(f"Skipping path {session}: could not read results csv")
+                #         logger.error(e)
+                #         continue
+                # final_df = pd.concat(dataframes, join="outer")
+                # exp_name = os.path.basename(scaling_results_dir)
+                # csv_path = final_stat_dir / f"{exp_name}-{get_date()}.csv"
+                # final_df.to_csv(str(csv_path))
 
             except Exception:
                 logger.error(f"Could not preprocess results for {scaling_results_dir}")
