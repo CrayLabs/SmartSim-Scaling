@@ -122,7 +122,7 @@ def scaling_plotter(run_cfg_path, scaling_test_name, var_input):
         step = math.ceil((stop-start) / (len(ordered_client_total)))
         xticks = list(range(start, stop, step)) #list()
         print(f"xticks: {xticks}")
-        function_names = ['put_tensor']
+        function_names = ['unpack_tensor', 'put_tensor']
         languages = df['language'].unique()
         legend_entries = []
         var_list = sorted(df[var_input].unique())
@@ -181,9 +181,12 @@ def scaling_plotter(run_cfg_path, scaling_test_name, var_input):
                     [col.set_alpha(0.3) for col in plot["bodies"]]
                     props_dict = dict(color=plot["cbars"].get_color().flatten())
                     entry = plot["cbars"]
-                    legend_entries.append(entry)
+                    legend_entries.append(entry)    
                     #means = [np.mean(function_df.groupby('client_total').get_group(client)) for client in ordered_client_total]
-                    #axs[lang_idx].plot(new_xticks, means, ':', color=props_dict['color'], alpha=0.5)     
+                    means = [np.mean(function_df.groupby('client_total').get_group(client)['time']) for client in ordered_client_total]
+                    print(f"MEANS: {means}\n")
+                    #sys.exit()
+                    axs[lang_idx].plot(new_xticks, means, ':', color=props_dict['color'], alpha=0.5) 
 
                 data_labels = [f"{var} DB nodes" for var in var_list]
                 axs[lang_idx].legend(legend_entries, data_labels, loc='upper left')

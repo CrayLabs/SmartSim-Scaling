@@ -36,10 +36,10 @@ class Inference:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[4,8,16,32,64,128],
+                           client_nodes=[4,8,16,32,64,128], #client_nodes
                            rebuild_model=False,
                            iterations=100,
-                           languages=["cpp", "fortran"],
+                           languages=["cpp"],
                            wall_time="15:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
@@ -158,15 +158,14 @@ class Inference:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
-            check_database_folder(result_path, logger)
         #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
   
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[1],
-                            clients_per_node=[12,24,36,60,96],
+                            nodes=[16],
+                            clients_per_node=[3,6,9,18],
                             db_cpus=[12],
                             db_tpq=[1],
                             db_port=6780,
@@ -279,7 +278,7 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
 
     @staticmethod
@@ -423,8 +422,7 @@ class Inference:
 
         db_opts = dict(
             db_cpus=db_cpus,
-            limit_app_cpus=pin_app_cpus,
-            threads_per_queue=db_tpq,
+            threads_per_queue=db_tpq, #limit_app_cpus=False,
             # turning this to true can result in performance loss
             # on networked file systems(many writes to db log file)
             debug=True,

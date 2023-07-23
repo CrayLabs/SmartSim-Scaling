@@ -3,9 +3,9 @@
     <br />
     <br />
     <div display="inline-block">
-        <a href="https://github.com/CrayLabs/SmartRedis"><b>Home</b></a>&nbsp;&nbsp;&nbsp;
-        <a href="https://www.craylabs.org/docs/installation.html#smartredis"><b>Install</b></a>&nbsp;&nbsp;&nbsp;
-        <a href="https://www.craylabs.org/docs/smartredis.html"><b>Documentation</b></a>&nbsp;&nbsp;&nbsp;
+        <a href="https://github.com/CrayLabs/SmartSim-Scaling"><b>Home</b></a>&nbsp;&nbsp;&nbsp;
+        <a href="https://www.craylabs.org/docs/installation_instructions/basic.html"><b>Install</b></a>&nbsp;&nbsp;&nbsp;
+        <a href="https://www.craylabs.org/docs/overview.html"><b>Documentation</b></a>&nbsp;&nbsp;&nbsp;
         <a href="https://join.slack.com/t/craylabs/shared_invite/zt-nw3ag5z5-5PS4tIXBfufu1bIvvr71UA"><b>Slack</b></a>&nbsp;&nbsp;&nbsp;
         <a href="https://github.com/CrayLabs"><b>Cray Labs</b></a>&nbsp;&nbsp;&nbsp;
     </div>
@@ -18,50 +18,77 @@
 # SmartSim Scaling
 
 This repository holds all of the scripts and materials for testing
-the scaling of SmartSim and the SmartRedis clients.
+the scaling of SmartSim and SmartRedis clients.
 
-## Scalability Tests
+## Scalability Tests Supported
 
 The SmartSim-Scaling repo offers three scalability tests with 
-six total permutations shown below:
+six total versions:
 
-#### Inference Tests
+#### `Inference Tests`
 
 | Inference Type | Client | Message Passing Interface |
-| --- | --- | --- |
+| :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
-#### Throughput Tests
+#### `Throughput Tests`
 
 | Throughput Type | Client | Message Passing Interface |
-| --- | --- | --- |
+| :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
-#### Data Aggregation Tests
+#### `Data Aggregation Tests`
 
 | Data Aggregation Type | Client | Message Passing Interface |
-| --- | --- | --- |
+| :--- | --- | --- |
 | Standard | C++ | MPI |
 | Standard | Python | MPI |
 | Standard | Python | File System |
 
+#### `combined graph test`
+
+| Scaling Type | Type | Client | Message Passing Interface |
+| :--- | --- | --- | --- |
+| Inference | Standard | C++ | MPI |
+| Inference | Colocated | C++ | MPI |
+| Throughput | Standard | C++ | MPI |
+| Throughput | Colocated | C++ | MPI |
+| Data Aggregation | Standard | C++ | MPI |
+| Data Aggregation | Standard | Python | MPI |
+| Data Aggregation | Standard | Python | File System |
+
 The scalability tests mimic an HPC workload by making calls to SmartSim 
-and SmartRedis infrastructure to complete highly complex, data-intensive 
-tasks that are spread across compute resources, which each run parts of the task in parallel. 
-These applications are used
-to test the performance of SmartSim and SmartRedis across various system types.
+and SmartRedis infrastructure to complete in parallel highly complex, data-intensive 
+tasks that are spread across compute resources. 
+These applications are used to test the performance of SmartSim and 
+SmartRedis across various system types.
+
+## Difference between colocated and standard?
+
+The scaling repo offers two types of Orchestrator deployement options: Standard and Colocated.
+
+1. `Colocated (non-Clustered Deployement)`
+⋅⋅* When running a Colocated test, your database will be deployed on the same node as your application.
+
+2. `Standard (Clustered Deployement)`
+⋅⋅* When running with Standard deployement, your database will be deployed on different compute nodes
+than your application. You will notice that all Standard tests share a `db_nodes` flag. By setting the flag to `db_nodes=[4,8]` - you are telling the program to split up your database to four shards on the first permutation, then eight shards on the second permutation.
+
+For more information on Clustered and Colocated Orchestrator deployement - please select here.
+https://www.craylabs.org/docs/orchestrator.html
 
 ## Building
 
 To run the scaling tests, SmartSim and SmartRedis will need to be
-installed. See [our installation docs](https://www.craylabs.org/docs/installation.html)
-for instructions.
+installed. See [our installation docs](https://www.craylabs.org/docs/installation_instructions/basic.html) for instructions.
 
 For the inference tests, be sure to have installed SmartSim with support
 for the device (CPU or GPU) you wish to run the tests on, as well as
-have built support for the PyTorch backend.
+have built support for the PyTorch backend. If you would also like to 
+run the Fortran tests, make sure to run `make lib-with-fortran` from 
+the intall docs for SmartRedis.
 
 This may look something like the following:
 
@@ -71,7 +98,7 @@ smart build --device gpu
 ```
 
 But please consult the documentation for other peices like specifying compilers,
-CUDA, cuDNN, and other build settings.
+CUDA, cuDNN, and other build settings. 
 
 Once SmartSim is installed, the Python dependencies for the scaling test and
 result processing/plotting can be installed with
@@ -85,13 +112,30 @@ You will need to install ``mpi4py`` in your python environment. The install inst
 can be found by selecting [mpi4py docs](https://mpi4py.readthedocs.io/en/stable/install.html).
 
 Lastly, the C++ applications themselves need to be built. One CMake edit is required.
-Near the top of the CMake file, change the path to the ``SMARTREDIS`` variable to
-the top level of the directory where you built or installed the SmartRedis library.
+Near the top of the `CMakeLists.txt`, on the line
+`set(SMARTREDIS "../../SmartRedis" CACHE PATH "Path to SmartRedis root directory")` - 
+change the path to the ``SMARTREDIS`` variable to
+the top level of the directory where you built or installed the SmartRedis library. 
+You will need to complete this task per scaling study you would like to run. 
+The paths are listed as:
 
-After the cmake edit, both tests can be built by running
+1. Inference
+  - `cpp-inference/CMakeLists.txt`
+1. Throughput
+  - `cpp-throughput/CMakeLists.txt`
+1. Data Aggregation 
+  - `cpp-data-aggregation/CMakeLists.txt`
+  - `cpp-py-data-aggregation/db/CMakeLists.txt`
+  - `cpp-py-data-aggregation/fs/CMakeLists.txt`
+
+> Note that there are three different `CMakeLists.txt` files for the Data Aggregation tests.
+You will need to setup one per Data Aggregation scaling test you would like to run.
+
+
+After the cmake edit, all tests can be built by running
 
 ```bash
-  cd cpp-<test name> # ex. cpp-inference for the inference tests
+  cd <language name>-<test name> # ex. cpp-inference for the cpp inference tests
   mkdir build && cd build
   cmake ..
   make
@@ -150,11 +194,40 @@ COMMANDS
 Each of the command provides their own help menu as well that shows the
 arguments possible for each.
 
-## Results 
+## Results
 
-1. where the results are stored
-2. the format of folder names
-3. what is stored
+The output of each Scalability Test is detail below.
+
+### Where the results are stored
+
+When a scalability test is first initialized, a nested folder named `results/'exp_name'`
+is created. The `exp_name` is captured by the `exp_name` flag value when you run your 
+scaling test. Such that if I ran `python driver.py inference_standard` with the default
+`exp_name`, the path to my results would be `results/inference-standard-scaling`. 
+
+Each time you run a scalability test it is considered a single run. This is how the 
+`results/'exp_name'` is organized. Per time you run a scalability test, the results 
+will be within a folder named `run-YEAR-MONTH-DAY-TIME`. A results folder with multiple
+runs of inference standard with the default `exp_name` would look like:
+
+results/
+├─ inference-standard-scaling/
+│  ├─ run-2023-07-17-13:21:17/
+│  │  ├─ database/
+│  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4/
+│  │  ├─ infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-f8a6/
+│  │  ├─ run.cfg
+│  │  ├─ scaling-2023-07-19.log
+│  ├─ run-2023-07-19-11:33:57
+│  ├─ run-2023-07-19-11:40:08
+
+Within each run folder there is a subset of files that will be useful to you.
+There is a file named `run.cfg` that contains the flag
+parameter information of the run. There is a `infer-sess-...` folder
+which contains all the timings for each rank, a `run.cfg` file that contains 
+the permutation values for that session as well as useful debugging files.
+Lastly, there is a file named `scaling-DATE.log` that contains all the output
+from your terminal during the scalability test run.
 
 ## Performance Results
 

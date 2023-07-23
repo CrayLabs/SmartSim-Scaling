@@ -6,14 +6,12 @@ SmartSim-Scaling currently offers three data aggregation test versions:
  2. Data Aggregation Standard Python        (Python Client and SmartRedis Orchestrator)
  3. Data Aggregation Standard File System   (Python Client and File System)
 
-Continue below for more information on all respective tests.
-
 ## Client Description
 
 The data aggregation scaling test runs two applications. The first application
 is an MPI application that produces datasets that are added to an aggregation list.
 In this producer application, each MPI rank has a single-threaded client.  The second
-application is a consumer application.  This application consumes the aggregation
+application is a consumer application. This application consumes the aggregation
 lists that are produced by the first application.  The consumer application
 can be configured to use multiple threads for data aggregation.  The producer and consumer
 applications are running at the same time, but the producer application waits for the
@@ -38,15 +36,16 @@ invokes the following SmartRedis commands:
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-## Why only Standard Deployement for Data Aggregation?
+## Why Standard Deployement for Data Aggregation vs Colocated?
 
-SmartSim-Scaling supports standard deployment for all three data aggregation tests. Standard deployement means that the Orchestrator database and the application will be launched on different nodes. Data aggregation requires each thread be assigned to a single database shard. Furthermore, multiple nodes are needed so that a single shard of the database may run on a single node. 
+SmartSim-Scaling supports standard deployment for all three data aggregation tests. For standard deployement, the Orchestrator database and the application will be launched on different client nodes. To perform data aggregation, each thread has to be assigned to a single shard of a database hosted on a client node. Hence, multiple client nodes are needed for sharded database support. 
 
-Since co-located deployment allots a singlular database, there is no performance benefit with co-located deployement since it would aggregate the data in serial. For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time.
+Co-located deployment supports a database on the same client node as the application. If we used 
+co-located deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial. For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time.
 
-## Data Aggregation Standard - C++ client
+## Data Aggregation Standard - C++ Client
 
-The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. If your application is written c++, you may want to run data aggregation with a c++ client.
+The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. If your application is written C++, you may want to run data aggregation with a C++ client.
 
 Note that data aggregation requires multiple threads. 
 
@@ -168,7 +167,7 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Data Aggregation Standard - Python Client
 
-The ``aggregation_scaling_python`` test uses a python client and a SmartRedis Orchestrator. Depending on your user application, you may want to run the scaling test with a python client.
+The ``aggregation_scaling_python`` test uses a Python client and a SmartRedis Orchestrator. Depending on your user application, you may want to run the scaling test with a python client.
 
 
 ```text
@@ -305,7 +304,7 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Data Aggregation Standard - Python Client and File System
 
-The ``aggregation_scaling_python_fs`` test uses a python client with the file system in replacement of SmartRedis. This test demonstrates a significant performance hit from using the file system instead of the SmartRedis Orchestrator.
+The ``aggregation_scaling_python_fs`` test uses a Python client with the file system in replacement of SmartRedis. This test demonstrates a significant performance hit from using the file system instead of the SmartRedis Orchestrator.
 
 ```text
 

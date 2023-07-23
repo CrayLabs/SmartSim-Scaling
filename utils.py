@@ -264,21 +264,3 @@ def print_yml_file(path, logger):
         logger.info(f"Running {key} with value: {value}")
     for key, value in config._sections['attributes'].items():
         logger.info(f"Running {key} with value: {value}")
-
-def check_database_folder(result_path, logger):
-    """Cleans the database folder within results.
-
-    :param result_path: path to results folder
-    :type result_path: str
-    :param logger: name of logger
-    :type logger: str
-    """
-    time.sleep(5)
-    for _ in range(5):
-        rdb_folders = os.listdir(Path(result_path) / "database")
-        for fold in rdb_folders:
-            if '.rdb' in fold:
-                logger.debug(f"Database folder removed: {fold}")
-                os.remove(Path(result_path) / "database" / fold)
-                break
-        time.sleep(1)
