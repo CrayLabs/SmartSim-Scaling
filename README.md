@@ -252,18 +252,18 @@ Note that the first iteration can take longer (up to several seconds) than the r
 is due to the DB loading libraries when the first RedisAI call is made. In the following plots, we excluded
 the first iteration time.
 
-![Colocated inference plots dark theme](/figures/colo_dark.png#gh-light-mode-only "Colocated inference")
-![Inference plots ligh theme](/figures/colo_light.png#gh-light-mode-only "Colocated inference")
+![Colocated inference plots dark theme](/figures/colo_dark.png "Colocated inference")
+![Inference plots ligh theme](/figures/colo_light.png "Colocated inference")
 
 ### Throughput
 
 #### Throughput Standard
-![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png#gh-light-mode-only "Throughput Standard")
-![Throughput Std Put](/figures/put_tensor_thro_std.png#gh-light-mode-only "Throughput Standard")
+![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png "Throughput Standard")
+![Throughput Std Put](/figures/put_tensor_thro_std.png "Throughput Standard")
 
 #### Throughput Colocated
-![Throughput colo Unpack](/figures/unpack_tensor_thro_colo.png#gh-light-mode-only "Colocated Throughput")
-![Throughput colo put](/figures/put_tensor_thro_colo.png#gh-light-mode-only "Colocated Throughput")
+![Throughput colo Unpack](/figures/unpack_tensor_thro_colo.png "Colocated Throughput")
+![Throughput colo put](/figures/put_tensor_thro_colo.png "Colocated Throughput")
 
 
 ### Data Aggregation
@@ -271,17 +271,17 @@ Input
 
 #### Data Aggregation
 Info on test
-![Data Agg Get List](/figures/get_list_data_agg.png#gh-light-mode-only "Data Aggregation Standard")
+![Data Agg Get List](/figures/get_list_data_agg.png "Data Aggregation Standard")
 
 #### Data Aggregation Py
 Info on test
-![Data Agg Py Get List](/figures/get_list_data_agg_py.png#gh-light-mode-only "Data Aggregation Py Standard")
+![Data Agg Py Get List](/figures/get_list_data_agg_py.png "Data Aggregation Py Standard")
 ![Data Agg Py Poll List](/figures/poll_list_data_agg_py.png "Data Aggregation Py Standard")
 
 #### Data Aggregation Py Fs
 Info on test
-![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png#gh-light-mode-only "Data Aggregation Py Fs Standard")
-![Data Agg Py Fs Poll List](/figures/poll_list_data_agg_fs.png#gh-light-mode-only "Data Aggregation Py Fs Standard")
+![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
+![Data Agg Py Fs Poll List](/figures/poll_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
 
 #### Data Aggregation Performance Analysis
 
