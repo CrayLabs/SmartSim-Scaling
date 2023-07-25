@@ -25,21 +25,21 @@ the scaling of SmartSim and SmartRedis clients.
 The SmartSim-Scaling repo offers three scalability tests with 
 six total versions:
 
-#### `Inference Tests`
+#### Inference Tests
 
 | Inference Type | Client | Message Passing Interface |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
-#### `Throughput Tests`
+#### Throughput Tests
 
 | Throughput Type | Client | Message Passing Interface |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
-#### `Data Aggregation Tests`
+#### Data Aggregation Tests
 
 | Data Aggregation Type | Client | Message Passing Interface |
 | :--- | --- | --- |
