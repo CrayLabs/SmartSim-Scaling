@@ -1,4 +1,4 @@
-## Performance Results
+# Performance Results
 
 The performance of SmartSim is detailed below across various types of systems.
 
@@ -6,11 +6,7 @@ Note that the first iteration can take longer (up to several seconds) than the r
 is due to the DB loading libraries when the first RedisAI call is made. In the following plots, we excluded
 the first iteration time.
 
-## Inference
-
-The performance of SmartSim and SmartRedis using Inference is detailed below.
-
-### Inference Standard
+## Inference Standard
 
 The following are scaling results from the cpp-inference scaling tests with ResNet-50
 and the imagenet dataset. For more information on these scaling tests, please see
@@ -19,7 +15,7 @@ the SmartSim paper on arXiv
 ![Inference plots dark theme](/figures/all_in_one_violin_dark.png#gh-dark-mode-only "Standard inference")
 ![Inference plots ligh theme](/figures/all_in_one_violin_light.png#gh-light-mode-only "Standard inference")
 
-### Colocated Inference
+## Colocated Inference
 
 The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
 each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
@@ -28,67 +24,59 @@ were run on 8 CPUs and 8 threads per queue.
 ![Colocated inference plots dark theme](/figures/colo_dark.png "Colocated inference")
 ![Inference plots ligh theme](/figures/colo_light.png "Colocated inference")
 
-### Inference Performance Analysis
+## Inference Performance Analysis
 
 INSERT ANALYSIS
 
-## Throughput
-
-The performance of SmartSim and SmartRedis using Throughput is detailed below.
-
-### Throughput Standard
+## Throughput Standard
 The following are scaling results for a standard throughput test, run on !12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run, and the databases
 were run on 8 CPUs and 8 threads per queue. 
 
-#### Unpack Tensor
+#### Unpack Tensor - retrieve the data
 ![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png "Throughput Standard")
 
-#### Put Tensor
+#### Put Tensor - send image to database
 ![Throughput Std Put](/figures/put_tensor_thro_std.png "Throughput Standard")
 
-### Throughput Colocated
+## Throughput Colocated
 The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
 
-#### Unpack Tensor
+#### Unpack Tensor - retrieve the data
 ![Throughput colo Unpack](/figures/unpack_tensor_thro_colo.png "Colocated Throughput")
 
-#### Put Tensor
+#### Put Tensor - send image to database
 ![Throughput colo put](/figures/put_tensor_thro_colo.png "Colocated Throughput")
 
-### Throughput Performance Analysis
+## Throughput Performance Analysis
 
 INSERT ANALYSIS
 
-### Data Aggregation
-
-The performance of SmartSim and SmartRedis using Data Aggregation is detailed below.
-
-#### Data Aggregation Standard
+## Data Aggregation Standard
 
 The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
 
-#### Get List
+#### Get List - retrieve the data from the aggregation list
 ![Data Agg Get List](/figures/get_list_data_agg.png "Data Aggregation Standard")
 
-#### Data Aggregation Standard Py
+## Data Aggregation Standard Py
 The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
 
-#### Get List
+#### Get List - retrieve the data from the aggregation list
 ![Data Agg Py Get List](/figures/get_list_data_agg_py.png "Data Aggregation Py Standard")
 
-#### Poll List
+#### Poll List - check when the next aggregation list is ready
 ![Data Agg Py Poll List](/figures/poll_list_data_agg_py.png "Data Aggregation Py Standard")
 
-#### Data Aggregation Standard Py Fs
+## Data Aggregation Standard Py Fs
 The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
 
-#### Get List
+#### Get List - retrieve the data from the aggregation list
 ![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
 
-#### Poll List
+#### Poll List - check when the next aggregation list is ready
 ![Data Agg Py Fs Poll List](/figures/poll_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
 
-#### Data Aggregation Performance Analysis
+## Data Aggregation Performance Analysis
 
 INSERT ANALYSIS
 
