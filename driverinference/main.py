@@ -23,7 +23,7 @@ class Inference:
     def inference_standard(self,
                            exp_name="inference-standard-scaling",
                            launcher="auto",
-                           run_db_as_batch=True,
+                           run_db_as_batch=False,
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
@@ -36,10 +36,10 @@ class Inference:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[4,8,16,32,64,128], #client_nodes
+                           client_nodes=[2,4,8,16], #client_nodes
                            rebuild_model=False,
-                           iterations=100,
-                           languages=["cpp"],
+                           iterations=100, #--exclusive -t 10:00:00
+                           languages=["cpp","fortran"],
                            wall_time="15:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
@@ -164,9 +164,9 @@ class Inference:
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[16],
-                            clients_per_node=[3,6,9,18],
-                            db_cpus=[12],
+                            nodes=[4,8,12,16],
+                            clients_per_node=[18],
+                            db_cpus=[8],
                             db_tpq=[1],
                             db_port=6780,
                             pin_app_cpus=[False],
@@ -278,7 +278,7 @@ class Inference:
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
-        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
 
     @staticmethod

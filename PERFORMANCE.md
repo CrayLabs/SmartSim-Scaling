@@ -49,7 +49,13 @@ The following are scaling results for a colocated throughput test, !run on 12 36
 
 ## Throughput Performance Analysis
 
-INSERT ANALYSIS
+1. Throughput std has greater density when database nodes increase. Outliers become greater as 
+client total increases. Takes much greater time than colo tho bc its having to communicate
+with multiple shards of the db.
+2. Put/Unpack tensor for Throughput colo stays consistent with density across all client totals.
+Doesnt seem like theres a difference in client func density as client totals increase. Times 
+it takes for Put/Unpack tensor is insanely faster than throughput std. Less time it takes to 
+communicate since the db and app are on the same node.
 
 ## Data Aggregation Standard
 
@@ -78,7 +84,11 @@ The following are scaling results for a colocated throughput test, !run on 12 36
 
 ## Data Aggregation Performance Analysis
 
-INSERT ANALYSIS
+1. std: density increases as client total increases. more db nodes the less time it takes per
+client total. But as client total increases the more time it takes.
+2. std py: for get_list it seems less stable than with a C++ client. get_list and before takes
+much less time than the fs one.
+3. std py fs: however poll list seems to be faster on fs. why is poll list fastest for fs
 
 ## Advanced Performance Tips
 

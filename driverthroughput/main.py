@@ -137,11 +137,7 @@ class Throughput:
         except Exception as e:
             #logger.warning(f"Skipping {run} in {scaling_results_dir}: could not process results")
             logger.error(e)
-            #continue
-            #Added to clean up db folder bc of issue with exp.stop()
-            #time.sleep(5)
-            #check_database_folder(result_path, logger)
-        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
     def _create_throughput_session(cls,

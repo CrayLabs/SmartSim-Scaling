@@ -1,4 +1,4 @@
-## Process Results
+# Process Results
 
 SmartSim-Scaling offers support to plot numeric data produced by
 a complete scalability test. Currently, we support one statistical graphing
@@ -28,7 +28,7 @@ The following client functions per scaling tests are listed below:
 > meaning the graphs will automatically be produced.
 
 
-### Collecting Performance Results
+## Collecting Performance Results
 
 The ``process_scaling_results`` function will collect the produced timings 
 from ``results/SCALING-TEST-NAME/RUN#`` and make a series of plots for each client function. 
@@ -54,14 +54,17 @@ DESCRIPTION
 
 FLAGS
     --scaling_dir=SCALING_DIR
-        Default: 'inference-scaling'
+        Default: 'inference-standard-scaling'
+        directory to create results from
+    --plot_type=PLOT_TYPE
+        Default: 'database_nodes'
         directory to create results from
     --overwrite=OVERWRITE
         Default: True
         overwrite any existing results
 ```
 
-For example for the inference tests (if you don't change the output dir name)
+For example for the inference standard tests (if you don't change the output dir name)
 you can run:
 
 ```bash
@@ -74,7 +77,7 @@ If you would like to rather run the `throughput-colocated-scaling`:
 python driver.py process_scaling_results --scaling_dir="throughput-colocated-scaling"
 ```
 
-### Plot Performance Results
+## Plot Performance Results
 
 The ``scaling_read_data`` function will collect the produced timings 
 from ``results/SCALING-TEST-NAME/RUN#`` and create a pandas dataframe
@@ -106,20 +109,13 @@ FLAGS
         Example: throughput-standard-scaling
 ```
 
-For example for the inference tests (if you don't change the output dir name)
-you can run:
+For example for the inference standard tests you can run:
 
 ```bash
-python driver.py scaling_read_data
+python driver.py scaling_read_data --scaling_dir="inference-standard-scaling" --run_cfg_path="results/inference-standard-scaling/run-2023-07-05-21:26:18"
 ```
 
-If you would like to rather run the `throughput-colocated-scaling`:
-
-```bash
-python driver.py scaling_read_data --scaling_dir="throughput-colocated-scaling"
-```
-
-### Read and Store Results
+## Read and Store Results
 
 The ``scaling_plotter`` function will plot the performance data. Using the 
 dataframe produced by ``scaling_read_data``, the function will create
@@ -153,15 +149,8 @@ FLAGS
         Example: database_nodes
 ```
 
-For example for the inference tests (if you don't change the output dir name)
-you can run:
+For example for the inference standard tests you can run:
 
 ```bash
-python driver.py scaling_plotter
-```
-
-If you would like to rather run the `throughput-colocated-scaling`:
-
-```bash
-python driver.py scaling_plotter --scaling_dir="throughput-colocated-scaling"
+python driver.py scaling_plotter --scaling_dir="inference-standard-scaling" --run_cfg_path="results/inference-standard-scaling/run-2023-07-05-21:26:18" --var_input="database_nodes"
 ```

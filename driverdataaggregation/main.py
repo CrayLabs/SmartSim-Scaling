@@ -166,10 +166,7 @@ class DataAggregation:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
-            #Added to clean up db folder bc of issue with exp.stop()
-            #time.sleep(5)
-            #check_database_folder(result_path, logger)
-        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
     def _create_aggregation_producer_session_cpp(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
@@ -508,10 +505,7 @@ class DataAggregation:
 
                 # stop database after this set of permutations have finished
                 exp.stop(db)
-                #Added to clean up db folder bc of issue with exp.stop()
-                #time.sleep(5)
-                #check_database_folder(result_path, logger)
-            #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+            self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
     @classmethod
     def _create_aggregation_producer_session_python(cls, exp, prod_node_feature, nodes, tasks, db_nodes, db_cpus,
@@ -663,7 +657,7 @@ class DataAggregation:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"ERROR: One of the scaling tests failed \
                                 {aggregation_consumer_sessions.name}")
-        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
     @classmethod
     def _create_aggregation_producer_session_python_fs(cls, exp, prod_node_feature, nodes, tasks, iterations,
