@@ -20,26 +20,32 @@
 This repository holds all of the scripts and materials for testing
 the scaling of SmartSim and SmartRedis clients.
 
+The scalability tests mimic an HPC workload by making calls to SmartSim 
+and SmartRedis infrastructure to complete in parallel highly complex, data-intensive 
+tasks that are spread across compute resources. 
+These applications are used to test the performance of SmartSim and 
+SmartRedis across various system types.
+
 ## Scalability Tests Supported
 
 The SmartSim-Scaling repo offers three scalability tests with 
-six total versions:
+six total versions detailed below:
 
-#### Inference Tests
+#### `Inference Tests`
 
 | Inference Type | Client | Message Passing Interface |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
-#### Throughput Tests
+#### `Throughput Tests`
 
 | Throughput Type | Client | Message Passing Interface |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
-#### Data Aggregation Tests
+#### `Data Aggregation Tests`
 
 | Data Aggregation Type | Client | Message Passing Interface |
 | :--- | --- | --- |
@@ -47,21 +53,15 @@ six total versions:
 | Standard | Python | MPI |
 | Standard | Python | File System |
 
-The scalability tests mimic an HPC workload by making calls to SmartSim 
-and SmartRedis infrastructure to complete in parallel highly complex, data-intensive 
-tasks that are spread across compute resources. 
-These applications are used to test the performance of SmartSim and 
-SmartRedis across various system types.
-
 ## Colocated vs Standard Deployement
 
-The scaling repo offers two types of Orchestrator deployement options: Standard and Colocated.
+The scaling repo offers two types of Orchestrator deployement: Standard and Colocated.
 
 1. `Colocated (non-Clustered Deployement)`
-⋅⋅* When running a Colocated test, your database will be deployed on the same node as your application.
+  ⋅⋅* When running a Colocated test, your database will be deployed on the same node as your application.
 
 2. `Standard (Clustered Deployement)`
-⋅⋅* When running with Standard deployement, your database will be deployed on different compute nodes
+  ⋅⋅* When running with Standard deployement, your database will be deployed on different compute nodes
 than your application. You will notice that all Standard tests share a `db_nodes` flag. By setting the flag to `db_nodes=[4,8]` - you are telling the program to split up your database to four shards on the first permutation, then eight shards on the second permutation.
 
 See [our installation docs](https://www.craylabs.org/docs/orchestrator.html) for 
