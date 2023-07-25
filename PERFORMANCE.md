@@ -26,11 +26,10 @@ were run on 8 CPUs and 8 threads per queue.
 
 ## Inference Performance Analysis
 
-INSERT ANALYSIS
+INSERT ANALYSIS - am rerunning the inference tests : ignore Inference section for this review
 
 ## Throughput Standard
-The following are scaling results for a standard throughput test, run on !12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue. 
+The following are scaling results for a standard throughput test, run with 48 client threads on each node. The databases were run on 8 CPUs and 8 threads per queue. 
 
 #### Unpack Tensor - retrieve the data
 ![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png "Throughput Standard")
@@ -39,7 +38,7 @@ were run on 8 CPUs and 8 threads per queue.
 ![Throughput Std Put](/figures/put_tensor_thro_std.png "Throughput Standard")
 
 ## Throughput Colocated
-The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+The following are scaling results for a colocated throughput test, run with 48 client threads on each node. The databases were run on 8 CPUs and 8 threads per queue. 
 
 #### Unpack Tensor - retrieve the data
 ![Throughput colo Unpack](/figures/unpack_tensor_thro_colo.png "Colocated Throughput")
@@ -49,23 +48,21 @@ The following are scaling results for a colocated throughput test, !run on 12 36
 
 ## Throughput Performance Analysis
 
-1. Throughput std has greater density when database nodes increase. Outliers become greater as 
-client total increases. Takes much greater time than colo tho bc its having to communicate
-with multiple shards of the db.
-2. Put/Unpack tensor for Throughput colo stays consistent with density across all client totals.
-Doesnt seem like theres a difference in client func density as client totals increase. Times 
-it takes for Put/Unpack tensor is insanely faster than throughput std. Less time it takes to 
-communicate since the db and app are on the same node.
+1. The Throughput Standard test density decreases as the database nodes increase. Outliers become greater as client total increases. This is because as there are more clients, there is a longer wait time. We can also tell that the standard takes longer than colocated because the client nodes are having to travel offsight to the database client node. Each database is having to handle more requests since they do not 
+have their own clients. 
+
+2. Put/Unpack tensor for Throughput Colocated stays consistent with density across all client totals.
+It takes much less time to complete using a colocated orchestrator since all the computations are happening on the same node. Less time it takes to communicate since the db and app are on the same node.
 
 ## Data Aggregation Standard
 
-The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+The following are scaling results for a data aggregation test, run with 32 client threads on each node. The databases were run on 36 CPUs and 4 threads per dataset. 
 
 #### Get List - retrieve the data from the aggregation list
 ![Data Agg Get List](/figures/get_list_data_agg.png "Data Aggregation Standard")
 
 ## Data Aggregation Standard Py
-The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+The following are scaling results for a data aggregation py test, run with 32 client threads on each node. The databases were run on 36 CPUs and 4 threads per dataset.
 
 #### Get List - retrieve the data from the aggregation list
 ![Data Agg Py Get List](/figures/get_list_data_agg_py.png "Data Aggregation Py Standard")
@@ -74,7 +71,7 @@ The following are scaling results for a colocated throughput test, !run on 12 36
 ![Data Agg Py Poll List](/figures/poll_list_data_agg_py.png "Data Aggregation Py Standard")
 
 ## Data Aggregation Standard Py Fs
-The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+The following are scaling results for a data aggregation py fs test, run with 32 client threads on each node.
 
 #### Get List - retrieve the data from the aggregation list
 ![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
@@ -84,11 +81,20 @@ The following are scaling results for a colocated throughput test, !run on 12 36
 
 ## Data Aggregation Performance Analysis
 
-1. std: density increases as client total increases. more db nodes the less time it takes per
-client total. But as client total increases the more time it takes.
-2. std py: for get_list it seems less stable than with a C++ client. get_list and before takes
-much less time than the fs one.
-3. std py fs: however poll list seems to be faster on fs. why is poll list fastest for fs
+1. The Standard Data Aggregation test performs the fastest get_list() client function. We
+can assume this is due to the fact that there is one less communication layer
+than the other two tests that use python consumer clients with c++ producer clients. 
+We can also see that as the database node count increases, the violin plot
+density decreases. We can assume this is happening because there are more shards
+of the database avaiable to complete the function get_list().
+
+2. The Standard Data Aggregation Python test seems to be less stable than the previous test using all C++ clients. Elements of the list might be distributed unevenly causing a contention between this test and the
+previous.
+
+3. The Standard Data Aggregation File System test shows much faster results in the poll_list()
+chart than the previous test. This is because it is much faster to write to a file system
+than using a database since there is signigicantly less nodes. 
+However, it is much faster to read from a database than the file system.
 
 ## Advanced Performance Tips
 

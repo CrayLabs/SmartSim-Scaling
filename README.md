@@ -33,21 +33,21 @@ six total versions detailed below:
 
 #### `Inference Tests`
 
-| Inference Type | Client | Message Passing Interface |
+| Inference Type | Client | Parallelization |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
 #### `Throughput Tests`
 
-| Throughput Type | Client | Message Passing Interface |
+| Throughput Type | Client | Parallelization |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
 #### `Data Aggregation Tests`
 
-| Data Aggregation Type | Client | Message Passing Interface |
+| Data Aggregation Type | Client | Parallelization |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Standard | Python | MPI |
