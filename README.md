@@ -58,10 +58,10 @@ six total versions detailed below:
 The scaling repo offers two types of Orchestrator deployement: Standard and Colocated.
 
 1. `Colocated (non-Clustered Deployement)`
-  ⋅⋅* When running a Colocated test, your database will be deployed on the same node as your application.
+  : When running a Colocated test, your database will be deployed on the same node as your application.
 
 2. `Standard (Clustered Deployement)`
-  ⋅⋅* When running with Standard deployement, your database will be deployed on different compute nodes
+  : When running with Standard deployement, your database will be deployed on different compute nodes
 than your application. You will notice that all Standard tests share a `db_nodes` flag. By setting the flag to `db_nodes=[4,8]` - you are telling the program to split up your database to four shards on the first permutation, then eight shards on the second permutation.
 
 See [our installation docs](https://www.craylabs.org/docs/orchestrator.html) for 
@@ -76,7 +76,7 @@ For the inference tests, be sure to have installed SmartSim with support
 for the device (CPU or GPU) you wish to run the tests on, as well as
 have built support for the PyTorch backend. If you would also like to 
 run the Fortran tests, make sure to run `make lib-with-fortran` from 
-the intall docs for SmartRedis.
+the intall docs for SmartRedis. For all other 
 
 This may look something like the following:
 
@@ -98,7 +98,7 @@ pip install -r requirements.txt
 
 Lastly, the C++ applications themselves need to be built. To complete this, 
 one CMake edit is required. Navigate to your respective tests `CMakeLists.txt` file.
-If you need help finding the file path, please reference the chart below.
+If you need assistance finding the file path, please reference the chart below.
 Near the top of `CMakeLists.txt`, on line
 `set(SMARTREDIS "../../SmartRedis" CACHE PATH "Path to SmartRedis root directory")`, 
 change the path to the ``SMARTREDIS`` variable to
@@ -113,11 +113,6 @@ the top level of the directory where you built or installed the SmartRedis libra
    - `cpp-py-data-aggregation/db/CMakeLists.txt`
    - `cpp-py-data-aggregation/fs/CMakeLists.txt`
 
-
-> Note that there are three different `CMakeLists.txt` files for the Data Aggregation tests.
-You will need to setup one per Data Aggregation scaling test you would like to run.
-
-
 After the cmake edit, all tests can be built by running
 
 ```bash
@@ -126,6 +121,9 @@ After the cmake edit, all tests can be built by running
   cmake ..
   make
 ```
+
+> Note that there are three different `CMakeLists.txt` files for the Data Aggregation tests.
+You will need to build per Data Aggregation scaling test.
 
 ## Running
 
@@ -171,6 +169,10 @@ COMMANDS
        Create a results directory with performance data and performance plots
        Client: None
        
+     scaling_read_data
+       Read performance results and store to file system
+       Client: None
+      
      scaling_plotter
        Create just performance plots
        Client: None
@@ -182,7 +184,7 @@ arguments possible for each.
 
 ## Results
 
-The output of each Scalability Test is detail below.
+The output organization of the performance results is detail below.
 
 ### Results File Structure
 
