@@ -252,49 +252,40 @@ Note that the first iteration can take longer (up to several seconds) than the r
 is due to the DB loading libraries when the first RedisAI call is made. In the following plots, we excluded
 the first iteration time.
 
-![Colocated inference plots dark theme](/figures/colo_dark.png#gh-dark-mode-only "Colocated inference")
+![Colocated inference plots dark theme](/figures/colo_dark.png#gh-light-mode-only "Colocated inference")
 ![Inference plots ligh theme](/figures/colo_light.png#gh-light-mode-only "Colocated inference")
 
 ### Throughput
 
-The following are results from the throughput tests for Redis. For results obtained using KeyDB, see section below.
+#### Throughput Standard
+![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png#gh-light-mode-only "Throughput Standard")
+![Throughput Std Put](/figures/put_tensor_thro_std.png#gh-light-mode-only "Throughput Standard")
 
-All the throughput data listed here is based on the ``loop time`` which is the time to complete a single put and get. Each client
-in the test performs 100 loop iterations and the aggregate throughput for all clients is displayed in the plots below.
-
-Each test has three lines for the three database sizes tested: 16, 32, 64. Each of the plots represents a different number of total clients
-the first is 4096 clients (128 nodes x 32 ranks per node), followed by 8192 (256 nodes x 32 ranks per node) and lastly 16384 clients
-(512 nodes x 32 ranks per node)
-
-![Throughput plots dark theme](/figures/loop_time-128-redis_dark.png#gh-dark-mode-only "Throughput scaling for 128 node Redis DB")
-![Throughput plots light theme](/figures/loop_time-128-redis_light.png#gh-light-mode-only "Throughput scaling for 128 node Redis DB")
-
-![Throughput plots dark theme](/figures/loop_time-256-redis_dark.png#gh-dark-mode-only "Throughput scaling for 256 node Redis DB")
-![Throughput plots light theme](/figures/loop_time-256-redis_light.png#gh-light-mode-only "Throughput scaling for 256 node Redis DB")
-
-![Throughput plots dark theme](/figures/loop_time-512-redis_dark.png#gh-dark-mode-only "Throughput scaling for 512 node Redis DB")
-![Throughput plots light theme](/figures/loop_time-512-redis_light.png#gh-light-mode-only "Throughput scaling for 512 node Redis DB")
-
-### Using KeyDB
-
-KeyDB is a multithreaded version of Redis with some strong performance claims. Luckily, since
-KeyDB is a drop in replacement for Redis, it's fairly easy to test. If you are looking for
-extreme performance, especially in throughput for large data sizes,
-we recommend building SmartSim with KeyDB.
-
-In future releases, switching between Redis and KeyDB will be achieved by setting an environment variable specifying the backend.
-
-The following plots show the results for the same throughput tests of previous section, using KeyDB as a backend.
+#### Throughput Colocated
+![Throughput colo Unpack](/figures/unpack_tensor_thro_colo.png#gh-light-mode-only "Colocated Throughput")
+![Throughput colo put](/figures/put_tensor_thro_colo.png#gh-light-mode-only "Colocated Throughput")
 
 
-![Throughput plots dark theme](/figures/loop_time-128-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 128 node KeyDB DB")
-![Throughput plots light theme](/figures/loop_time-128-keydb_light.png#gh-light-mode-only "Throughput scaling for 128 node KeyDB DB")
+### Data Aggregation
+Input 
 
-![Throughput plots dark theme](/figures/loop_time-256-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 256 node KeyDB DB")
-![Throughput plots light theme](/figures/loop_time-256-keydb_light.png#gh-light-mode-only "Throughput scaling for 256 node KeyDB DB")
+#### Data Aggregation
+Info on test
+![Data Agg Get List](/figures/get_list_data_agg.png#gh-light-mode-only "Data Aggregation Standard")
 
-![Throughput plots dark theme](/figures/loop_time-512-keydb_dark.png#gh-dark-mode-only "Throughput scaling for 512 node KeyDB DB")
-![Throughput plots light theme](/figures/loop_time-512-keydb_light.png#gh-light-mode-only "Throughput scaling for 512 node KeyDB DB")
+#### Data Aggregation Py
+Info on test
+![Data Agg Py Get List](/figures/get_list_data_agg_py.png#gh-light-mode-only "Data Aggregation Py Standard")
+![Data Agg Py Poll List](/figures/poll_list_data_agg_py.png "Data Aggregation Py Standard")
+
+#### Data Aggregation Py Fs
+Info on test
+![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png#gh-light-mode-only "Data Aggregation Py Fs Standard")
+![Data Agg Py Fs Poll List](/figures/poll_list_data_agg_fs.png#gh-light-mode-only "Data Aggregation Py Fs Standard")
+
+#### Data Aggregation Performance Analysis
+
+Info on test
 
 ### Result analysis
 
