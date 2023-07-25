@@ -30,75 +30,67 @@ were run on 8 CPUs and 8 threads per queue.
 
 ### Inference Performance Analysis
 
+INSERT ANALYSIS
+
 ## Throughput
 
 The performance of SmartSim and SmartRedis using Throughput is detailed below.
 
 ### Throughput Standard
-The following are scaling results for a standard throughput test, run on 12 36-core Intel Broadwell nodes,
-each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
+The following are scaling results for a standard throughput test, run on !12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run, and the databases
 were run on 8 CPUs and 8 threads per queue. 
 
-```bash
-    [run]
-    name = run-2023-07-05-21:26:18
-    path = results/throughput-standard-scaling/run-2023-07-05-21:26:18
-    smartsim_version = 0.4.2
-    smartredis_version = 0.3.1
-    db = redis-server
-    date = 2023-07-05
-    language = ['cpp']
-
-    [attributes]
-    colocated = 0
-    client_per_node = [48]
-    client_nodes = [4, 8, 16, 32, 64, 128]
-    database_nodes = [4, 8, 16]
-    database_cpus = [8]
-    iterations = 100
-    tensor_bytes = [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 1024000]
-    language = ['cpp']
-    wall_time = 05:00:00
-```
+#### Unpack Tensor
 ![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png "Throughput Standard")
+
+#### Put Tensor
 ![Throughput Std Put](/figures/put_tensor_thro_std.png "Throughput Standard")
 
 ### Throughput Colocated
-The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
-each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue. 
+The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+
+#### Unpack Tensor
 ![Throughput colo Unpack](/figures/unpack_tensor_thro_colo.png "Colocated Throughput")
+
+#### Put Tensor
 ![Throughput colo put](/figures/put_tensor_thro_colo.png "Colocated Throughput")
 
 ### Throughput Performance Analysis
+
+INSERT ANALYSIS
 
 ### Data Aggregation
 
 The performance of SmartSim and SmartRedis using Data Aggregation is detailed below.
 
-#### Data Aggregation
-The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
-each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue. 
+#### Data Aggregation Standard
+
+The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+
+#### Get List
 ![Data Agg Get List](/figures/get_list_data_agg.png "Data Aggregation Standard")
 
-#### Data Aggregation Py
-The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
-each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue. 
+#### Data Aggregation Standard Py
+The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+
+#### Get List
 ![Data Agg Py Get List](/figures/get_list_data_agg_py.png "Data Aggregation Py Standard")
+
+#### Poll List
 ![Data Agg Py Poll List](/figures/poll_list_data_agg_py.png "Data Aggregation Py Standard")
 
-#### Data Aggregation Py Fs
-The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
-each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue. 
+#### Data Aggregation Standard Py Fs
+The following are scaling results for a colocated throughput test, !run on 12 36-core Intel Broadwell nodes!. On each node, 48 client threads were run.
+
+#### Get List
 ![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
+
+#### Poll List
 ![Data Agg Py Fs Poll List](/figures/poll_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
 
 #### Data Aggregation Performance Analysis
 
-Info on test
+INSERT ANALYSIS
 
 ## Advanced Performance Tips
 
