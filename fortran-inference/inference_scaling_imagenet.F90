@@ -96,7 +96,7 @@ subroutine set_model(client, device_type, num_devices, batch_size)
     character(len=255) :: model_key, script_key
 
     write(model_filename,'(A,A,A)') "./resnet50.", TRIM(device_type), '.pt'
-    script_filename = "./data_processing_script.txt"
+    script_filename = "../imagenet/data_processing_script.txt"
 
     if (num_devices > 1 .and. device_type == 'GPU') then
         model_key = 'resnet_model'
@@ -105,10 +105,12 @@ subroutine set_model(client, device_type, num_devices, batch_size)
             model_key, model_filename, "TORCH", 0, num_devices, batch_size)
         if (return_code /= SRNoError) then
             call print_last_error()
+            stop 'Error in set_model'
         endif
         return_code = client%set_script_from_file_multigpu(script_key, script_filename, 0, num_devices)
         if (return_code /= SRNoError) then
             call print_last_error()
+            stop 'Error in set_script'
         endif
     else
         do i=1,num_devices
@@ -175,7 +177,7 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     else
         return_code = client%run_script(script_key, "pre_process_3ch", [in_key], [script_out_key])
     endif
-    if (return_code/=SRNoError) stop "Error in run_script"
+    if (return_code/=SRNoError) stop "Error in run_script (warmup)"
 
     if (use_multigpu) then
         return_code = client%run_model_multigpu(model_key, [script_out_key], [out_key], rank, 0, num_devices)

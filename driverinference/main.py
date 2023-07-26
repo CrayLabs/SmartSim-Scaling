@@ -95,7 +95,7 @@ class Inference:
         logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=0,
-                        clients_per_node=clients_per_node,
+                        client_per_node=clients_per_node,
                         client_nodes=client_nodes,
                         database_hosts=db_hosts,
                         database_nodes=db_nodes,
@@ -159,7 +159,12 @@ class Inference:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
         #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
-  
+    #went to the log, tracked the error message and not sure what causing the other error message
+    #add logging to the piece - find if anything is an empty string via logging poke at it
+    #poke the things that are being passed in
+    #looked at the fortran code that corresponding to the run_script
+    #error was that it wasnt load the script - looked at the path to the script
+    #found that that was the issue
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
@@ -232,8 +237,8 @@ class Inference:
                         node_feature=node_feature,
                         experiment_name=exp_name,
                         launcher=launcher,
-                        nodes=nodes,
-                        clients_per_node=clients_per_node,
+                        client_nodes=nodes,
+                        client_per_node=clients_per_node,
                         database_cpus=db_cpus,
                         database_threads_per_queue=db_tpq,
                         database_port=db_port,
@@ -443,9 +448,9 @@ class Inference:
         write_run_config(
             model.path,
             colocated=1,
-            nodes=nodes,
+            client_nodes=nodes,
             client_total=tasks*nodes,
-            clients_per_node=tasks,
+            client_per_node=tasks,
             database_cpus=db_cpus,
             database_threads_per_queue=db_tpq,
             database_port=db_port,

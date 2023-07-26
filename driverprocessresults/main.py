@@ -17,9 +17,9 @@ logger = get_logger("Scaling Tests")
 
 
 class ProcessResults:
-    def process_scaling_results(self, 
-                                scaling_results_dir="aggregation-standard-scaling", 
-                                plot_type="database_nodes",
+    def process_scaling_results(self,
+                                scaling_results_dir="inference-colocated-scaling", 
+                                plot_type="database_cpus",
                                 overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
@@ -62,7 +62,7 @@ class ProcessResults:
                 #collect all written csv into dataframes to concat
                 for run in tqdm(run_list, desc="Creating scaling plots...", ncols=80):
                     try:
-                        PlotResults.scaling_read_data(run, scaling_results_dir)
+                        PlotResults.scaling_read_data(self, run, scaling_results_dir)
                         logger.debug(f"Data read and saved for: {run}")
                     # want to catch all exceptions and skip runs that may
                     # not have completed or finished b/c some reason i.e. node failure
