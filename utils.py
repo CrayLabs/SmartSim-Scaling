@@ -136,6 +136,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     db.set_cpus(cpus)
     exp.generate(db, overwrite=True)
     exp.start(db)
+    print(f"status of db: {exp.status(db)}")
     logger.info("Orchestrator Database created and running")
     return db
 
@@ -171,12 +172,14 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
         # Redis does not accept CPU:<n>. We are either
         # setting (possibly multiple copies of) the model and script on CPU, or one
         # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
-        client.set_model_from_file(f"resnet_model",
+        print(f"model: {model}, device: {device}, batch_size: {batch_size}")
+        client.set_model_from_file("resnet_model",
                                     model,
                                     "TORCH",
                                     device,
                                     batch_size)
-        client.set_script_from_file(f"resnet_script",
+        print("passed set model")
+        client.set_script_from_file("resnet_script",
                                     "./imagenet/data_processing_script.txt",
                                     device)
         logger.info(f"Resnet Model and Script in Orchestrator on device {device}")

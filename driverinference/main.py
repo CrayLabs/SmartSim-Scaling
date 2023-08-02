@@ -27,7 +27,7 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8,16],
+                           db_nodes=[3],
                            db_cpus=[8],
                            db_tpq=[8],
                            db_port=6780,
@@ -36,8 +36,8 @@ class Inference:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[2,4,8,16], #client_nodes
-                           rebuild_model=False,
+                           client_nodes=[2], #client_nodes
+                           rebuild_model=False, #force_rebuild
                            iterations=100, #--exclusive -t 10:00:00
                            languages=["cpp","fortran"],
                            wall_time="15:00:00",
@@ -88,7 +88,7 @@ class Inference:
         :type plot: str
         """
         logger.info("Starting inference standard scaling tests")
-        check_node_allocation(client_nodes, db_nodes)
+        #check_node_allocation(client_nodes, db_nodes)
         logger.info("Experiment allocation passed check")
 
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
@@ -117,7 +117,6 @@ class Inference:
             c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
             print(perm)
-
             db = start_database(exp,
                                 db_node_feature,
                                 db_port,
@@ -128,6 +127,7 @@ class Inference:
                                 run_db_as_batch,
                                 db_hosts,
                                 wall_time)
+            print("passed")
             # setup a an instance of the synthetic C++ app and start it
             infer_session, resnet_model = self._create_inference_session(exp,
                                                      node_feature,
@@ -144,6 +144,7 @@ class Inference:
                                                      language)
             logger.debug("Inference session created")
             address = db.get_address()[0]
+            print(f"res: {resnet_model}")
             setup_resnet(resnet_model,
                         device,
                         num_devices,
@@ -158,7 +159,7 @@ class Inference:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
-        #self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
+        self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     #went to the log, tracked the error message and not sure what causing the other error message
     #add logging to the piece - find if anything is an empty string via logging poke at it
     #poke the things that are being passed in
@@ -169,7 +170,7 @@ class Inference:
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[4,8,12,16],
+                            nodes=[3],
                             clients_per_node=[18],
                             db_cpus=[8],
                             db_tpq=[1],
@@ -224,8 +225,7 @@ class Inference:
         :type plot: str
         """
         logger.info("Starting inference colocated scaling tests")
-        
-        check_model(device, force_rebuild=rebuild_model)
+        check_model(device, force_rebuild=rebuild_model) #can the force rebuild
         
         check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
@@ -288,16 +288,16 @@ class Inference:
 
     @staticmethod
     def _set_resnet_model(device="GPU", force_rebuild=False):
-            resnet_model = f"./imagenet/resnet50.{device}.pt"
-            if not Path(resnet_model).exists() or force_rebuild:
-                logger.info(f"AI Model {resnet_model} does not exist or rebuild was asked, it will be created")
-                try:
-                    save_model(device)
-                except:
-                    logger.error(f"Could not save {resnet_model} for {device}.")
-                    sys.exit(1)
+            resnet_model = f"./imagenet/resnet50.{device}.pt" #we just need this line but can the whole thing
+            # if not Path(resnet_model).exists() or force_rebuild:
+            #     logger.info(f"AI Model {resnet_model} does not exist or rebuild was asked, it will be created")
+            #     try:
+            #         save_model(device)
+            #     except:
+            #         logger.error(f"Could not save {resnet_model} for {device}.")
+            #         sys.exit(1)
 
-            logger.info(f"Using model {resnet_model}")
+            # logger.info(f"Using model {resnet_model}")
             return resnet_model
 
     @classmethod
