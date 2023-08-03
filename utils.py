@@ -122,6 +122,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :return: orchestrator instance
     :rtype: Orchestrator
     """
+    print(f"node fet: {db_node_feature}")
     db = exp.create_database(port=port,
                             db_nodes=nodes,
                             batch=run_as_batch,
@@ -133,10 +134,13 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
         db.set_walltime(wall_time)
         for k, v in db_node_feature.items():
             db.set_batch_arg(k, v)
+    if not run_as_batch:
+        for k, v in db_node_feature.items():
+            db.set_run_arg(k, v)
     db.set_cpus(cpus)
     exp.generate(db, overwrite=True)
     exp.start(db)
-    print(f"status of db: {exp.status(db)}")
+    #print(f"status of db: {exp.status(db)}")
     logger.info("Orchestrator Database created and running")
     return db
 

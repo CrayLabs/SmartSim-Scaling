@@ -213,12 +213,12 @@ class Throughput:
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[4,8,16,32,64,128],
+                           nodes=[4],
                            db_cpus=[8],
                            db_port=6780,
                            net_ifname="lo",
                            clients_per_node=[48],
-                           pin_app_cpus=[False],
+                           pin_db_cpus=[False],
                            iterations=100,
                            tensor_bytes=[1024,8192,16384,32769,65538,
                                           131076,262152,524304,1024000],
@@ -246,8 +246,8 @@ class Throughput:
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
         :type clients_per_node: list[int], optional
-        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: list[bool], optional
+        :param pin_db_cpus: pin the threads of the database to 0-(n-db_cpus)
+        :type pin_db_cpus: list[bool], optional
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
@@ -264,7 +264,7 @@ class Throughput:
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
         write_run_config(result_path,
                     colocated=1,
-                    pin_app_cpus=str(pin_app_cpus),
+                    custom_pinning=str(pin_db_cpus),
                     client_per_node=clients_per_node,
                     client_nodes=nodes,
                     database_cpus=db_cpus,
@@ -273,9 +273,9 @@ class Throughput:
                     language=languages)
         print_yml_file(Path(result_path) / "run.cfg", logger)
 
-        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus, languages))
+        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_db_cpus, languages))
         for i, perm in enumerate(perms, start=1):
-            c_nodes, cpn, dbc, _bytes, pin_app, language = perm
+            c_nodes, cpn, dbc, _bytes, pin_db, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
 
             # setup a an instance of the C++ driver and start it
@@ -287,7 +287,7 @@ class Throughput:
                                                             db_port,
                                                             iterations,
                                                             _bytes,
-                                                            pin_app,
+                                                            pin_db,
                                                             net_ifname,
                                                             language)
             logger.debug("Throughput session created")
@@ -309,7 +309,7 @@ class Throughput:
                               db_port,
                               iterations,
                               _bytes,
-                              pin_app_cpus,
+                              pin_db_cpus,
                               net_ifname,
                               language):
         """Run the throughput scaling tests with colocated Orchestrator deployment
@@ -330,8 +330,8 @@ class Throughput:
         :type iterations: int
         :param _bytes: size in bytes of tensors to use for throughput scaling
         :type _bytes: int
-        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: bool, optional
+        :param pin_db_cpus: pin the threads of the database to 0-(n-db_cpus)
+        :type pin_db_cpus: bool, optional
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
@@ -355,7 +355,7 @@ class Throughput:
             "N"+str(nodes),
             "T"+str(tasks),
             "DBCPU"+str(db_cpus),
-            "PIN"+str(pin_app_cpus),
+            "PIN"+str(pin_db_cpus),
             "ITER"+str(iterations),
             "TB"+str(_bytes),
             get_uuid()
@@ -366,7 +366,7 @@ class Throughput:
         model.colocate_db(port=db_port,
                         db_cpus=db_cpus,
                         ifname=net_ifname,
-                        limit_app_cpus=pin_app_cpus,
+                        custom_pinning=pin_db_cpus,
                         debug=True,
                         loglevel="notice")
         
@@ -374,7 +374,7 @@ class Throughput:
         
         write_run_config(model.path,
                     colocated=1,
-                    pin_app_cpus=int(pin_app_cpus),
+                    custom_pinning=int(pin_db_cpus),
                     client_total=tasks*nodes,
                     client_per_node=tasks,
                     client_nodes=nodes,

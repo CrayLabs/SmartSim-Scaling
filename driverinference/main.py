@@ -25,7 +25,7 @@ class Inference:
                            launcher="auto",
                            run_db_as_batch=False,
                            db_node_feature = {"constraint": "P100"},
-                           node_feature = {},
+                           node_feature = {"constraint": "SK48"},
                            db_hosts=[],
                            db_nodes=[3],
                            db_cpus=[8],
