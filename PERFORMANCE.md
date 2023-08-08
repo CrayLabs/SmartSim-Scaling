@@ -12,7 +12,10 @@ The following are scaling results from the cpp-inference scaling tests with ResN
 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on arXiv
 
-
+![Inference Colo](/figures/put_tensor_inf_std.png "Inference Colocated")
+![Inference Colo](/figures/unpack_tensor_inf_std.png "Inference Colocated")
+![Inference Colo](/figures/run_model_inf_std.png "Inference Colocated")
+![Inference Colo](/figures/run_script_inf_std.png "Inference Colocated")
 
 ## Colocated Inference
 
