@@ -12,8 +12,7 @@ The following are scaling results from the cpp-inference scaling tests with ResN
 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on arXiv
 
-![Inference plots dark theme](/figures/all_in_one_violin_dark.png#gh-dark-mode-only "Standard inference")
-![Inference plots ligh theme](/figures/all_in_one_violin_light.png#gh-light-mode-only "Standard inference")
+
 
 ## Colocated Inference
 
@@ -21,8 +20,7 @@ The following are scaling results for a colocated inference test, run on 12 36-c
 each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
 were run on 8 CPUs and 8 threads per queue. 
 
-![Colocated inference plots dark theme](/figures/colo_dark.png "Colocated inference")
-![Inference plots ligh theme](/figures/colo_light.png "Colocated inference")
+![Inference Colo](/figures/inf_colo.png "Inference Colocated")
 
 ## Inference Performance Analysis
 
@@ -64,20 +62,12 @@ The following are scaling results for a data aggregation test, run with 32 clien
 ## Data Aggregation Standard Py
 The following are scaling results for a data aggregation py test, run with 32 client threads on each node. The databases were run on 36 CPUs and 4 threads per dataset.
 
-#### Get List - retrieve the data from the aggregation list
-![Data Agg Py Get List](/figures/get_list_data_agg_py.png "Data Aggregation Py Standard")
-
-#### Poll List - check when the next aggregation list is ready
-![Data Agg Py Poll List](/figures/poll_list_data_agg_py.png "Data Aggregation Py Standard")
+![Data Agg Py Poll List](/figures/data_agg_py.png "Data Aggregation Py Standard")
 
 ## Data Aggregation Standard Py Fs
 The following are scaling results for a data aggregation py fs test, run with 32 client threads on each node.
 
-#### Get List - retrieve the data from the aggregation list
-![Data Agg Py Fs Get List](/figures/get_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
-
-#### Poll List - check when the next aggregation list is ready
-![Data Agg Py Fs Poll List](/figures/poll_list_data_agg_fs.png "Data Aggregation Py Fs Standard")
+![Data Agg Py Fs Get List](/figures/data_agg_fs.png "Data Aggregation Py Fs Standard")
 
 ## Data Aggregation Performance Analysis
 
