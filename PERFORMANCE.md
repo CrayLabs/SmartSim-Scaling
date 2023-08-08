@@ -29,20 +29,12 @@ INSERT ANALYSIS - am rerunning the inference tests : ignore Inference section fo
 ## Throughput Standard
 The following are scaling results for a standard throughput test, run with 48 client threads on each node. The databases were run on 8 CPUs and 8 threads per queue. 
 
-#### Unpack Tensor - retrieve the data
-![Throughput Std Unpack](/figures/unpack_tensor_thro_std.png "Throughput Standard")
-
-#### Put Tensor - send image to database
-![Throughput Std Put](/figures/put_tensor_thro_std.png "Throughput Standard")
+![Throughput Std Unpack](/figures/new_std_thro.png "Throughput Standard")
 
 ## Throughput Colocated
 The following are scaling results for a colocated throughput test, run with 48 client threads on each node. The databases were run on 8 CPUs and 8 threads per queue. 
 
-#### Unpack Tensor - retrieve the data
-![Throughput colo Unpack](/figures/thro_colo_un_ten.png "Colocated Throughput")
-
-#### Put Tensor - send image to database
-![Throughput colo put](/figures/thro_colo_put_ten.png "Colocated Throughput")
+![Throughput colo Unpack](/figures/new_colo_thro.png "Colocated Throughput")
 
 ## Throughput Performance Analysis
 
