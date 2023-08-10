@@ -11,7 +11,12 @@ implicit none
 ! Configuration parameters
 integer :: batch_size, num_devices, client_count
 character(len=255) :: device_type
-logical :: should_set, use_cluster
+logical :: use_cluster
+logical :: poll_return_bool
+integer :: poll_return_code
+
+! File imports
+include "enum_fortran.inc"
 
 ! MPI-related variables
 integer :: rank, ierror
@@ -33,7 +38,6 @@ character(len=255) :: script_key, model_key
 batch_size = get_env_var("SS_BATCH_SIZE", 1)
 device_type = get_env_var("SS_DEVICE", "GPU")
 num_devices = get_env_var("SS_NUM_DEVICES", 1)
-should_set = get_env_var("SS_SET_MODEL", .false.)
 use_cluster = get_env_var("SS_CLUSTER", .false.)
 client_count = get_env_var("SS_CLIENT_COUNT", 18)
 
@@ -52,7 +56,9 @@ call init_client(client, rank, use_cluster, timing_unit)
 
 model_key = "resnet_model"
 script_key = "resnet_script"
-
+poll_return_code = client%poll_key(script_key, 100, 100, poll_return_bool)
+if (poll_return_code /= SRNoError) stop 'SR Error finding script '
+if (.not. poll_return_bool) stop 'Bool Error finding script'
 call MPI_Barrier(MPI_COMM_WORLD, ierror)
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
 
@@ -126,8 +132,10 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     if (use_multigpu) then
         return_code = client%run_script_multigpu( &
             script_key, "pre_process_3ch", [in_key], [script_out_key], rank, 0, num_devices)
+        write(error_unit, *) 'is multi 1'
     else
-        return_code = client%run_script(script_key, "pre_process_3ch", [in_key], [script_out_key])
+        return_code = client%run_script(trim(script_key), "pre_process_3ch", [in_key], [script_out_key])
+        write(error_unit, *) 'is not multi 1', script_key
     endif
     if (return_code /= SRNoError) then
         call print_last_error()
