@@ -36,18 +36,22 @@ invokes the following SmartRedis commands:
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
-## Why Standard Deployement for Data Aggregation vs Colocated?
+## Why Standard Deployment for Data Aggregation vs Colocated?
 
-SmartSim-Scaling supports standard deployment for all three data aggregation tests. For standard deployement, the Orchestrator database and the application will be launched on different client nodes. To perform data aggregation, each thread has to be assigned to a single shard of a database hosted on a client node. Hence, multiple client nodes are needed for sharded database support. 
+SmartSim-Scaling supports standard deployment for all three data aggregation tests. For standard deployement, the Orchestrator database and the application will be launched on different nodes: database nodes and client nodes. To perform data aggregation, each client will create a new thread to try to grab a dataset from multiple database shards.
 
-Co-located deployment supports a database on the same client node as the application. If we used 
-co-located deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial. For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time.
+Co-located deployment supports a database on the same node as the application. If we used 
+co-located deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial. 
+
+For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time with 
+colocated deployement.
 
 ## Data Aggregation Standard - C++ Client
 
-The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator. If your application is written C++, you may want to run data aggregation with a C++ client.
+The ``aggregation_scaling`` test uses a c++ client and a SmartRedis Orchestrator.
 
-Note that data aggregation requires multiple threads. 
+> Note that the number of threads per client should be less than or equal 
+(most performant) to the number of database shards.
 
 ```text
 
@@ -167,7 +171,7 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Data Aggregation Standard - Python Client
 
-The ``aggregation_scaling_python`` test uses a Python client and a SmartRedis Orchestrator. Depending on your user application, you may want to run the scaling test with a python client.
+The ``aggregation_scaling_python`` test uses a Python client and a SmartRedis Orchestrator.
 
 
 ```text
@@ -304,7 +308,7 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Data Aggregation Standard - Python Client and File System
 
-The ``aggregation_scaling_python_fs`` test uses a Python client with the file system in replacement of SmartRedis. This test demonstrates a significant performance hit from using the file system instead of the SmartRedis Orchestrator.
+The ``aggregation_scaling_python_fs`` test uses a Python client with the file system in replacement of SmartRedis.
 
 ```text
 

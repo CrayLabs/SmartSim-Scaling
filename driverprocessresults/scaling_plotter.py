@@ -116,11 +116,11 @@ class PlotResults:
             grid_spacing = np.min(np.diff(client_nodes))*(client_per_n[0])
             logger.debug(f"grid_spacing: {grid_spacing}")
             ordered_client_total = sorted(df['client_total'].unique())
-            start = ordered_client_total[0]
+            start = 48
             stop = ordered_client_total[len(ordered_client_total) - 1]
             logger.debug(f"Ordered client total: {ordered_client_total}")
             step = math.ceil((stop-start) / (len(ordered_client_total)))
-            xticks = list(range(start, stop, step)) #list()
+            xticks = list(range(start, stop, step))
             logger.debug(f"xticks: {xticks}")
             function_names = df['function'].unique()
             languages = df['language'].unique()
@@ -150,12 +150,12 @@ class PlotResults:
                         #loop through client_total - assign times in data list
                         data = [function_df.groupby('client_total').get_group(client)['time'] for client in ordered_client_total]
                         new_xticks = []
-                        # what we're doing here is offsetting xticks by 100 relative to idx
+                        # what we're doing here is offsetting xticks by 250 relative to idx
                         # (this prevents the graphs from stacking on top of one another)
                         #
                         for aidx, val in enumerate(xticks):
                             if len(var_list) > 1:
-                                new_xticks.append(val + (250*idx) - 250)
+                                new_xticks.append(val + (15*idx) - 15)
                             else:
                                 new_xticks.append(val)
                         plot = axs[lang_idx].violinplot(data, positions=new_xticks, **violin_opts)
@@ -164,7 +164,7 @@ class PlotResults:
                         entry = plot["cbars"]
                         legend_entries.append(entry)    
                         means = [np.mean(function_df.groupby('client_total').get_group(client)['time']) for client in ordered_client_total]
-                        print(f"MEANS: {means}\n")
+                        logger.debug(f"MEANS: {means}\n")
                         axs[lang_idx].plot(new_xticks, means, ':', color=props_dict['color'], alpha=0.5) 
 
                     data_labels = [f"{var} {var_input}" for var in var_list]

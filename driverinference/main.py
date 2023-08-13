@@ -27,19 +27,19 @@ class Inference:
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {"constraint": "SK48"},
                            db_hosts=[],
-                           db_nodes=[3],
+                           db_nodes=[4],
                            db_cpus=[8],
-                           db_tpq=[8],
+                           db_tpq=[1],
                            db_port=6780,
                            batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[2], #client_nodes
+                           client_nodes=[4], #client_nodes
                            rebuild_model=False, #force_rebuild
                            iterations=100, #--exclusive -t 10:00:00
-                           languages=["cpp","fortran"],
+                           languages=["fortran"],
                            wall_time="15:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
@@ -127,7 +127,7 @@ class Inference:
                                 run_db_as_batch,
                                 db_hosts,
                                 wall_time)
-            print("passed")
+            print("passed 1")
             # setup a an instance of the synthetic C++ app and start it
             infer_session, resnet_model = self._create_inference_session(exp,
                                                      node_feature,
@@ -142,15 +142,16 @@ class Inference:
                                                      rebuild_model,
                                                      iterations,
                                                      language)
+            print(f"passed 2 with infer: {infer_session}, res: {resnet_model}")
             logger.debug("Inference session created")
             address = db.get_address()[0]
-            print(f"res: {resnet_model}")
-            setup_resnet(resnet_model,
+            print(f"address: {address}")
+            attach_resnet(infer_session,
+                        resnet_model,
                         device,
                         num_devices,
-                        batch,
-                        address,
-                        cluster=dbn>1)
+                        batch)
+            print("passed attaching resnet")
             logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
@@ -234,32 +235,23 @@ class Inference:
         logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=1,
-                        node_feature=node_feature,
-                        experiment_name=exp_name,
-                        launcher=launcher,
-                        client_nodes=nodes,
                         client_per_node=clients_per_node,
+                        client_nodes=nodes,
                         database_cpus=db_cpus,
-                        database_threads_per_queue=db_tpq,
                         database_port=db_port,
-                        pin_app_cpus=pin_app_cpus,
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
-                        net_type=net_type,
-                        net_ifname=net_ifname,
-                        rebuild_model=rebuild_model,
                         iterations=iterations,
                         language=languages,
-                        plot=plot
-                        )
+                        node_feature=node_feature)
         print_yml_file(Path(result_path) / "run.cfg", logger)
         perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
 
-            infer_session = self._create_colocated_inference_session(exp,
+            infer_session, resnet_model = self._create_colocated_inference_session(exp,
                                                                node_feature,
                                                                c_nodes,
                                                                cpn,
@@ -276,6 +268,12 @@ class Inference:
                                                                iterations,
                                                                language)
             logger.debug("Inference session created")
+            #resnet_model = f"./imagenet/resnet50.{device}.pt"
+            attach_resnet(infer_session,
+                        "./imagenet/resnet50.GPU.pt",
+                        device,
+                        num_devices,
+                        batch)
 
             exp.start(infer_session, block=True, summary=True)
 
@@ -445,23 +443,17 @@ class Inference:
                 **db_opts
             )
         exp.generate(model, overwrite=True)
-        write_run_config(
-            model.path,
-            colocated=1,
-            client_nodes=nodes,
-            client_total=tasks*nodes,
-            client_per_node=tasks,
-            database_cpus=db_cpus,
-            database_threads_per_queue=db_tpq,
-            database_port=db_port,
-            pin_app_cpus=pin_app_cpus,
-            batch_size=batch_size,
-            device=device,
-            num_devices=num_devices,
-            net_type=net_type,
-            net_ifname=net_ifname,
-            rebuild_model=rebuild_model,
-            iterations=iterations,
-            language=language
-        )
-        return model
+        write_run_config(model.path,
+                        colocated=1,
+                        client_total=tasks*nodes,
+                        client_per_node=tasks,
+                        client_nodes=nodes,
+                        database_cpus=db_cpus,
+                        database_threads_per_queue=db_tpq,
+                        batch_size=batch_size,
+                        device=device,
+                        num_devices=num_devices,
+                        language=language,
+                        iterations=iterations,
+                        node_feature=node_feature)
+        return model, resnet_model

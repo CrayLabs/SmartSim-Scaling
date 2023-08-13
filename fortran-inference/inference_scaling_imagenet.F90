@@ -12,8 +12,10 @@ implicit none
 integer :: batch_size, num_devices, client_count
 character(len=255) :: device_type
 logical :: use_cluster
-logical :: poll_return_bool
-integer :: poll_return_code
+logical :: poll_model_bool
+logical :: poll_script_bool
+integer :: poll_model_code
+integer :: poll_script_code
 
 ! File imports
 include "enum_fortran.inc"
@@ -55,10 +57,16 @@ open(newunit = timing_unit, &
 call init_client(client, rank, use_cluster, timing_unit)
 
 model_key = "resnet_model"
+poll_model_code = client%poll_model(model_key, 200, 100, poll_model_bool)
+if (poll_model_code /= SRNoError) stop 'SR Error finding model'
+if (.not. poll_model_bool) stop 'Bool Error finding model'
+
+
 script_key = "resnet_script"
-poll_return_code = client%poll_key(script_key, 100, 100, poll_return_bool)
-if (poll_return_code /= SRNoError) stop 'SR Error finding script '
-if (.not. poll_return_bool) stop 'Bool Error finding script'
+poll_script_code = client%poll_key(script_key, 1000, 1000, poll_script_bool)
+if (poll_script_code /= SRNoError) stop 'SR Error finding script'
+if (.not. poll_script_bool) stop 'Bool Error finding script'
+
 call MPI_Barrier(MPI_COMM_WORLD, ierror)
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
 

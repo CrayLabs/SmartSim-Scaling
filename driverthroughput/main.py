@@ -213,7 +213,7 @@ class Throughput:
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[4],
+                           nodes=[4,8,16,32,64,128],
                            db_cpus=[8],
                            db_port=6780,
                            net_ifname="lo",
@@ -258,7 +258,7 @@ class Throughput:
         :type plot: str
         """
         logger.info("Starting throughput colocated scaling tests")
-        check_node_allocation(nodes, [0])
+        #check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
         
         exp, result_path = create_experiment_and_dir(exp_name, launcher)

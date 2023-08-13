@@ -1,0 +1,196 @@
+----------   Running  Command   ---------- 
+----------   Running  Command   ---------- 
+
+
+COMMAND: /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/bin/redis-server /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/config/redis.conf --loadmodule /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so THREADS_PER_QUEUE 1 --port 6780 --cluster-enabled yes --cluster-config-file nodes-orchestrator_0-6780.conf --bind 10.128.0.153 --bind-source-addr 10.128.0.153
+COMMAND: /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/bin/redis-server /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/config/redis.conf --loadmodule /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so THREADS_PER_QUEUE 1 --port 6780 --cluster-enabled yes --cluster-config-file nodes-orchestrator_2-6780.conf --bind 10.128.0.155 --bind-source-addr 10.128.0.155
+
+
+IPADDRESS: 10.128.0.153
+IPADDRESS: 10.128.0.155
+
+
+NETWORK: ipogif0
+NETWORK: ipogif0
+
+
+------------------------------ 
+------------------------------ 
+
+
+
+
+----------   Output   ---------- 
+----------   Output   ---------- 
+
+
+
+
+2377:C 12 Aug 2023 21:12:03.500 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2377:C 12 Aug 2023 21:12:03.500 # Redis version=7.0.5, bits=64, commit=1571907e, modified=0, pid=2377, just started
+2377:C 12 Aug 2023 21:12:03.500 # Configuration loaded
+2377:M 12 Aug 2023 21:12:03.501 * monotonic clock: POSIX clock_gettime
+7263:C 12 Aug 2023 21:12:03.501 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+7263:C 12 Aug 2023 21:12:03.501 # Redis version=7.0.5, bits=64, commit=1571907e, modified=0, pid=7263, just started
+7263:C 12 Aug 2023 21:12:03.501 # Configuration loaded
+7263:M 12 Aug 2023 21:12:03.502 * monotonic clock: POSIX clock_gettime
+2377:M 12 Aug 2023 21:12:03.503 * No cluster configuration found, I'm 08c98b7904124c189de996e37fb337c6768fffef
+7263:M 12 Aug 2023 21:12:03.504 * No cluster configuration found, I'm 4619f3b0cd419105295cf0656b6995a0469a0a83
+                _._
+                _._
+           _.-``__ ''-._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 7.0.5 (1571907e/0) 64 bit
+      _.-``    `.  `_.  ''-._           Redis 7.0.5 (1571907e/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in cluster mode
+ (    '      ,       .-`  | `,    )     Running in cluster mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6780
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6780
+ |    `-._   `._    /     _.-'    |     PID: 7263
+ |    `-._   `._    /     _.-'    |     PID: 2377
+  `-._    `-._  `-./  _.-'    _.-'
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           https://redis.io
+ |    `-._`-._        _.-'_.-'    |           https://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+          `-._        _.-'
+              `-.__.-'
+              `-.__.-'
+
+
+7263:M 12 Aug 2023 21:12:03.589 # Server initialized
+2377:M 12 Aug 2023 21:12:03.589 # Server initialized
+7263:M 12 Aug 2023 21:12:03.589 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+2377:M 12 Aug 2023 21:12:03.589 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+2377:M 12 Aug 2023 21:12:03.595 * <ai> Redis version found by RedisAI: 7.0.5 - oss
+2377:M 12 Aug 2023 21:12:03.595 * <ai> RedisAI version 10207, git_sha=1bf38d86233ba06e1350ca9de794df2b07cdb274
+7263:M 12 Aug 2023 21:12:03.595 * <ai> Redis version found by RedisAI: 7.0.5 - oss
+7263:M 12 Aug 2023 21:12:03.595 * <ai> RedisAI version 10207, git_sha=1bf38d86233ba06e1350ca9de794df2b07cdb274
+2377:M 12 Aug 2023 21:12:03.596 * <ai> Setting THREADS_PER_QUEUE parameter to: 1
+2377:M 12 Aug 2023 21:12:03.596 * Module 'ai' loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so
+7263:M 12 Aug 2023 21:12:03.596 * <ai> Setting THREADS_PER_QUEUE parameter to: 1
+7263:M 12 Aug 2023 21:12:03.596 * Module 'ai' loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so
+2377:M 12 Aug 2023 21:12:03.597 * Ready to accept connections
+7263:M 12 Aug 2023 21:12:03.597 * Ready to accept connections
+----------   Running  Command   ---------- 
+
+COMMAND: /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/bin/redis-server /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/config/redis.conf --loadmodule /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so THREADS_PER_QUEUE 1 --port 6780 --cluster-enabled yes --cluster-config-file nodes-orchestrator_3-6780.conf --bind 10.128.0.156 --bind-source-addr 10.128.0.156
+
+IPADDRESS: 10.128.0.156
+
+NETWORK: ipogif0
+
+------------------------------ 
+
+
+----------   Output   ---------- 
+
+
+20345:C 12 Aug 2023 21:12:03.656 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+20345:C 12 Aug 2023 21:12:03.656 # Redis version=7.0.5, bits=64, commit=1571907e, modified=0, pid=20345, just started
+20345:C 12 Aug 2023 21:12:03.656 # Configuration loaded
+20345:M 12 Aug 2023 21:12:03.657 * monotonic clock: POSIX clock_gettime
+20345:M 12 Aug 2023 21:12:03.660 * No cluster configuration found, I'm 8e677d2e41584376bf7fb4640438f901b7446c69
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 7.0.5 (1571907e/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in cluster mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6780
+ |    `-._   `._    /     _.-'    |     PID: 20345
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           https://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+              `-.__.-'
+
+20345:M 12 Aug 2023 21:12:03.719 # Server initialized
+20345:M 12 Aug 2023 21:12:03.719 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+----------   Running  Command   ---------- 
+
+COMMAND: /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/bin/redis-server /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/config/redis.conf --loadmodule /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so THREADS_PER_QUEUE 1 --port 6780 --cluster-enabled yes --cluster-config-file nodes-orchestrator_1-6780.conf --bind 10.128.0.154 --bind-source-addr 10.128.0.154
+
+IPADDRESS: 10.128.0.154
+
+NETWORK: ipogif0
+
+------------------------------ 
+
+
+----------   Output   ---------- 
+
+
+20345:M 12 Aug 2023 21:12:03.727 * <ai> Redis version found by RedisAI: 7.0.5 - oss
+20345:M 12 Aug 2023 21:12:03.727 * <ai> RedisAI version 10207, git_sha=1bf38d86233ba06e1350ca9de794df2b07cdb274
+20345:M 12 Aug 2023 21:12:03.728 * <ai> Setting THREADS_PER_QUEUE parameter to: 1
+20345:M 12 Aug 2023 21:12:03.728 * Module 'ai' loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so
+20345:M 12 Aug 2023 21:12:03.729 * Ready to accept connections
+22243:C 12 Aug 2023 21:12:03.773 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+22243:C 12 Aug 2023 21:12:03.773 # Redis version=7.0.5, bits=64, commit=1571907e, modified=0, pid=22243, just started
+22243:C 12 Aug 2023 21:12:03.773 # Configuration loaded
+22243:M 12 Aug 2023 21:12:03.773 * monotonic clock: POSIX clock_gettime
+22243:M 12 Aug 2023 21:12:03.777 * No cluster configuration found, I'm 4a99411e47a4ff6befc12c00ba3c5ba6d32b312a
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 7.0.5 (1571907e/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in cluster mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6780
+ |    `-._   `._    /     _.-'    |     PID: 22243
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           https://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+              `-.__.-'
+
+22243:M 12 Aug 2023 21:12:03.836 # Server initialized
+22243:M 12 Aug 2023 21:12:03.836 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+22243:M 12 Aug 2023 21:12:03.845 * <ai> Redis version found by RedisAI: 7.0.5 - oss
+22243:M 12 Aug 2023 21:12:03.845 * <ai> RedisAI version 10207, git_sha=1bf38d86233ba06e1350ca9de794df2b07cdb274
+22243:M 12 Aug 2023 21:12:03.846 * <ai> Setting THREADS_PER_QUEUE parameter to: 1
+22243:M 12 Aug 2023 21:12:03.846 * Module 'ai' loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/redisai.so
+22243:M 12 Aug 2023 21:12:03.848 * Ready to accept connections
+7263:M 12 Aug 2023 21:12:24.213 # configEpoch set to 1 via CLUSTER SET-CONFIG-EPOCH
+2377:M 12 Aug 2023 21:12:24.214 # configEpoch set to 2 via CLUSTER SET-CONFIG-EPOCH
+20345:M 12 Aug 2023 21:12:24.214 # configEpoch set to 3 via CLUSTER SET-CONFIG-EPOCH
+22243:M 12 Aug 2023 21:12:24.216 # configEpoch set to 4 via CLUSTER SET-CONFIG-EPOCH
+7263:M 12 Aug 2023 21:12:24.240 # IP address for this node updated to 10.128.0.153
+2377:M 12 Aug 2023 21:12:24.342 # IP address for this node updated to 10.128.0.155
+22243:M 12 Aug 2023 21:12:24.342 # IP address for this node updated to 10.128.0.154
+20345:M 12 Aug 2023 21:12:24.342 # IP address for this node updated to 10.128.0.156
+2377:M 12 Aug 2023 21:12:29.194 # Cluster state changed: ok
+20345:M 12 Aug 2023 21:12:29.198 # Cluster state changed: ok
+7263:M 12 Aug 2023 21:12:29.200 # Cluster state changed: ok
+22243:M 12 Aug 2023 21:12:29.209 # Cluster state changed: ok
+7263:M 12 Aug 2023 21:12:41.447 # <ai> backend TORCH not loaded, will try loading default backend
+7263:M 12 Aug 2023 21:12:45.102 * <ai> TORCH backend loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/backends/redisai_torch/redisai_torch.so
+2377:M 12 Aug 2023 21:12:52.879 # <ai> backend TORCH not loaded, will try loading default backend
+2377:M 12 Aug 2023 21:12:56.429 * <ai> TORCH backend loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/backends/redisai_torch/redisai_torch.so
+20345:M 12 Aug 2023 21:13:03.946 # <ai> backend TORCH not loaded, will try loading default backend
+20345:M 12 Aug 2023 21:13:08.462 * <ai> TORCH backend loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/backends/redisai_torch/redisai_torch.so
+22243:M 12 Aug 2023 21:13:16.440 # <ai> backend TORCH not loaded, will try loading default backend
+22243:M 12 Aug 2023 21:13:20.248 * <ai> TORCH backend loaded from /lus/cls01029/richaama/smartsim-scaling/SmartSim/smartsim/_core/lib/backends/redisai_torch/redisai_torch.so

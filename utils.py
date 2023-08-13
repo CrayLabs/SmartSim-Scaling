@@ -144,7 +144,7 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     logger.info("Orchestrator Database created and running")
     return db
 
-def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
+def attach_resnet(model, res_model_path, device, num_devices, batch_size):
     """Set and configure the PyTorch resnet50 model for inference
 
     :param model: path to serialized resnet model
@@ -160,33 +160,22 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    client = Client(address=address, cluster=cluster)
+    print(f"passed 4 model: {model}, res: {res_model_path}, device: {device}, num: {num_devices}, batch: {batch_size}")
     device = device.upper()
-    if (device == "GPU") and (num_devices > 1):
-        client.set_model_from_file_multigpu("resnet_model",
-                                            model,
-                                            "TORCH",
-                                            0, num_devices,
-                                            batch_size)
-        client.set_script_from_file_multigpu("resnet_script",
-                                             "./imagenet/data_processing_script.txt",
-                                             0, num_devices)
-        logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
-    else:
-        # Redis does not accept CPU:<n>. We are either
-        # setting (possibly multiple copies of) the model and script on CPU, or one
-        # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
-        print(f"model: {model}, device: {device}, batch_size: {batch_size}")
-        client.set_model_from_file("resnet_model",
-                                    model,
-                                    "TORCH",
-                                    device,
-                                    batch_size)
-        print("passed set model")
-        client.set_script_from_file("resnet_script",
-                                    "./imagenet/data_processing_script.txt",
-                                    device)
-        logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
+    print(f"model: {model}")
+    model.add_ml_model(name="resnet_model",
+                        devices_per_node=num_devices,
+                        backend="TORCH",
+                        model_path=res_model_path,
+                        batch_size=batch_size,
+                        device=device)
+    print("passed 5")
+    #removed devices per node
+    model.add_script("resnet_script",
+                        script_path="./imagenet/data_processing_script.txt",
+                        device="GPU")
+    print("passed 6")
+    logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 def write_run_config(path, **kwargs):
     """Write config attributes to run file.

@@ -1,0 +1,36 @@
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 3958329.0+8 ON nid00280 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+7 ON nid00279 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+4 ON nid00276 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+10 ON nid00282 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+11 ON nid00283 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+2 ON nid00274 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+5 ON nid00277 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+1 ON nid00273 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+12 ON nid00284 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+13 ON nid00285 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+9 ON nid00281 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+15 ON nid00287 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+6 ON nid00278 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+14 ON nid00286 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** STEP 3958329.0+3 ON nid00275 CANCELLED AT 2023-07-20T15:31:58 ***
+srun: got SIGCONT
+slurmstepd: error: *** STEP 3958329.0+0 ON nid00272 CANCELLED AT 2023-07-20T15:31:58 ***
+slurmstepd: error: *** JOB 3958329 ON nid00272 CANCELLED AT 2023-07-20T15:31:58 ***
+srun: forcing job termination
+srun: forcing job termination

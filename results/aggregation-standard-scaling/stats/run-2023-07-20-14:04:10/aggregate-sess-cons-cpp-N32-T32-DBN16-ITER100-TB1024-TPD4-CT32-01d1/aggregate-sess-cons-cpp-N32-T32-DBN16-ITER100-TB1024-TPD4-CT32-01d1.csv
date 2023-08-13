@@ -1,0 +1,2 @@
+,name,date,db,smartsim,smartredis,client_total,client_per_node,client_nodes,database_nodes,database_cpus,iterations,tensor_bytes,t_per_dataset,client_threads,language,client(),get_list_min,get_list_mean,get_list_max,loop_time,main()
+0,aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1,2023-07-20,redis-server,0.5.0,0.3.1,1024,32,32,16,36,100,1024,4,32,cpp,0.00229383,0.0140049,0.014981227,0.023072,132.666,132.67

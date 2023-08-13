@@ -113,7 +113,7 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Standard throughput
 
-Co-locacated deployment is the preferred method for running tightly coupled
+Co-located deployment is the preferred method for running tightly coupled
 throughput workloads with SmartSim, however, if you want to deploy the Orchestrator
 database and the application on different nodes, you want to use standard
 deployment.

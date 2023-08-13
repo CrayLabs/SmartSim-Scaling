@@ -1,0 +1,1851 @@
+14:51:41 horizon SmartSim[22800] INFO Running name with value: run-2023-07-20-14:51:41
+14:51:41 horizon SmartSim[22800] INFO Running path with value: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+14:51:41 horizon SmartSim[22800] INFO Running smartsim_version with value: 0.5.0
+14:51:41 horizon SmartSim[22800] INFO Running smartredis_version with value: 0.3.1
+14:51:41 horizon SmartSim[22800] INFO Running db with value: redis-server
+14:51:41 horizon SmartSim[22800] INFO Running date with value: 2023-07-20
+14:51:41 horizon SmartSim[22800] INFO Running language with value: ['cpp']
+14:51:41 horizon SmartSim[22800] INFO Running colocated with value: 0
+14:51:41 horizon SmartSim[22800] INFO Running client_per_node with value: [32]
+14:51:41 horizon SmartSim[22800] INFO Running client_nodes with value: [4, 8, 16, 32, 64, 128]
+14:51:41 horizon SmartSim[22800] INFO Running db_cpus with value: 32
+14:51:41 horizon SmartSim[22800] INFO Running iterations with value: 100
+14:51:41 horizon SmartSim[22800] INFO Running tensor_bytes with value: [1024]
+14:51:41 horizon SmartSim[22800] INFO Running tensors_per_dataset with value: [4]
+14:51:41 horizon SmartSim[22800] INFO Running client_threads with value: [32]
+14:51:41 horizon SmartSim[22800] INFO Running cpu_hyperthreads with value: 2
+14:51:41 horizon SmartSim[22800] INFO Running language with value: ['cpp']
+14:51:41 horizon SmartSim[22800] INFO Running wall_time with value: 05:00:00
+14:51:41 horizon SmartSim[22800] INFO Running permutation 1 of 3
+14:51:41 horizon SmartSim[22800] INFO Working in previously created experiment
+14:51:41 horizon SmartSim[22800] DEBUG Added step command to batch for orchestrator-CU79F7QJJ769
+14:51:41 horizon SmartSim[22800] DEBUG Gleaned batch job id: 3958327 for orchestrator-CU79F7QJIL06
+14:51:42 horizon SmartSim[22800] DEBUG Launching orchestrator
+14:51:42 horizon SmartSim[22800] INFO Orchestrator launched as a batch
+14:51:42 horizon SmartSim[22800] INFO While queued, SmartSim will wait for Orchestrator to run
+14:51:42 horizon SmartSim[22800] INFO CTRL+C interrupt to abort and cancel launch
+14:52:04 horizon SmartSim[22800] DEBUG [29;1m>>> Performing hash slots allocation on 4 nodes...
+[0mMaster[0] -> Slots 0 - 4095
+Master[1] -> Slots 4096 - 8191
+Master[2] -> Slots 8192 - 12287
+Master[3] -> Slots 12288 - 16383
+M: b198da6fcb68b70ae4ceb336beaa476c7741b06d 10.128.0.120:6780
+   slots:[0-4095] (4096 slots) master
+M: a872af5501c9ccfb17cfc1f237e851ba52ef0699 10.128.0.121:6780
+   slots:[4096-8191] (4096 slots) master
+M: eaeaeaebd4e1063c520b0efbcf844e5f663787f7 10.128.0.122:6780
+   slots:[8192-12287] (4096 slots) master
+M: 6d78aac66aea377a97dc474ae0070a7a6a7172af 10.128.0.123:6780
+   slots:[12288-16383] (4096 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+.
+[29;1m>>> Performing Cluster Check (using node 10.128.0.120:6780)
+[0mM: b198da6fcb68b70ae4ceb336beaa476c7741b06d 10.128.0.120:6780
+   slots:[0-4095] (4096 slots) master
+M: eaeaeaebd4e1063c520b0efbcf844e5f663787f7 10.128.0.122:6780
+   slots:[8192-12287] (4096 slots) master
+M: 6d78aac66aea377a97dc474ae0070a7a6a7172af 10.128.0.123:6780
+   slots:[12288-16383] (4096 slots) master
+M: a872af5501c9ccfb17cfc1f237e851ba52ef0699 10.128.0.121:6780
+   slots:[4096-8191] (4096 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+14:52:04 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+14:52:09 horizon SmartSim[22800] DEBUG Cluster status verified
+14:52:09 horizon SmartSim[22800] INFO Database cluster created with 4 shards
+14:52:09 horizon SmartSim[22800] DEBUG Orchestrator launched on nodes: ['10.128.0.120', '10.128.0.121', '10.128.0.122', '10.128.0.123']
+14:52:09 horizon SmartSim[22800] DEBUG Starting Job Manager
+14:52:09 horizon SmartSim[22800] INFO Orchestrator Database created and running
+14:52:09 horizon SmartSim[22800] INFO Running with threads: 32
+14:52:09 horizon SmartSim[22800] INFO Working in previously created experiment
+14:52:09 horizon SmartSim[22800] DEBUG Producer session created
+14:52:09 horizon SmartSim[22800] INFO Working in previously created experiment
+14:52:09 horizon SmartSim[22800] INFO Working in previously created experiment
+14:52:09 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9 with params {}
+14:52:09 horizon SmartSim[22800] DEBUG Consumer session created
+14:52:09 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 128
+	ntasks-per-node = 32
+	nodes = 4
+aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 128
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:52:09 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+14:52:14 horizon SmartSim[22800] DEBUG Cluster status verified
+14:52:14 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:52:14 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:52:17 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268
+14:52:21 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9
+14:52:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): New
+14:52:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:52:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:52:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:52:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:52:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:52:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:52:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:16 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:16 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:21 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:21 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:53:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:53:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:54:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:54:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:54:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Running
+14:54:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Running
+14:54:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-6268(3958326.0): Completed
+14:54:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ebe9(3958326.1): Completed
+14:54:11 horizon SmartSim[22800] INFO Running with threads: 32
+14:54:11 horizon SmartSim[22800] INFO Working in previously created experiment
+14:54:11 horizon SmartSim[22800] DEBUG Producer session created
+14:54:11 horizon SmartSim[22800] INFO Working in previously created experiment
+14:54:11 horizon SmartSim[22800] INFO Working in previously created experiment
+14:54:11 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d with params {}
+14:54:11 horizon SmartSim[22800] DEBUG Consumer session created
+14:54:11 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 256
+	ntasks-per-node = 32
+	nodes = 8
+aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 256
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:54:11 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+14:54:16 horizon SmartSim[22800] DEBUG Cluster status verified
+14:54:16 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:54:16 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:54:19 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2
+14:54:22 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d
+14:54:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): New
+14:54:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:54:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:54:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:54:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:54:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:54:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:54:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:02 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:02 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:07 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:07 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:12 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:12 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:28 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:28 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:33 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:33 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:38 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:38 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:55:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:55:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:56:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:56:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:56:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Running
+14:56:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Running
+14:56:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-14a2(3958326.2): Completed
+14:56:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-6d9d(3958326.3): Completed
+14:56:13 horizon SmartSim[22800] INFO Running with threads: 32
+14:56:13 horizon SmartSim[22800] INFO Working in previously created experiment
+14:56:13 horizon SmartSim[22800] DEBUG Producer session created
+14:56:13 horizon SmartSim[22800] INFO Working in previously created experiment
+14:56:13 horizon SmartSim[22800] INFO Working in previously created experiment
+14:56:13 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557 with params {}
+14:56:13 horizon SmartSim[22800] DEBUG Consumer session created
+14:56:13 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 512
+	ntasks-per-node = 32
+	nodes = 16
+aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 512
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:56:13 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+14:56:18 horizon SmartSim[22800] DEBUG Cluster status verified
+14:56:18 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:56:18 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:56:21 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3
+14:56:24 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557
+14:56:29 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): New
+14:56:29 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): New
+14:56:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:56:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:56:39 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:56:39 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:56:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:56:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:56:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:56:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:56:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:56:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:56:59 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:56:59 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:04 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:04 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:09 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:09 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:14 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:14 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:19 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:19 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:24 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:24 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:29 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:29 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:39 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:39 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:57:59 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:57:59 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:58:04 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:58:04 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:58:09 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Running
+14:58:09 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Running
+14:58:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-d0a3(3958326.4): Completed
+14:58:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-0557(3958326.5): Completed
+14:58:14 horizon SmartSim[22800] INFO Running with threads: 32
+14:58:14 horizon SmartSim[22800] INFO Working in previously created experiment
+14:58:14 horizon SmartSim[22800] DEBUG Producer session created
+14:58:14 horizon SmartSim[22800] INFO Working in previously created experiment
+14:58:14 horizon SmartSim[22800] INFO Working in previously created experiment
+14:58:14 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a with params {}
+14:58:14 horizon SmartSim[22800] DEBUG Consumer session created
+14:58:14 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 1024
+	ntasks-per-node = 32
+	nodes = 32
+aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 1024
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:58:14 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+14:58:19 horizon SmartSim[22800] DEBUG Cluster status verified
+14:58:19 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:58:19 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+14:58:23 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285
+14:58:26 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a
+14:58:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:58:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:58:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:58:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:58:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:58:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:58:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:58:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:58:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:58:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:58:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:58:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:16 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:16 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:21 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:21 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+14:59:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+14:59:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+15:00:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+15:00:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+15:00:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+15:00:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+15:00:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+15:00:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+15:00:16 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Running
+15:00:16 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Running
+15:00:21 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-9285(3958326.6): Completed
+15:00:21 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-d88a(3958326.7): Completed
+15:00:21 horizon SmartSim[22800] INFO Running with threads: 32
+15:00:21 horizon SmartSim[22800] INFO Working in previously created experiment
+15:00:21 horizon SmartSim[22800] DEBUG Producer session created
+15:00:21 horizon SmartSim[22800] INFO Working in previously created experiment
+15:00:21 horizon SmartSim[22800] INFO Working in previously created experiment
+15:00:21 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d with params {}
+15:00:21 horizon SmartSim[22800] DEBUG Consumer session created
+15:00:21 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 2048
+	ntasks-per-node = 32
+	nodes = 64
+aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 2048
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:00:21 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:00:26 horizon SmartSim[22800] DEBUG Cluster status verified
+15:00:26 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:00:26 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:00:29 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7
+15:00:33 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d
+15:00:38 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:00:38 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): New
+15:00:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:00:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:00:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:00:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:00:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:00:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:00:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:00:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:28 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:28 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:33 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:33 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:38 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:38 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:01:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:01:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:02:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:02:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:02:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:02:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:02:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:28 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Running
+15:02:28 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Running
+15:02:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-63a7(3958326.8): Completed
+15:02:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-0d0d(3958326.9): Completed
+15:02:33 horizon SmartSim[22800] INFO Running with threads: 32
+15:02:33 horizon SmartSim[22800] INFO Working in previously created experiment
+15:02:33 horizon SmartSim[22800] DEBUG Producer session created
+15:02:33 horizon SmartSim[22800] INFO Working in previously created experiment
+15:02:33 horizon SmartSim[22800] INFO Working in previously created experiment
+15:02:33 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5 with params {}
+15:02:33 horizon SmartSim[22800] DEBUG Consumer session created
+15:02:33 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 4096
+	ntasks-per-node = 32
+	nodes = 128
+aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 4096
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:02:33 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:02:38 horizon SmartSim[22800] DEBUG Cluster status verified
+15:02:38 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:02:38 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:02:41 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473
+15:02:44 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5
+15:02:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:02:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): New
+15:02:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:02:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:02:59 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:02:59 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:35 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:35 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:03:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:03:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:00 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:00 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:35 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:35 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Running
+15:04:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Running
+15:04:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-d473(3958326.10): Completed
+15:04:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-21c5(3958326.11): Completed
+15:04:55 horizon SmartSim[22800] INFO Stopping model orchestrator with job name orchestrator-CU79F7QJIL06
+15:04:55 horizon SmartSim[22800] INFO Running permutation 2 of 3
+15:04:55 horizon SmartSim[22800] INFO Working in previously created experiment
+15:04:55 horizon SmartSim[22800] DEBUG Added step command to batch for orchestrator-CU79PCG3F66U
+15:04:55 horizon SmartSim[22800] DEBUG Gleaned batch job id: 3958328 for orchestrator-CU79PCG3EFVZ
+15:04:56 horizon SmartSim[22800] DEBUG Restarting orchestrator
+15:04:56 horizon SmartSim[22800] INFO Orchestrator launched as a batch
+15:04:56 horizon SmartSim[22800] INFO While queued, SmartSim will wait for Orchestrator to run
+15:04:56 horizon SmartSim[22800] INFO CTRL+C interrupt to abort and cancel launch
+15:05:18 horizon SmartSim[22800] DEBUG [29;1m>>> Performing hash slots allocation on 8 nodes...
+[0mMaster[0] -> Slots 0 - 2047
+Master[1] -> Slots 2048 - 4095
+Master[2] -> Slots 4096 - 6143
+Master[3] -> Slots 6144 - 8191
+Master[4] -> Slots 8192 - 10239
+Master[5] -> Slots 10240 - 12287
+Master[6] -> Slots 12288 - 14335
+Master[7] -> Slots 14336 - 16383
+M: 469c31fc8a1519bfe91c98b92cb589e349df0625 10.128.0.149:6780
+   slots:[0-2047] (2048 slots) master
+M: 80e25382a5f833df77c0eb6b5b81c376623d8b0e 10.128.0.125:6780
+   slots:[2048-4095] (2048 slots) master
+M: ecc3aa4b1b54659d56f2420c46d281ba3b1a3d20 10.128.0.151:6780
+   slots:[4096-6143] (2048 slots) master
+M: 2b5a95b7497a5e8bd91e274c3df3a6ac356f1006 10.128.0.126:6780
+   slots:[6144-8191] (2048 slots) master
+M: ec75352d9cf2b7fa6c04631dcbdbc982b7d994fe 10.128.0.124:6780
+   slots:[8192-10239] (2048 slots) master
+M: 69ad7b87246cdaff1a4b11f62eb51f4af41ea166 10.128.0.128:6780
+   slots:[10240-12287] (2048 slots) master
+M: ba32ecb4bcfc82d5f5a0efd2811b7ccc0b2e0938 10.128.0.150:6780
+   slots:[12288-14335] (2048 slots) master
+M: a13c012f5577ef5d399fbcb19703dd0cf7f67bab 10.128.0.127:6780
+   slots:[14336-16383] (2048 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+.
+[29;1m>>> Performing Cluster Check (using node 10.128.0.149:6780)
+[0mM: 469c31fc8a1519bfe91c98b92cb589e349df0625 10.128.0.149:6780
+   slots:[0-2047] (2048 slots) master
+M: 80e25382a5f833df77c0eb6b5b81c376623d8b0e 10.128.0.125:6780
+   slots:[2048-4095] (2048 slots) master
+M: ba32ecb4bcfc82d5f5a0efd2811b7ccc0b2e0938 10.128.0.150:6780
+   slots:[12288-14335] (2048 slots) master
+M: ec75352d9cf2b7fa6c04631dcbdbc982b7d994fe 10.128.0.124:6780
+   slots:[8192-10239] (2048 slots) master
+M: 69ad7b87246cdaff1a4b11f62eb51f4af41ea166 10.128.0.128:6780
+   slots:[10240-12287] (2048 slots) master
+M: a13c012f5577ef5d399fbcb19703dd0cf7f67bab 10.128.0.127:6780
+   slots:[14336-16383] (2048 slots) master
+M: ecc3aa4b1b54659d56f2420c46d281ba3b1a3d20 10.128.0.151:6780
+   slots:[4096-6143] (2048 slots) master
+M: 2b5a95b7497a5e8bd91e274c3df3a6ac356f1006 10.128.0.126:6780
+   slots:[6144-8191] (2048 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+15:05:18 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:05:23 horizon SmartSim[22800] DEBUG Cluster status verified
+15:05:23 horizon SmartSim[22800] INFO Database cluster created with 8 shards
+15:05:23 horizon SmartSim[22800] DEBUG Orchestrator launched on nodes: ['10.128.0.149', '10.128.0.125', '10.128.0.151', '10.128.0.126', '10.128.0.124', '10.128.0.128', '10.128.0.150', '10.128.0.127']
+15:05:23 horizon SmartSim[22800] INFO Orchestrator Database created and running
+15:05:23 horizon SmartSim[22800] INFO Running with threads: 32
+15:05:23 horizon SmartSim[22800] INFO Working in previously created experiment
+15:05:23 horizon SmartSim[22800] DEBUG Producer session created
+15:05:23 horizon SmartSim[22800] INFO Working in previously created experiment
+15:05:23 horizon SmartSim[22800] INFO Working in previously created experiment
+15:05:23 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4 with params {}
+15:05:23 horizon SmartSim[22800] DEBUG Consumer session created
+15:05:23 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 128
+	ntasks-per-node = 32
+	nodes = 4
+aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 128
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:05:23 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:05:28 horizon SmartSim[22800] DEBUG Cluster status verified
+15:05:28 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:05:28 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:05:31 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0
+15:05:35 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4
+15:05:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:05:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): New
+15:05:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:05:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:05:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:05:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:05:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:05:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:00 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:00 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:35 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:35 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:06:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:06:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:07:00 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:07:00 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:07:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:07:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:07:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:07:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:07:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:07:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:07:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Running
+15:07:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Running
+15:07:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-f8b0(3958326.12): Completed
+15:07:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-1bd4(3958326.13): Completed
+15:07:25 horizon SmartSim[22800] INFO Running with threads: 32
+15:07:25 horizon SmartSim[22800] INFO Working in previously created experiment
+15:07:25 horizon SmartSim[22800] DEBUG Producer session created
+15:07:25 horizon SmartSim[22800] INFO Working in previously created experiment
+15:07:25 horizon SmartSim[22800] INFO Working in previously created experiment
+15:07:25 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e with params {}
+15:07:25 horizon SmartSim[22800] DEBUG Consumer session created
+15:07:25 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 256
+	ntasks-per-node = 32
+	nodes = 8
+aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 256
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:07:25 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:07:30 horizon SmartSim[22800] DEBUG Cluster status verified
+15:07:30 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:07:30 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:07:33 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3
+15:07:36 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e
+15:07:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): New
+15:07:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): New
+15:07:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:07:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:07:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:07:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:07:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:07:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:16 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:16 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:21 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:21 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:08:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:08:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:09:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:09:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:09:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:09:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:09:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:09:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:09:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:09:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:09:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Running
+15:09:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Running
+15:09:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-bed3(3958326.14): Completed
+15:09:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-154e(3958326.15): Completed
+15:09:27 horizon SmartSim[22800] INFO Running with threads: 32
+15:09:27 horizon SmartSim[22800] INFO Working in previously created experiment
+15:09:27 horizon SmartSim[22800] DEBUG Producer session created
+15:09:27 horizon SmartSim[22800] INFO Working in previously created experiment
+15:09:27 horizon SmartSim[22800] INFO Working in previously created experiment
+15:09:27 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6 with params {}
+15:09:27 horizon SmartSim[22800] DEBUG Consumer session created
+15:09:27 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 512
+	ntasks-per-node = 32
+	nodes = 16
+aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 512
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:09:27 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:09:32 horizon SmartSim[22800] DEBUG Cluster status verified
+15:09:32 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:09:32 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:09:35 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06
+15:09:38 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6
+15:09:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:09:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:09:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:09:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:09:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:09:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:09:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:09:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:28 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:28 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:33 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:33 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:38 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:38 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:10:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:10:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:11:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:11:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:11:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:11:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:11:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:11:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:11:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Running
+15:11:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Running
+15:11:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Completed
+15:11:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-fb06(3958326.16): Completed
+15:11:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Completed
+15:11:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-cfc6(3958326.17): Completed
+15:11:28 horizon SmartSim[22800] INFO Running with threads: 32
+15:11:28 horizon SmartSim[22800] INFO Working in previously created experiment
+15:11:28 horizon SmartSim[22800] DEBUG Producer session created
+15:11:28 horizon SmartSim[22800] INFO Working in previously created experiment
+15:11:28 horizon SmartSim[22800] INFO Working in previously created experiment
+15:11:28 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a with params {}
+15:11:28 horizon SmartSim[22800] DEBUG Consumer session created
+15:11:28 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 1024
+	ntasks-per-node = 32
+	nodes = 32
+aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 1024
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:11:28 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:11:33 horizon SmartSim[22800] DEBUG Cluster status verified
+15:11:33 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:11:33 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:11:37 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277
+15:11:40 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a
+15:11:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:11:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:11:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:11:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:11:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:11:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:00 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:00 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:35 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:35 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:12:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:12:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:00 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:00 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Running
+15:13:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Running
+15:13:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-f277(3958326.18): Completed
+15:13:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-fc5a(3958326.19): Completed
+15:13:35 horizon SmartSim[22800] INFO Running with threads: 32
+15:13:35 horizon SmartSim[22800] INFO Working in previously created experiment
+15:13:35 horizon SmartSim[22800] DEBUG Producer session created
+15:13:35 horizon SmartSim[22800] INFO Working in previously created experiment
+15:13:35 horizon SmartSim[22800] INFO Working in previously created experiment
+15:13:35 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711 with params {}
+15:13:35 horizon SmartSim[22800] DEBUG Consumer session created
+15:13:35 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 2048
+	ntasks-per-node = 32
+	nodes = 64
+aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 2048
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:13:35 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:13:40 horizon SmartSim[22800] DEBUG Cluster status verified
+15:13:40 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:13:40 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:13:43 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb
+15:13:47 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711
+15:13:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:13:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): New
+15:13:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:13:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:02 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:02 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:07 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:07 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:12 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:12 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:14:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:14:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:02 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:02 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:07 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:07 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:12 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:12 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Running
+15:15:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Running
+15:15:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-87bb(3958326.20): Completed
+15:15:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-0711(3958326.21): Completed
+15:15:47 horizon SmartSim[22800] INFO Running with threads: 32
+15:15:47 horizon SmartSim[22800] INFO Working in previously created experiment
+15:15:47 horizon SmartSim[22800] DEBUG Producer session created
+15:15:47 horizon SmartSim[22800] INFO Working in previously created experiment
+15:15:47 horizon SmartSim[22800] INFO Working in previously created experiment
+15:15:47 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22 with params {}
+15:15:47 horizon SmartSim[22800] DEBUG Consumer session created
+15:15:47 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 4096
+	ntasks-per-node = 32
+	nodes = 128
+aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 4096
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:15:47 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:15:52 horizon SmartSim[22800] DEBUG Cluster status verified
+15:15:52 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:15:52 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:15:55 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47
+15:15:58 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22
+15:16:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): New
+15:16:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): New
+15:16:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:28 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:28 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:33 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:33 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:38 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:38 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:16:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:16:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:08 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:08 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:23 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:23 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:28 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:28 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:33 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:33 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:38 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:38 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:43 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:43 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:48 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:48 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:53 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:53 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:17:58 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:17:58 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:18:03 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Running
+15:18:03 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Running
+15:18:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-fe47(3958326.22): Completed
+15:18:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-1b22(3958326.23): Completed
+15:18:08 horizon SmartSim[22800] INFO Stopping model orchestrator with job name orchestrator-CU79PCG3EFVZ
+15:18:08 horizon SmartSim[22800] INFO Running permutation 3 of 3
+15:18:08 horizon SmartSim[22800] INFO Working in previously created experiment
+15:18:09 horizon SmartSim[22800] DEBUG Added step command to batch for orchestrator-CU79ZH437MCE
+15:18:09 horizon SmartSim[22800] DEBUG Gleaned batch job id: 3958329 for orchestrator-CU79ZH436ZP0
+15:18:10 horizon SmartSim[22800] DEBUG Restarting orchestrator
+15:18:10 horizon SmartSim[22800] INFO Orchestrator launched as a batch
+15:18:10 horizon SmartSim[22800] INFO While queued, SmartSim will wait for Orchestrator to run
+15:18:10 horizon SmartSim[22800] INFO CTRL+C interrupt to abort and cancel launch
+15:18:52 horizon SmartSim[22800] DEBUG [29;1m>>> Performing hash slots allocation on 16 nodes...
+[0mMaster[0] -> Slots 0 - 1023
+Master[1] -> Slots 1024 - 2047
+Master[2] -> Slots 2048 - 3071
+Master[3] -> Slots 3072 - 4095
+Master[4] -> Slots 4096 - 5119
+Master[5] -> Slots 5120 - 6143
+Master[6] -> Slots 6144 - 7167
+Master[7] -> Slots 7168 - 8191
+Master[8] -> Slots 8192 - 9215
+Master[9] -> Slots 9216 - 10239
+Master[10] -> Slots 10240 - 11263
+Master[11] -> Slots 11264 - 12287
+Master[12] -> Slots 12288 - 13311
+Master[13] -> Slots 13312 - 14335
+Master[14] -> Slots 14336 - 15359
+Master[15] -> Slots 15360 - 16383
+M: c0b9c70c723e7b7056bf4cb1585ae8c0a3ac5bf2 10.128.1.29:6780
+   slots:[0-1023] (1024 slots) master
+M: a86cf29d37c7d887cc33ccee8fa2ee7c16494118 10.128.1.30:6780
+   slots:[1024-2047] (1024 slots) master
+M: b7f807e7e787822dc2ceab4cc3d4b1ab05a3103d 10.128.1.24:6780
+   slots:[2048-3071] (1024 slots) master
+M: 44dc72ca36a5f9c6df408411e823d9e61c7fae33 10.128.1.25:6780
+   slots:[3072-4095] (1024 slots) master
+M: 852be380afed27ca7acc6418a51708f10cca5b46 10.128.1.34:6780
+   slots:[4096-5119] (1024 slots) master
+M: 28c48dd865751d50679e1cb141d27d12cd6f96ad 10.128.1.23:6780
+   slots:[5120-6143] (1024 slots) master
+M: 740afdcf4073b588db973d280cf32901aaed29f8 10.128.1.28:6780
+   slots:[6144-7167] (1024 slots) master
+M: c1d006263eeb8b048023d72fce0ee3c50b773d29 10.128.1.22:6780
+   slots:[7168-8191] (1024 slots) master
+M: 3c95d72cb522232c9cff6b771286677261ade4e4 10.128.1.33:6780
+   slots:[8192-9215] (1024 slots) master
+M: 27f6c3e39310aa3da525a2938fac61a45e000f28 10.128.1.27:6780
+   slots:[9216-10239] (1024 slots) master
+M: eb5e34bb690eef777a76eea735a0a460b4aadcb3 10.128.1.32:6780
+   slots:[10240-11263] (1024 slots) master
+M: e6ad5114a06ee6e2278915854aef9c9846da818e 10.128.1.20:6780
+   slots:[11264-12287] (1024 slots) master
+M: 929b9c917d178e575ec85c343ce0fdf43f8abbf2 10.128.1.31:6780
+   slots:[12288-13311] (1024 slots) master
+M: 5cbea11ba390d12496b73a06c673c31439c60998 10.128.1.19:6780
+   slots:[13312-14335] (1024 slots) master
+M: 2a4d7fa2ded6972ff22da773913a1d555714c9aa 10.128.1.26:6780
+   slots:[14336-15359] (1024 slots) master
+M: 0cbaa76c2fb77cd3add66c8787a83e0fd6563905 10.128.1.21:6780
+   slots:[15360-16383] (1024 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+.....................
+[29;1m>>> Performing Cluster Check (using node 10.128.1.29:6780)
+[0mM: c0b9c70c723e7b7056bf4cb1585ae8c0a3ac5bf2 10.128.1.29:6780
+   slots:[0-1023] (1024 slots) master
+M: 0cbaa76c2fb77cd3add66c8787a83e0fd6563905 10.128.1.21:6780
+   slots:[15360-16383] (1024 slots) master
+M: 852be380afed27ca7acc6418a51708f10cca5b46 10.128.1.34:6780
+   slots:[4096-5119] (1024 slots) master
+M: eb5e34bb690eef777a76eea735a0a460b4aadcb3 10.128.1.32:6780
+   slots:[10240-11263] (1024 slots) master
+M: a86cf29d37c7d887cc33ccee8fa2ee7c16494118 10.128.1.30:6780
+   slots:[1024-2047] (1024 slots) master
+M: c1d006263eeb8b048023d72fce0ee3c50b773d29 10.128.1.22:6780
+   slots:[7168-8191] (1024 slots) master
+M: e6ad5114a06ee6e2278915854aef9c9846da818e 10.128.1.20:6780
+   slots:[11264-12287] (1024 slots) master
+M: 27f6c3e39310aa3da525a2938fac61a45e000f28 10.128.1.27:6780
+   slots:[9216-10239] (1024 slots) master
+M: b7f807e7e787822dc2ceab4cc3d4b1ab05a3103d 10.128.1.24:6780
+   slots:[2048-3071] (1024 slots) master
+M: 28c48dd865751d50679e1cb141d27d12cd6f96ad 10.128.1.23:6780
+   slots:[5120-6143] (1024 slots) master
+M: 929b9c917d178e575ec85c343ce0fdf43f8abbf2 10.128.1.31:6780
+   slots:[12288-13311] (1024 slots) master
+M: 5cbea11ba390d12496b73a06c673c31439c60998 10.128.1.19:6780
+   slots:[13312-14335] (1024 slots) master
+M: 2a4d7fa2ded6972ff22da773913a1d555714c9aa 10.128.1.26:6780
+   slots:[14336-15359] (1024 slots) master
+M: 740afdcf4073b588db973d280cf32901aaed29f8 10.128.1.28:6780
+   slots:[6144-7167] (1024 slots) master
+M: 44dc72ca36a5f9c6df408411e823d9e61c7fae33 10.128.1.25:6780
+   slots:[3072-4095] (1024 slots) master
+M: 3c95d72cb522232c9cff6b771286677261ade4e4 10.128.1.33:6780
+   slots:[8192-9215] (1024 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+15:18:52 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:18:57 horizon SmartSim[22800] DEBUG Cluster status verified
+15:18:57 horizon SmartSim[22800] INFO Database cluster created with 16 shards
+15:18:57 horizon SmartSim[22800] DEBUG Orchestrator launched on nodes: ['10.128.1.29', '10.128.1.30', '10.128.1.24', '10.128.1.25', '10.128.1.34', '10.128.1.23', '10.128.1.28', '10.128.1.22', '10.128.1.33', '10.128.1.27', '10.128.1.32', '10.128.1.20', '10.128.1.31', '10.128.1.19', '10.128.1.26', '10.128.1.21']
+15:18:57 horizon SmartSim[22800] INFO Orchestrator Database created and running
+15:18:57 horizon SmartSim[22800] INFO Running with threads: 32
+15:18:57 horizon SmartSim[22800] INFO Working in previously created experiment
+15:18:57 horizon SmartSim[22800] DEBUG Producer session created
+15:18:57 horizon SmartSim[22800] INFO Working in previously created experiment
+15:18:57 horizon SmartSim[22800] INFO Working in previously created experiment
+15:18:57 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9 with params {}
+15:18:57 horizon SmartSim[22800] DEBUG Consumer session created
+15:18:57 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 128
+	ntasks-per-node = 32
+	nodes = 4
+aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 128
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:18:57 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:19:02 horizon SmartSim[22800] DEBUG Cluster status verified
+15:19:02 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:19:02 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:19:05 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736
+15:19:08 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9
+15:19:13 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): New
+15:19:13 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): New
+15:19:18 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:18 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:24 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:24 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:29 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:29 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:39 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:39 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:19:59 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:19:59 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:04 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:04 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:09 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:09 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:14 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:14 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:19 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:19 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:24 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:24 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:29 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:29 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:39 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:39 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Running
+15:20:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Running
+15:20:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-4736(3958326.24): Completed
+15:20:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-4ec9(3958326.25): Completed
+15:20:59 horizon SmartSim[22800] INFO Running with threads: 32
+15:20:59 horizon SmartSim[22800] INFO Working in previously created experiment
+15:20:59 horizon SmartSim[22800] DEBUG Producer session created
+15:20:59 horizon SmartSim[22800] INFO Working in previously created experiment
+15:20:59 horizon SmartSim[22800] INFO Working in previously created experiment
+15:20:59 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140 with params {}
+15:20:59 horizon SmartSim[22800] DEBUG Consumer session created
+15:20:59 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 256
+	ntasks-per-node = 32
+	nodes = 8
+aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 256
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:20:59 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:21:04 horizon SmartSim[22800] DEBUG Cluster status verified
+15:21:04 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:21:04 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:21:07 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999
+15:21:10 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140
+15:21:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:35 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:35 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:21:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:21:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:00 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:00 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:05 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:05 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:10 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:10 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:15 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:15 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:20 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:20 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:25 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:25 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:30 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:30 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:35 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:35 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:40 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:40 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:45 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:45 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:50 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:50 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:55 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Running
+15:22:55 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Running
+15:22:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-8999(3958326.26): Completed
+15:22:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-e140(3958326.27): Completed
+15:23:00 horizon SmartSim[22800] INFO Running with threads: 32
+15:23:00 horizon SmartSim[22800] INFO Working in previously created experiment
+15:23:00 horizon SmartSim[22800] DEBUG Producer session created
+15:23:00 horizon SmartSim[22800] INFO Working in previously created experiment
+15:23:00 horizon SmartSim[22800] INFO Working in previously created experiment
+15:23:00 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f with params {}
+15:23:00 horizon SmartSim[22800] DEBUG Consumer session created
+15:23:00 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 512
+	ntasks-per-node = 32
+	nodes = 16
+aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 512
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:23:00 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:23:05 horizon SmartSim[22800] DEBUG Cluster status verified
+15:23:05 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:23:05 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:23:09 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb
+15:23:12 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f
+15:23:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:23:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:23:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:02 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:02 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:07 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:07 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:12 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:12 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Running
+15:24:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Running
+15:24:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-41cb(3958326.28): Completed
+15:24:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-cb0f(3958326.29): Completed
+15:24:57 horizon SmartSim[22800] INFO Running with threads: 32
+15:24:57 horizon SmartSim[22800] INFO Working in previously created experiment
+15:24:57 horizon SmartSim[22800] DEBUG Producer session created
+15:24:57 horizon SmartSim[22800] INFO Working in previously created experiment
+15:24:57 horizon SmartSim[22800] INFO Working in previously created experiment
+15:24:57 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34 with params {}
+15:24:57 horizon SmartSim[22800] DEBUG Consumer session created
+15:24:57 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 1024
+	ntasks-per-node = 32
+	nodes = 32
+aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 1024
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:24:57 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:25:02 horizon SmartSim[22800] DEBUG Cluster status verified
+15:25:02 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:25:02 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:25:06 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574
+15:25:09 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34
+15:25:14 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:14 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): New
+15:25:19 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:19 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:24 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:24 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:29 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:29 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:39 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:39 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:25:59 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:25:59 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:04 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:04 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:09 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:09 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:14 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:14 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:19 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:19 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:24 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:24 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:29 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:29 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:34 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:34 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:39 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:39 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:44 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:44 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:49 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:49 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:54 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:54 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:26:59 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:26:59 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:27:04 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Running
+15:27:04 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Running
+15:27:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-b574(3958326.30): Completed
+15:27:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-6f34(3958326.31): Completed
+15:27:09 horizon SmartSim[22800] INFO Running with threads: 32
+15:27:09 horizon SmartSim[22800] INFO Working in previously created experiment
+15:27:09 horizon SmartSim[22800] DEBUG Producer session created
+15:27:09 horizon SmartSim[22800] INFO Working in previously created experiment
+15:27:09 horizon SmartSim[22800] INFO Working in previously created experiment
+15:27:09 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f with params {}
+15:27:09 horizon SmartSim[22800] DEBUG Consumer session created
+15:27:09 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 2048
+	ntasks-per-node = 32
+	nodes = 64
+aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 2048
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:27:09 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:27:14 horizon SmartSim[22800] DEBUG Cluster status verified
+15:27:14 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:27:14 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:27:17 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533
+15:27:21 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f
+15:27:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): New
+15:27:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): New
+15:27:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:27:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:27:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:27:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:27:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:27:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:27:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:27:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:27:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:27:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:27:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:27:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:16 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:16 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:21 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:21 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:31 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:31 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:36 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:36 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:41 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:41 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:46 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:46 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:51 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:51 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:28:56 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:28:56 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:01 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:29:01 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:06 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:29:06 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:11 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:29:11 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:16 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:29:16 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:21 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:29:21 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:26 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Running
+15:29:26 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Running
+15:29:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-3533(3958326.32): Completed
+15:29:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-c92f(3958326.33): Completed
+15:29:31 horizon SmartSim[22800] INFO Running with threads: 32
+15:29:31 horizon SmartSim[22800] INFO Working in previously created experiment
+15:29:31 horizon SmartSim[22800] DEBUG Producer session created
+15:29:31 horizon SmartSim[22800] INFO Working in previously created experiment
+15:29:31 horizon SmartSim[22800] INFO Working in previously created experiment
+15:29:31 horizon SmartSim[22800] DEBUG Configuring model aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b with params {}
+15:29:31 horizon SmartSim[22800] DEBUG Consumer session created
+15:29:31 horizon SmartSim[22800] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-py-data-aggregation/db/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 4096
+	ntasks-per-node = 32
+	nodes = 128
+aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b
+Executable: /lus/scratch/richaama/miniconda3/envs/plz3/bin/python
+Executable Arguments: aggregation_consumer.py 4096
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+15:29:31 horizon SmartSim[22800] DEBUG Beginning database cluster status check...
+15:29:36 horizon SmartSim[22800] DEBUG Cluster status verified
+15:29:36 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:29:36 horizon SmartSim[22800] DEBUG Running on allocation 3958326 gleaned from user environment
+15:29:39 horizon SmartSim[22800] DEBUG Launching aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9
+15:29:42 horizon SmartSim[22800] DEBUG Launching aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b
+15:29:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:29:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:29:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:29:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:29:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:29:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:02 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:02 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:07 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:07 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:12 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:12 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:30:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:30:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:02 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:02 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:07 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:07 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:12 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:12 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:17 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:17 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:22 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:22 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:27 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:27 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:32 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:32 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:37 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:37 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:42 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:42 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:47 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:47 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:52 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Running
+15:31:52 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Running
+15:31:57 horizon SmartSim[22800] INFO aggregate-sess-prod-for-python-consumer-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-38f9(3958326.34): Completed
+15:31:57 horizon SmartSim[22800] INFO aggregate-sess-cons-python-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-678b(3958326.35): Completed
+15:31:57 horizon SmartSim[22800] INFO Stopping model orchestrator with job name orchestrator-CU79ZH436ZP0

@@ -1,0 +1,119 @@
+21:00:18 horizon SmartSim[22050] DEBUG Experiment and Results folder created
+21:00:18 horizon SmartSim[22050] INFO Running name with value: run-2023-08-12-21:00:18
+21:00:18 horizon SmartSim[22050] INFO Running path with value: results/inference-standard-scaling/run-2023-08-12-21:00:18
+21:00:18 horizon SmartSim[22050] INFO Running smartsim_version with value: 0.5.0
+21:00:18 horizon SmartSim[22050] INFO Running smartredis_version with value: 0.3.1
+21:00:18 horizon SmartSim[22050] INFO Running db with value: redis-server
+21:00:18 horizon SmartSim[22050] INFO Running date with value: 2023-08-12
+21:00:18 horizon SmartSim[22050] INFO Running language with value: ['fortran']
+21:00:18 horizon SmartSim[22050] INFO Running colocated with value: 0
+21:00:18 horizon SmartSim[22050] INFO Running client_per_node with value: [18]
+21:00:18 horizon SmartSim[22050] INFO Running client_nodes with value: [4]
+21:00:18 horizon SmartSim[22050] INFO Running database_hosts with value: []
+21:00:18 horizon SmartSim[22050] INFO Running database_nodes with value: [4]
+21:00:18 horizon SmartSim[22050] INFO Running database_cpus with value: [8]
+21:00:18 horizon SmartSim[22050] INFO Running database_port with value: 6780
+21:00:18 horizon SmartSim[22050] INFO Running batch_size with value: [1000]
+21:00:18 horizon SmartSim[22050] INFO Running device with value: GPU
+21:00:18 horizon SmartSim[22050] INFO Running num_devices with value: 1
+21:00:18 horizon SmartSim[22050] INFO Running iterations with value: 100
+21:00:18 horizon SmartSim[22050] INFO Running language with value: ['fortran']
+21:00:18 horizon SmartSim[22050] INFO Running db_node_feature with value: {'constraint': 'P100'}
+21:00:18 horizon SmartSim[22050] INFO Running node_feature with value: {'constraint': 'SK48'}
+21:00:18 horizon SmartSim[22050] INFO Running wall_time with value: 15:00:00
+21:00:18 horizon SmartSim[22050] INFO Executing 1 permutations
+21:00:18 horizon SmartSim[22050] INFO Running permutation 1 of 1
+21:00:18 horizon SmartSim[22050] INFO Working in previously created experiment
+21:00:18 horizon SmartSim[22050] DEBUG Running on allocation 4037071 gleaned from user environment
+21:00:21 horizon SmartSim[22050] DEBUG Launching orchestrator
+21:00:43 horizon SmartSim[22050] DEBUG [29;1m>>> Performing hash slots allocation on 4 nodes...
+[0mMaster[0] -> Slots 0 - 4095
+Master[1] -> Slots 4096 - 8191
+Master[2] -> Slots 8192 - 12287
+Master[3] -> Slots 12288 - 16383
+M: 6fd38cab03b07b782d445b336a5d8f6b37c6c227 10.128.0.153:6780
+   slots:[0-4095] (4096 slots) master
+M: fa33b0ff5c84903e529792cc3a6fe7a13b07850f 10.128.0.156:6780
+   slots:[4096-8191] (4096 slots) master
+M: 7c99f258b86ac9a192a37ee53d9922abd9f2eabd 10.128.0.155:6780
+   slots:[8192-12287] (4096 slots) master
+M: c4666ce6848d4ece8c9124cc79d7bd09f2662b88 10.128.0.154:6780
+   slots:[12288-16383] (4096 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+
+[29;1m>>> Performing Cluster Check (using node 10.128.0.153:6780)
+[0mM: 6fd38cab03b07b782d445b336a5d8f6b37c6c227 10.128.0.153:6780
+   slots:[0-4095] (4096 slots) master
+M: fa33b0ff5c84903e529792cc3a6fe7a13b07850f 10.128.0.156:6780
+   slots:[4096-8191] (4096 slots) master
+M: c4666ce6848d4ece8c9124cc79d7bd09f2662b88 10.128.0.154:6780
+   slots:[12288-16383] (4096 slots) master
+M: 7c99f258b86ac9a192a37ee53d9922abd9f2eabd 10.128.0.155:6780
+   slots:[8192-12287] (4096 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+21:00:43 horizon SmartSim[22050] DEBUG Beginning database cluster status check...
+21:00:48 horizon SmartSim[22050] DEBUG Cluster status verified
+21:00:48 horizon SmartSim[22050] INFO Database cluster created with 4 shards
+21:00:48 horizon SmartSim[22050] DEBUG Orchestrator launched on nodes: ['10.128.0.153', '10.128.0.156', '10.128.0.155', '10.128.0.154']
+21:00:48 horizon SmartSim[22050] DEBUG Starting Job Manager
+21:00:48 horizon SmartSim[22050] INFO Orchestrator Database created and running
+21:00:48 horizon SmartSim[22050] INFO Working in previously created experiment
+21:00:48 horizon SmartSim[22050] DEBUG Configuring model infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1 with params {}
+21:00:48 horizon SmartSim[22050] DEBUG Inference session created
+21:00:48 horizon SmartSim[22050] DEBUG Beginning database cluster status check...
+21:00:53 horizon SmartSim[22050] DEBUG Cluster status verified
+21:00:53 horizon SmartSim[22050] INFO Resnet Model and Script in Orchestrator on device GPU
+21:00:53 horizon SmartSim[22050] DEBUG Resnet model set
+21:00:53 horizon SmartSim[22050] INFO 
+
+=== Launch Summary ===
+Experiment: results/inference-standard-scaling/run-2023-08-12-21:00:18
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/inference-standard-scaling/run-2023-08-12-21:00:18
+Launcher: slurm
+Models: 1
+Database Status: active
+
+=== Models ===
+infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/fortran-inference/build/run_resnet_inference
+Executable Arguments: 
+Run Command: /opt/slurm/20.11.5/bin/srun
+Run Arguments:
+	constraint = SK48
+	nodes = 4
+	ntasks-per-node = 18
+	ntasks = 72
+
+
+
+21:00:53 horizon SmartSim[22050] DEBUG Beginning database cluster status check...
+21:00:58 horizon SmartSim[22050] DEBUG Cluster status verified
+21:00:58 horizon SmartSim[22050] DEBUG Adding DBModel named resnet_model
+21:01:48 horizon SmartSim[22050] DEBUG Adding DBScript named resnet_script
+21:01:48 horizon SmartSim[22050] DEBUG Running on allocation 4037071 gleaned from user environment
+21:01:52 horizon SmartSim[22050] DEBUG Launching infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1
+21:01:57 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): New
+21:02:02 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:07 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:12 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:17 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:22 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:27 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:32 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:37 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Running
+21:02:39 horizon SmartSim[22050] INFO infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ1-fde1(4037071.5): Completed
+21:02:42 horizon SmartSim[22050] INFO Stopping model orchestrator with job name orchestrator-CUR1NZESVJ0L
+21:02:42 horizon SmartSim[22050] DEBUG Process terminated with kill 22108
+21:02:42 horizon SmartSim[22050] DEBUG Process terminated with kill 22109
+21:02:42 horizon SmartSim[22050] DEBUG Running with final_stat_dir: results/inference-standard-scaling/stats
+21:02:42 horizon SmartSim[22050] DEBUG Running with run_folders: ['run-2023-08-12-21:00:18']
+21:02:42 horizon SmartSim[22050] DEBUG Running with run_list: [PosixPath('results/inference-standard-scaling/run-2023-08-12-21:00:18')] for run_folder: run-2023-08-12-21:00:18
+21:02:42 horizon SmartSim[22050] WARNING Skipping results/inference-standard-scaling/run-2023-08-12-21:00:18: could not plot performance results
+21:02:42 horizon SmartSim[22050] ERROR [Errno 2] No such file or directory: 'results/inference-standard-scaling/stats/run-2023-08-12-21:00:18/dataframe.csv.gz'

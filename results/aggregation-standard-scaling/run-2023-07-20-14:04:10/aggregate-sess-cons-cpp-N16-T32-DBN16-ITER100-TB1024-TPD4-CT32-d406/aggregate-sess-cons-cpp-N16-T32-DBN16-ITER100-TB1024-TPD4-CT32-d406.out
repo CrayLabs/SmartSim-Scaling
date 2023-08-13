@@ -1,0 +1,208 @@
+SmartRedis Library@14-34-30:WARNING: Environment variable SR_LOG_FILE is not set. Defaulting to stdout
+SmartRedis Library@14-34-30:WARNING: Environment variable SR_LOG_LEVEL is not set. Defaulting to INFO
+Data Aggregation Tests Consumer Rank: 0@14-34-30:Running aggregate scaling test consumer.
+Running aggregate scaling test consumer.
+Data Aggregation MPI Consumer Rank: 0@14-34-30:Connecting clients
+Connecting clients
+Consuming list 0
+Data Aggregation MPI Consumer Rank: 0@14-34-30:Consuming list 0
+Consuming list 1
+Data Aggregation MPI Consumer Rank: 0@14-34-30:Consuming list 1
+Consuming list 2
+Data Aggregation MPI Consumer Rank: 0@14-34-31:Consuming list 2
+Consuming list 3
+Data Aggregation MPI Consumer Rank: 0@14-34-33:Consuming list 3
+Consuming list 4
+Data Aggregation MPI Consumer Rank: 0@14-34-35:Consuming list 4
+Consuming list 5
+Data Aggregation MPI Consumer Rank: 0@14-34-36:Consuming list 5
+Consuming list 6
+Data Aggregation MPI Consumer Rank: 0@14-34-37:Consuming list 6
+Consuming list 7
+Data Aggregation MPI Consumer Rank: 0@14-34-38:Consuming list 7
+Consuming list 8
+Data Aggregation MPI Consumer Rank: 0@14-34-39:Consuming list 8
+Consuming list 9
+Data Aggregation MPI Consumer Rank: 0@14-34-40:Consuming list 9
+Consuming list 10
+Data Aggregation MPI Consumer Rank: 0@14-34-41:Consuming list 10
+Consuming list 11
+Data Aggregation MPI Consumer Rank: 0@14-34-42:Consuming list 11
+Consuming list 12
+Data Aggregation MPI Consumer Rank: 0@14-34-43:Consuming list 12
+Consuming list 13
+Data Aggregation MPI Consumer Rank: 0@14-34-44:Consuming list 13
+Consuming list 14
+Data Aggregation MPI Consumer Rank: 0@14-34-45:Consuming list 14
+Consuming list 15
+Data Aggregation MPI Consumer Rank: 0@14-34-46:Consuming list 15
+Consuming list 16
+Data Aggregation MPI Consumer Rank: 0@14-34-47:Consuming list 16
+Consuming list 17
+Data Aggregation MPI Consumer Rank: 0@14-34-48:Consuming list 17
+Consuming list 18
+Data Aggregation MPI Consumer Rank: 0@14-34-49:Consuming list 18
+Consuming list 19
+Data Aggregation MPI Consumer Rank: 0@14-34-50:Consuming list 19
+Consuming list 20
+Data Aggregation MPI Consumer Rank: 0@14-34-51:Consuming list 20
+Consuming list 21
+Data Aggregation MPI Consumer Rank: 0@14-34-53:Consuming list 21
+Consuming list 22
+Data Aggregation MPI Consumer Rank: 0@14-34-55:Consuming list 22
+Consuming list 23
+Data Aggregation MPI Consumer Rank: 0@14-34-57:Consuming list 23
+Consuming list 24
+Data Aggregation MPI Consumer Rank: 0@14-34-59:Consuming list 24
+Consuming list 25
+Data Aggregation MPI Consumer Rank: 0@14-35-00:Consuming list 25
+Consuming list 26
+Data Aggregation MPI Consumer Rank: 0@14-35-01:Consuming list 26
+Consuming list 27
+Data Aggregation MPI Consumer Rank: 0@14-35-02:Consuming list 27
+Consuming list 28
+Data Aggregation MPI Consumer Rank: 0@14-35-03:Consuming list 28
+Consuming list 29
+Data Aggregation MPI Consumer Rank: 0@14-35-04:Consuming list 29
+Consuming list 30
+Data Aggregation MPI Consumer Rank: 0@14-35-05:Consuming list 30
+Consuming list 31
+Data Aggregation MPI Consumer Rank: 0@14-35-07:Consuming list 31
+Consuming list 32
+Data Aggregation MPI Consumer Rank: 0@14-35-08:Consuming list 32
+Consuming list 33
+Data Aggregation MPI Consumer Rank: 0@14-35-09:Consuming list 33
+Consuming list 34
+Data Aggregation MPI Consumer Rank: 0@14-35-10:Consuming list 34
+Consuming list 35
+Data Aggregation MPI Consumer Rank: 0@14-35-11:Consuming list 35
+Consuming list 36
+Data Aggregation MPI Consumer Rank: 0@14-35-12:Consuming list 36
+Consuming list 37
+Data Aggregation MPI Consumer Rank: 0@14-35-13:Consuming list 37
+Consuming list 38
+Data Aggregation MPI Consumer Rank: 0@14-35-14:Consuming list 38
+Consuming list 39
+Data Aggregation MPI Consumer Rank: 0@14-35-15:Consuming list 39
+Consuming list 40
+Data Aggregation MPI Consumer Rank: 0@14-35-16:Consuming list 40
+Consuming list 41
+Data Aggregation MPI Consumer Rank: 0@14-35-18:Consuming list 41
+Consuming list 42
+Data Aggregation MPI Consumer Rank: 0@14-35-20:Consuming list 42
+Consuming list 43
+Data Aggregation MPI Consumer Rank: 0@14-35-22:Consuming list 43
+Consuming list 44
+Data Aggregation MPI Consumer Rank: 0@14-35-24:Consuming list 44
+Consuming list 45
+Data Aggregation MPI Consumer Rank: 0@14-35-25:Consuming list 45
+Consuming list 46
+Data Aggregation MPI Consumer Rank: 0@14-35-26:Consuming list 46
+Consuming list 47
+Data Aggregation MPI Consumer Rank: 0@14-35-27:Consuming list 47
+Consuming list 48
+Data Aggregation MPI Consumer Rank: 0@14-35-28:Consuming list 48
+Consuming list 49
+Data Aggregation MPI Consumer Rank: 0@14-35-29:Consuming list 49
+Consuming list 50
+Data Aggregation MPI Consumer Rank: 0@14-35-30:Consuming list 50
+Consuming list 51
+Data Aggregation MPI Consumer Rank: 0@14-35-31:Consuming list 51
+Consuming list 52
+Data Aggregation MPI Consumer Rank: 0@14-35-32:Consuming list 52
+Consuming list 53
+Data Aggregation MPI Consumer Rank: 0@14-35-33:Consuming list 53
+Consuming list 54
+Data Aggregation MPI Consumer Rank: 0@14-35-34:Consuming list 54
+Consuming list 55
+Data Aggregation MPI Consumer Rank: 0@14-35-35:Consuming list 55
+Consuming list 56
+Data Aggregation MPI Consumer Rank: 0@14-35-36:Consuming list 56
+Consuming list 57
+Data Aggregation MPI Consumer Rank: 0@14-35-37:Consuming list 57
+Consuming list 58
+Data Aggregation MPI Consumer Rank: 0@14-35-38:Consuming list 58
+Consuming list 59
+Data Aggregation MPI Consumer Rank: 0@14-35-39:Consuming list 59
+Consuming list 60
+Data Aggregation MPI Consumer Rank: 0@14-35-40:Consuming list 60
+Consuming list 61
+Data Aggregation MPI Consumer Rank: 0@14-35-42:Consuming list 61
+Consuming list 62
+Data Aggregation MPI Consumer Rank: 0@14-35-43:Consuming list 62
+Consuming list 63
+Data Aggregation MPI Consumer Rank: 0@14-35-45:Consuming list 63
+Consuming list 64
+Data Aggregation MPI Consumer Rank: 0@14-35-47:Consuming list 64
+Consuming list 65
+Data Aggregation MPI Consumer Rank: 0@14-35-48:Consuming list 65
+Consuming list 66
+Data Aggregation MPI Consumer Rank: 0@14-35-49:Consuming list 66
+Consuming list 67
+Data Aggregation MPI Consumer Rank: 0@14-35-50:Consuming list 67
+Consuming list 68
+Data Aggregation MPI Consumer Rank: 0@14-35-51:Consuming list 68
+Consuming list 69
+Data Aggregation MPI Consumer Rank: 0@14-35-52:Consuming list 69
+Consuming list 70
+Data Aggregation MPI Consumer Rank: 0@14-35-53:Consuming list 70
+Consuming list 71
+Data Aggregation MPI Consumer Rank: 0@14-35-54:Consuming list 71
+Consuming list 72
+Data Aggregation MPI Consumer Rank: 0@14-35-55:Consuming list 72
+Consuming list 73
+Data Aggregation MPI Consumer Rank: 0@14-35-56:Consuming list 73
+Consuming list 74
+Data Aggregation MPI Consumer Rank: 0@14-35-57:Consuming list 74
+Consuming list 75
+Data Aggregation MPI Consumer Rank: 0@14-35-58:Consuming list 75
+Consuming list 76
+Data Aggregation MPI Consumer Rank: 0@14-35-59:Consuming list 76
+Consuming list 77
+Data Aggregation MPI Consumer Rank: 0@14-36-00:Consuming list 77
+Consuming list 78
+Data Aggregation MPI Consumer Rank: 0@14-36-01:Consuming list 78
+Consuming list 79
+Data Aggregation MPI Consumer Rank: 0@14-36-02:Consuming list 79
+Consuming list 80
+Data Aggregation MPI Consumer Rank: 0@14-36-03:Consuming list 80
+Consuming list 81
+Data Aggregation MPI Consumer Rank: 0@14-36-04:Consuming list 81
+Consuming list 82
+Data Aggregation MPI Consumer Rank: 0@14-36-05:Consuming list 82
+Consuming list 83
+Data Aggregation MPI Consumer Rank: 0@14-36-06:Consuming list 83
+Consuming list 84
+Data Aggregation MPI Consumer Rank: 0@14-36-07:Consuming list 84
+Consuming list 85
+Data Aggregation MPI Consumer Rank: 0@14-36-08:Consuming list 85
+Consuming list 86
+Data Aggregation MPI Consumer Rank: 0@14-36-09:Consuming list 86
+Consuming list 87
+Data Aggregation MPI Consumer Rank: 0@14-36-10:Consuming list 87
+Consuming list 88
+Data Aggregation MPI Consumer Rank: 0@14-36-11:Consuming list 88
+Consuming list 89
+Data Aggregation MPI Consumer Rank: 0@14-36-12:Consuming list 89
+Consuming list 90
+Data Aggregation MPI Consumer Rank: 0@14-36-13:Consuming list 90
+Consuming list 91
+Data Aggregation MPI Consumer Rank: 0@14-36-14:Consuming list 91
+Consuming list 92
+Data Aggregation MPI Consumer Rank: 0@14-36-15:Consuming list 92
+Consuming list 93
+Data Aggregation MPI Consumer Rank: 0@14-36-16:Consuming list 93
+Consuming list 94
+Data Aggregation MPI Consumer Rank: 0@14-36-17:Consuming list 94
+Consuming list 95
+Data Aggregation MPI Consumer Rank: 0@14-36-18:Consuming list 95
+Consuming list 96
+Data Aggregation MPI Consumer Rank: 0@14-36-19:Consuming list 96
+Consuming list 97
+Data Aggregation MPI Consumer Rank: 0@14-36-20:Consuming list 97
+Consuming list 98
+Data Aggregation MPI Consumer Rank: 0@14-36-21:Consuming list 98
+Consuming list 99
+Data Aggregation MPI Consumer Rank: 0@14-36-22:Consuming list 99
+Data Aggregation Tests Consumer Rank: 0@14-36-23:Finished aggregation scaling consumer.
+Finished aggregation scaling consumer.

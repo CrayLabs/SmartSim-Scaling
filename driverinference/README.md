@@ -42,6 +42,8 @@ and the GPU model can be created running
 python model_saver.py --device=GPU
 ```
 
+> Note that if you would like to generate the GPU model, you must run the 
+command on a GPU node.
 
 If the benchmark driver is executed and
 no model exists, an attempt is made to generate the model on the fly. In both cases,

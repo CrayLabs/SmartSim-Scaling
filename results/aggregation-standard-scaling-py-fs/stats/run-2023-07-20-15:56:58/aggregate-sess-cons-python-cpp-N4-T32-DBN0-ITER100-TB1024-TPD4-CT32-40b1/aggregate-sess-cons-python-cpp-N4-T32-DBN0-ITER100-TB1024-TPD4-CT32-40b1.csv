@@ -1,0 +1,2 @@
+,name,date,db,smartsim,smartredis,client_total,client_per_node,client_nodes,database_nodes,database_cpus,iterations,tensor_bytes,t_per_dataset,client_threads,language,client(),poll_list_min,poll_list_mean,poll_list_max,get_list_min,get_list_mean,get_list_max,loop_time,main()
+0,aggregate-sess-cons-python-cpp-N4-T32-DBN0-ITER100-TB1024-TPD4-CT32-40b1,2023-07-20,redis-server,0.5.0,0.3.1,128,32,4,0,0,100,1024,4,32,cpp,0.0,0.0022161006927490234,0.7298846411705017,1.0205409526824951,0.5766210556030273,1.154030385017395,1.7162270545959473,191.4271330833435,191.431067943573

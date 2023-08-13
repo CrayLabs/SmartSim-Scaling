@@ -2,7 +2,7 @@
 
 SmartSim-Scaling offers support to plot numeric data produced by
 a complete scalability test. Currently, we support one statistical graphing
-method: violin plot. The violin plots give a data summary and density of
+method: violin plot. The violin plots give a data summary and histogram of
 each client function associated with the respective scaling test.
 
 The following client functions per scaling tests are listed below:

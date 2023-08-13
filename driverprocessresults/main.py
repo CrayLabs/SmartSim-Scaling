@@ -18,8 +18,8 @@ logger = get_logger("Scaling Tests")
 
 class ProcessResults:
     def process_scaling_results(self,
-                                scaling_results_dir="inference-colocated-scaling", 
-                                plot_type="database_cpus",
+                                scaling_results_dir="inference-standard-scaling", 
+                                plot_type="database_nodes",
                                 overwrite=True):
             """Create a results directory with performance data and plots
             With the overwrite flag turned off, this function can be used
@@ -60,7 +60,7 @@ class ProcessResults:
                         logger.error(e)
                         continue
                 #collect all written csv into dataframes to concat
-                for run in tqdm(run_list, desc="Creating scaling plots...", ncols=80):
+                for run in tqdm(run_list, desc="Creating dataframe...", ncols=80):
                     try:
                         PlotResults.scaling_read_data(self, run, scaling_results_dir)
                         logger.debug(f"Data read and saved for: {run}")

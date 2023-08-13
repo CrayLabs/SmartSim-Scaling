@@ -1,0 +1,1809 @@
+14:04:11 horizon SmartSim[3447] INFO Running name with value: run-2023-07-20-14:04:10
+14:04:11 horizon SmartSim[3447] INFO Running path with value: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+14:04:11 horizon SmartSim[3447] INFO Running smartsim_version with value: 0.5.0
+14:04:11 horizon SmartSim[3447] INFO Running smartredis_version with value: 0.3.1
+14:04:11 horizon SmartSim[3447] INFO Running db with value: redis-server
+14:04:11 horizon SmartSim[3447] INFO Running date with value: 2023-07-20
+14:04:11 horizon SmartSim[3447] INFO Running language with value: ['cpp']
+14:04:11 horizon SmartSim[3447] INFO Running colocated with value: 0
+14:04:11 horizon SmartSim[3447] INFO Running client_per_node with value: [32]
+14:04:11 horizon SmartSim[3447] INFO Running client_nodes with value: [4, 8, 16, 32, 64, 128]
+14:04:11 horizon SmartSim[3447] INFO Running db_cpus with value: 36
+14:04:11 horizon SmartSim[3447] INFO Running iterations with value: 100
+14:04:11 horizon SmartSim[3447] INFO Running tensor_bytes with value: [1024]
+14:04:11 horizon SmartSim[3447] INFO Running tensors_per_dataset with value: [4]
+14:04:11 horizon SmartSim[3447] INFO Running client_threads with value: [32]
+14:04:11 horizon SmartSim[3447] INFO Running cpu_hyperthreads with value: 2
+14:04:11 horizon SmartSim[3447] INFO Running language with value: ['cpp']
+14:04:11 horizon SmartSim[3447] INFO Running wall_time with value: 10:00:00
+14:04:11 horizon SmartSim[3447] INFO Running permutation 1 of 3
+14:04:11 horizon SmartSim[3447] INFO Working in previously created experiment
+14:04:11 horizon SmartSim[3447] DEBUG Added step command to batch for orchestrator-CU78EUCS8G8S
+14:04:11 horizon SmartSim[3447] DEBUG Gleaned batch job id: 3958312 for orchestrator-CU78EUCS6YY0
+14:04:12 horizon SmartSim[3447] DEBUG Launching orchestrator
+14:04:12 horizon SmartSim[3447] INFO Orchestrator launched as a batch
+14:04:12 horizon SmartSim[3447] INFO While queued, SmartSim will wait for Orchestrator to run
+14:04:12 horizon SmartSim[3447] INFO CTRL+C interrupt to abort and cancel launch
+14:04:36 horizon SmartSim[3447] DEBUG [29;1m>>> Performing hash slots allocation on 4 nodes...
+[0mMaster[0] -> Slots 0 - 4095
+Master[1] -> Slots 4096 - 8191
+Master[2] -> Slots 8192 - 12287
+Master[3] -> Slots 12288 - 16383
+M: 92f82b85fea80d5bfe5a1c7fbc44c57d7b2cc0bf 10.128.0.124:6780
+   slots:[0-4095] (4096 slots) master
+M: 0e458de81331dacc1e3b8b98f4cbd8ae4d3fdc26 10.128.0.122:6780
+   slots:[4096-8191] (4096 slots) master
+M: dfccc19ff814a7124b9b020de99ee503058d341d 10.128.0.121:6780
+   slots:[8192-12287] (4096 slots) master
+M: 95a049fa02e42178832046ac40a64540e78ec38f 10.128.0.123:6780
+   slots:[12288-16383] (4096 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+...
+[29;1m>>> Performing Cluster Check (using node 10.128.0.124:6780)
+[0mM: 92f82b85fea80d5bfe5a1c7fbc44c57d7b2cc0bf 10.128.0.124:6780
+   slots:[0-4095] (4096 slots) master
+M: 95a049fa02e42178832046ac40a64540e78ec38f 10.128.0.123:6780
+   slots:[12288-16383] (4096 slots) master
+M: 0e458de81331dacc1e3b8b98f4cbd8ae4d3fdc26 10.128.0.122:6780
+   slots:[4096-8191] (4096 slots) master
+M: dfccc19ff814a7124b9b020de99ee503058d341d 10.128.0.121:6780
+   slots:[8192-12287] (4096 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+14:04:36 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:04:41 horizon SmartSim[3447] DEBUG Cluster status verified
+14:04:41 horizon SmartSim[3447] INFO Database cluster created with 4 shards
+14:04:41 horizon SmartSim[3447] DEBUG Orchestrator launched on nodes: ['10.128.0.124', '10.128.0.122', '10.128.0.121', '10.128.0.123']
+14:04:41 horizon SmartSim[3447] DEBUG Starting Job Manager
+14:04:41 horizon SmartSim[3447] INFO Orchestrator Database created and running
+14:04:41 horizon SmartSim[3447] INFO Running with threads: 32
+14:04:41 horizon SmartSim[3447] INFO Working in previously created experiment
+14:04:41 horizon SmartSim[3447] DEBUG Producer session created
+14:04:41 horizon SmartSim[3447] INFO Working in previously created experiment
+14:04:41 horizon SmartSim[3447] DEBUG Consumer session created
+14:04:41 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 128
+	ntasks-per-node = 32
+	nodes = 4
+aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 128
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:04:41 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:04:46 horizon SmartSim[3447] DEBUG Cluster status verified
+14:04:46 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:04:46 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:04:49 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c
+14:04:52 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31
+14:04:57 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:04:57 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): New
+14:05:02 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:02 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:07 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:07 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:12 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:12 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:17 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:17 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:05:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:05:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:06:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:06:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:06:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:06:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:06:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Running
+14:06:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Running
+14:06:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-998c(3958311.0): Completed
+14:06:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea31(3958311.1): Completed
+14:06:33 horizon SmartSim[3447] INFO Running with threads: 32
+14:06:33 horizon SmartSim[3447] INFO Working in previously created experiment
+14:06:33 horizon SmartSim[3447] DEBUG Producer session created
+14:06:33 horizon SmartSim[3447] INFO Working in previously created experiment
+14:06:33 horizon SmartSim[3447] DEBUG Consumer session created
+14:06:33 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 256
+	ntasks-per-node = 32
+	nodes = 8
+aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 256
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:06:33 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:06:38 horizon SmartSim[3447] DEBUG Cluster status verified
+14:06:38 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:06:38 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:06:41 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a
+14:06:44 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51
+14:06:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:06:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): New
+14:06:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:06:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:06:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:06:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:07:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:07:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:08:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:08:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:08:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:08:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:08:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Running
+14:08:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Running
+14:08:32 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-718a(3958311.2): Completed
+14:08:32 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN4-ITER100-TB1024-TPD4-CT32-2b51(3958311.3): Completed
+14:08:34 horizon SmartSim[3447] INFO Running with threads: 32
+14:08:34 horizon SmartSim[3447] INFO Working in previously created experiment
+14:08:34 horizon SmartSim[3447] DEBUG Producer session created
+14:08:34 horizon SmartSim[3447] INFO Working in previously created experiment
+14:08:34 horizon SmartSim[3447] DEBUG Consumer session created
+14:08:34 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 512
+	ntasks-per-node = 32
+	nodes = 16
+aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 512
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:08:34 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:08:39 horizon SmartSim[3447] DEBUG Cluster status verified
+14:08:39 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:08:39 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:08:43 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3
+14:08:46 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9
+14:08:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): New
+14:08:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): New
+14:08:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:08:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:09:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:09:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Running
+14:10:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Running
+14:10:32 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-a0f3(3958311.4): Completed
+14:10:32 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN4-ITER100-TB1024-TPD4-CT32-f7a9(3958311.5): Completed
+14:10:36 horizon SmartSim[3447] INFO Running with threads: 32
+14:10:36 horizon SmartSim[3447] INFO Working in previously created experiment
+14:10:36 horizon SmartSim[3447] DEBUG Producer session created
+14:10:36 horizon SmartSim[3447] INFO Working in previously created experiment
+14:10:36 horizon SmartSim[3447] DEBUG Consumer session created
+14:10:36 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 1024
+	ntasks-per-node = 32
+	nodes = 32
+aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 1024
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:10:36 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:10:41 horizon SmartSim[3447] DEBUG Cluster status verified
+14:10:41 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:10:41 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:10:44 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d
+14:10:48 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b
+14:10:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:10:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:10:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:10:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:11:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:11:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:12:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:12:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:12:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:12:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:12:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Running
+14:12:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Running
+14:12:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-367d(3958311.6): Completed
+14:12:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN4-ITER100-TB1024-TPD4-CT32-ea3b(3958311.7): Completed
+14:12:33 horizon SmartSim[3447] INFO Running with threads: 32
+14:12:33 horizon SmartSim[3447] INFO Working in previously created experiment
+14:12:33 horizon SmartSim[3447] DEBUG Producer session created
+14:12:33 horizon SmartSim[3447] INFO Working in previously created experiment
+14:12:33 horizon SmartSim[3447] DEBUG Consumer session created
+14:12:33 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 2048
+	ntasks-per-node = 32
+	nodes = 64
+aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 2048
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:12:33 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:12:38 horizon SmartSim[3447] DEBUG Cluster status verified
+14:12:38 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:12:38 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:12:41 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7
+14:12:44 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f
+14:12:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:12:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): New
+14:12:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:12:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:12:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:12:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:13:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:13:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:14:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:14:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:14:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:14:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:14:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Running
+14:14:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Running
+14:14:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-abb7(3958311.8): Completed
+14:14:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN4-ITER100-TB1024-TPD4-CT32-b10f(3958311.9): Completed
+14:14:35 horizon SmartSim[3447] INFO Running with threads: 32
+14:14:35 horizon SmartSim[3447] INFO Working in previously created experiment
+14:14:35 horizon SmartSim[3447] DEBUG Producer session created
+14:14:35 horizon SmartSim[3447] INFO Working in previously created experiment
+14:14:35 horizon SmartSim[3447] DEBUG Consumer session created
+14:14:35 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 4096
+	ntasks-per-node = 32
+	nodes = 128
+aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 4096
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:14:35 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:14:40 horizon SmartSim[3447] DEBUG Cluster status verified
+14:14:40 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:14:40 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:14:43 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9
+14:14:46 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7
+14:14:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:14:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): New
+14:14:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:14:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:15:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:15:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Running
+14:16:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Running
+14:16:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-93b9(3958311.10): Completed
+14:16:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN4-ITER100-TB1024-TPD4-CT32-83f7(3958311.11): Completed
+14:16:46 horizon SmartSim[3447] INFO Stopping model orchestrator with job name orchestrator-CU78EUCS6YY0
+14:16:46 horizon SmartSim[3447] INFO Running permutation 2 of 3
+14:16:46 horizon SmartSim[3447] INFO Working in previously created experiment
+14:16:46 horizon SmartSim[3447] DEBUG Added step command to batch for orchestrator-CU78OHIVTWW0
+14:16:46 horizon SmartSim[3447] DEBUG Gleaned batch job id: 3958314 for orchestrator-CU78OHIVT8GZ
+14:16:47 horizon SmartSim[3447] DEBUG Restarting orchestrator
+14:16:47 horizon SmartSim[3447] INFO Orchestrator launched as a batch
+14:16:47 horizon SmartSim[3447] INFO While queued, SmartSim will wait for Orchestrator to run
+14:16:47 horizon SmartSim[3447] INFO CTRL+C interrupt to abort and cancel launch
+14:17:12 horizon SmartSim[3447] DEBUG [29;1m>>> Performing hash slots allocation on 8 nodes...
+[0mMaster[0] -> Slots 0 - 2047
+Master[1] -> Slots 2048 - 4095
+Master[2] -> Slots 4096 - 6143
+Master[3] -> Slots 6144 - 8191
+Master[4] -> Slots 8192 - 10239
+Master[5] -> Slots 10240 - 12287
+Master[6] -> Slots 12288 - 14335
+Master[7] -> Slots 14336 - 16383
+M: 23ba911230f794b8ef63c2fbd1761ed4d41633da 10.128.0.128:6780
+   slots:[0-2047] (2048 slots) master
+M: 79a814f8f441549c937053be246c4a42ee661610 10.128.0.126:6780
+   slots:[2048-4095] (2048 slots) master
+M: 0f11dc65dbf351099199391fa27dd12a35b6bc95 10.128.0.151:6780
+   slots:[4096-6143] (2048 slots) master
+M: 2e60ee74af667f05d76bb7098103d68d3773a92a 10.128.0.127:6780
+   slots:[6144-8191] (2048 slots) master
+M: 1af6d5c274ef79dbb09e733f512299dcbce0973e 10.128.0.125:6780
+   slots:[8192-10239] (2048 slots) master
+M: 575b0ca71d27b2e2976c7527a2f01584c3523532 10.128.0.149:6780
+   slots:[10240-12287] (2048 slots) master
+M: 062a9612be27aec8907d85c913fa45a18704b2cd 10.128.0.150:6780
+   slots:[12288-14335] (2048 slots) master
+M: 5a468e9f5d09579d75294f9afb25c91da3bae34c 10.128.0.152:6780
+   slots:[14336-16383] (2048 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+....
+[29;1m>>> Performing Cluster Check (using node 10.128.0.128:6780)
+[0mM: 23ba911230f794b8ef63c2fbd1761ed4d41633da 10.128.0.128:6780
+   slots:[0-2047] (2048 slots) master
+M: 5a468e9f5d09579d75294f9afb25c91da3bae34c 10.128.0.152:6780
+   slots:[14336-16383] (2048 slots) master
+M: 575b0ca71d27b2e2976c7527a2f01584c3523532 10.128.0.149:6780
+   slots:[10240-12287] (2048 slots) master
+M: 79a814f8f441549c937053be246c4a42ee661610 10.128.0.126:6780
+   slots:[2048-4095] (2048 slots) master
+M: 2e60ee74af667f05d76bb7098103d68d3773a92a 10.128.0.127:6780
+   slots:[6144-8191] (2048 slots) master
+M: 062a9612be27aec8907d85c913fa45a18704b2cd 10.128.0.150:6780
+   slots:[12288-14335] (2048 slots) master
+M: 0f11dc65dbf351099199391fa27dd12a35b6bc95 10.128.0.151:6780
+   slots:[4096-6143] (2048 slots) master
+M: 1af6d5c274ef79dbb09e733f512299dcbce0973e 10.128.0.125:6780
+   slots:[8192-10239] (2048 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+14:17:12 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:17:17 horizon SmartSim[3447] DEBUG Cluster status verified
+14:17:17 horizon SmartSim[3447] INFO Database cluster created with 8 shards
+14:17:18 horizon SmartSim[3447] DEBUG Orchestrator launched on nodes: ['10.128.0.128', '10.128.0.126', '10.128.0.151', '10.128.0.127', '10.128.0.125', '10.128.0.149', '10.128.0.150', '10.128.0.152']
+14:17:18 horizon SmartSim[3447] INFO Orchestrator Database created and running
+14:17:18 horizon SmartSim[3447] INFO Running with threads: 32
+14:17:18 horizon SmartSim[3447] INFO Working in previously created experiment
+14:17:18 horizon SmartSim[3447] DEBUG Producer session created
+14:17:18 horizon SmartSim[3447] INFO Working in previously created experiment
+14:17:18 horizon SmartSim[3447] DEBUG Consumer session created
+14:17:18 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 128
+	ntasks-per-node = 32
+	nodes = 4
+aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 128
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:17:18 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:17:23 horizon SmartSim[3447] DEBUG Cluster status verified
+14:17:23 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:17:23 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:17:26 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc
+14:17:29 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b
+14:17:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:17:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:17:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:17:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:17:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:17:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:17:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:17:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:17:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:17:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:17:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:17:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:18:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:18:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:19:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:19:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:19:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Running
+14:19:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Running
+14:19:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-c5bc(3958311.12): Completed
+14:19:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN8-ITER100-TB1024-TPD4-CT32-621b(3958311.13): Completed
+14:19:14 horizon SmartSim[3447] INFO Running with threads: 32
+14:19:14 horizon SmartSim[3447] INFO Working in previously created experiment
+14:19:14 horizon SmartSim[3447] DEBUG Producer session created
+14:19:14 horizon SmartSim[3447] INFO Working in previously created experiment
+14:19:14 horizon SmartSim[3447] DEBUG Consumer session created
+14:19:14 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 256
+	ntasks-per-node = 32
+	nodes = 8
+aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 256
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:19:14 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:19:19 horizon SmartSim[3447] DEBUG Cluster status verified
+14:19:19 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:19:19 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:19:23 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8
+14:19:26 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0
+14:19:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:19:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): New
+14:19:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:19:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:19:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:19:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:19:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:19:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:19:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:19:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:19:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:19:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:20:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:20:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:21:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Running
+14:21:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Running
+14:21:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-fed8(3958311.14): Completed
+14:21:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN8-ITER100-TB1024-TPD4-CT32-27b0(3958311.15): Completed
+14:21:06 horizon SmartSim[3447] INFO Running with threads: 32
+14:21:06 horizon SmartSim[3447] INFO Working in previously created experiment
+14:21:06 horizon SmartSim[3447] DEBUG Producer session created
+14:21:06 horizon SmartSim[3447] INFO Working in previously created experiment
+14:21:06 horizon SmartSim[3447] DEBUG Consumer session created
+14:21:06 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 512
+	ntasks-per-node = 32
+	nodes = 16
+aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 512
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:21:06 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:21:11 horizon SmartSim[3447] DEBUG Cluster status verified
+14:21:11 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:21:11 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:21:14 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea
+14:21:18 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4
+14:21:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): New
+14:21:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:21:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:21:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:21:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:21:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:21:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:21:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:21:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:22:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:22:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:23:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Running
+14:23:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Running
+14:23:05 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-e0ea(3958311.16): Completed
+14:23:05 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN8-ITER100-TB1024-TPD4-CT32-e8e4(3958311.17): Completed
+14:23:08 horizon SmartSim[3447] INFO Running with threads: 32
+14:23:08 horizon SmartSim[3447] INFO Working in previously created experiment
+14:23:08 horizon SmartSim[3447] DEBUG Producer session created
+14:23:08 horizon SmartSim[3447] INFO Working in previously created experiment
+14:23:08 horizon SmartSim[3447] DEBUG Consumer session created
+14:23:08 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 1024
+	ntasks-per-node = 32
+	nodes = 32
+aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 1024
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:23:08 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:23:13 horizon SmartSim[3447] DEBUG Cluster status verified
+14:23:13 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:23:13 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:23:16 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f
+14:23:19 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f
+14:23:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): New
+14:23:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): New
+14:23:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:23:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:23:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:23:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:23:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:23:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:23:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:23:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:24:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:24:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:25:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Running
+14:25:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Running
+14:25:05 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-ac0f(3958311.18): Completed
+14:25:05 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN8-ITER100-TB1024-TPD4-CT32-ff1f(3958311.19): Completed
+14:25:09 horizon SmartSim[3447] INFO Running with threads: 32
+14:25:09 horizon SmartSim[3447] INFO Working in previously created experiment
+14:25:09 horizon SmartSim[3447] DEBUG Producer session created
+14:25:09 horizon SmartSim[3447] INFO Working in previously created experiment
+14:25:09 horizon SmartSim[3447] DEBUG Consumer session created
+14:25:09 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 2048
+	ntasks-per-node = 32
+	nodes = 64
+aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 2048
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:25:09 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:25:15 horizon SmartSim[3447] DEBUG Cluster status verified
+14:25:15 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:25:15 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:25:18 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9
+14:25:21 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343
+14:25:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:25:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:25:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:25:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:25:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:25:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:25:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:25:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:26:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:26:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:27:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:27:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:27:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:27:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:27:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Running
+14:27:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Running
+14:27:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-b3f9(3958311.20): Completed
+14:27:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN8-ITER100-TB1024-TPD4-CT32-b343(3958311.21): Completed
+14:27:16 horizon SmartSim[3447] INFO Running with threads: 32
+14:27:16 horizon SmartSim[3447] INFO Working in previously created experiment
+14:27:16 horizon SmartSim[3447] DEBUG Producer session created
+14:27:16 horizon SmartSim[3447] INFO Working in previously created experiment
+14:27:16 horizon SmartSim[3447] DEBUG Consumer session created
+14:27:16 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 4096
+	ntasks-per-node = 32
+	nodes = 128
+aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 4096
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:27:16 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:27:21 horizon SmartSim[3447] DEBUG Cluster status verified
+14:27:21 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:27:21 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:27:25 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8
+14:27:28 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00
+14:27:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:27:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): New
+14:27:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:27:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:27:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:27:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:27:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:27:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:27:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:27:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:27:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:27:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:28:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:28:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Running
+14:29:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Running
+14:29:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-a5c8(3958311.22): Completed
+14:29:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN8-ITER100-TB1024-TPD4-CT32-eb00(3958311.23): Completed
+14:29:48 horizon SmartSim[3447] INFO Stopping model orchestrator with job name orchestrator-CU78OHIVT8GZ
+14:29:48 horizon SmartSim[3447] INFO Running permutation 3 of 3
+14:29:48 horizon SmartSim[3447] INFO Working in previously created experiment
+14:29:48 horizon SmartSim[3447] DEBUG Added step command to batch for orchestrator-CU78YGO7HZ52
+14:29:48 horizon SmartSim[3447] DEBUG Gleaned batch job id: 3958317 for orchestrator-CU78YGO7H8LB
+14:29:49 horizon SmartSim[3447] DEBUG Restarting orchestrator
+14:29:49 horizon SmartSim[3447] INFO Orchestrator launched as a batch
+14:29:49 horizon SmartSim[3447] INFO While queued, SmartSim will wait for Orchestrator to run
+14:29:49 horizon SmartSim[3447] INFO CTRL+C interrupt to abort and cancel launch
+14:30:22 horizon SmartSim[3447] DEBUG [29;1m>>> Performing hash slots allocation on 16 nodes...
+[0mMaster[0] -> Slots 0 - 1023
+Master[1] -> Slots 1024 - 2047
+Master[2] -> Slots 2048 - 3071
+Master[3] -> Slots 3072 - 4095
+Master[4] -> Slots 4096 - 5119
+Master[5] -> Slots 5120 - 6143
+Master[6] -> Slots 6144 - 7167
+Master[7] -> Slots 7168 - 8191
+Master[8] -> Slots 8192 - 9215
+Master[9] -> Slots 9216 - 10239
+Master[10] -> Slots 10240 - 11263
+Master[11] -> Slots 11264 - 12287
+Master[12] -> Slots 12288 - 13311
+Master[13] -> Slots 13312 - 14335
+Master[14] -> Slots 14336 - 15359
+Master[15] -> Slots 15360 - 16383
+M: 86b0e33238ca6ce506c18c6259c203c2e4306fbc 10.128.1.23:6780
+   slots:[0-1023] (1024 slots) master
+M: 0bcb05817bb18cf137c8d1837a21e00cf8d83d29 10.128.1.30:6780
+   slots:[1024-2047] (1024 slots) master
+M: 435416cabfbb82c779a8f0b17e29ed5d9a7d1871 10.128.1.29:6780
+   slots:[2048-3071] (1024 slots) master
+M: d308a7acfa76f444a875c591c577aff76b14459a 10.128.1.24:6780
+   slots:[3072-4095] (1024 slots) master
+M: ba8754091d7d4e9008355a521446f0376f8707b3 10.128.1.25:6780
+   slots:[4096-5119] (1024 slots) master
+M: 06322b4f72d79a02e7e8bfdd44fa8b5746cda2cf 10.128.1.21:6780
+   slots:[5120-6143] (1024 slots) master
+M: 2dbab8967248183a4b8228a5f35f9af366a4e1f7 10.128.1.34:6780
+   slots:[6144-7167] (1024 slots) master
+M: 11fd149571053a871faa243566133c3f66c72b76 10.128.1.26:6780
+   slots:[7168-8191] (1024 slots) master
+M: 24411d739f23bd24dcb232513fa459e9e31c285d 10.128.1.31:6780
+   slots:[8192-9215] (1024 slots) master
+M: 052c046733fff61311cc32f6ae732605d034f28d 10.128.1.27:6780
+   slots:[9216-10239] (1024 slots) master
+M: f83227355cc04dde179ad408584079f8897b3841 10.128.1.32:6780
+   slots:[10240-11263] (1024 slots) master
+M: ac6a921266ea8325cdd8795f59171955633c4e72 10.128.1.33:6780
+   slots:[11264-12287] (1024 slots) master
+M: 4a9820f25a19a7ff9c26496accc200a4bf3ce58d 10.128.1.28:6780
+   slots:[12288-13311] (1024 slots) master
+M: 42602940724c54aeb2b32c2ea1d38c0f8aca4bc7 10.128.1.22:6780
+   slots:[13312-14335] (1024 slots) master
+M: b5f13c02656d9ba3b3a86f4c0d79903a2f7fec9d 10.128.1.19:6780
+   slots:[14336-15359] (1024 slots) master
+M: 4867ccadae5ef04fb791c176119507af08dc869d 10.128.1.20:6780
+   slots:[15360-16383] (1024 slots) master
+Can I set the above configuration? (type 'yes' to accept): [29;1m>>> Nodes configuration updated
+[0m[29;1m>>> Assign a different config epoch to each node
+[0m[29;1m>>> Sending CLUSTER MEET messages to join the cluster
+[0mWaiting for the cluster to join
+............
+[29;1m>>> Performing Cluster Check (using node 10.128.1.23:6780)
+[0mM: 86b0e33238ca6ce506c18c6259c203c2e4306fbc 10.128.1.23:6780
+   slots:[0-1023] (1024 slots) master
+M: f83227355cc04dde179ad408584079f8897b3841 10.128.1.32:6780
+   slots:[10240-11263] (1024 slots) master
+M: 4867ccadae5ef04fb791c176119507af08dc869d 10.128.1.20:6780
+   slots:[15360-16383] (1024 slots) master
+M: 06322b4f72d79a02e7e8bfdd44fa8b5746cda2cf 10.128.1.21:6780
+   slots:[5120-6143] (1024 slots) master
+M: 435416cabfbb82c779a8f0b17e29ed5d9a7d1871 10.128.1.29:6780
+   slots:[2048-3071] (1024 slots) master
+M: 2dbab8967248183a4b8228a5f35f9af366a4e1f7 10.128.1.34:6780
+   slots:[6144-7167] (1024 slots) master
+M: 24411d739f23bd24dcb232513fa459e9e31c285d 10.128.1.31:6780
+   slots:[8192-9215] (1024 slots) master
+M: d308a7acfa76f444a875c591c577aff76b14459a 10.128.1.24:6780
+   slots:[3072-4095] (1024 slots) master
+M: 42602940724c54aeb2b32c2ea1d38c0f8aca4bc7 10.128.1.22:6780
+   slots:[13312-14335] (1024 slots) master
+M: b5f13c02656d9ba3b3a86f4c0d79903a2f7fec9d 10.128.1.19:6780
+   slots:[14336-15359] (1024 slots) master
+M: 4a9820f25a19a7ff9c26496accc200a4bf3ce58d 10.128.1.28:6780
+   slots:[12288-13311] (1024 slots) master
+M: 11fd149571053a871faa243566133c3f66c72b76 10.128.1.26:6780
+   slots:[7168-8191] (1024 slots) master
+M: ac6a921266ea8325cdd8795f59171955633c4e72 10.128.1.33:6780
+   slots:[11264-12287] (1024 slots) master
+M: 0bcb05817bb18cf137c8d1837a21e00cf8d83d29 10.128.1.30:6780
+   slots:[1024-2047] (1024 slots) master
+M: ba8754091d7d4e9008355a521446f0376f8707b3 10.128.1.25:6780
+   slots:[4096-5119] (1024 slots) master
+M: 052c046733fff61311cc32f6ae732605d034f28d 10.128.1.27:6780
+   slots:[9216-10239] (1024 slots) master
+[32;1m[OK] All nodes agree about slots configuration.
+[0m[29;1m>>> Check for open slots...
+[0m[29;1m>>> Check slots coverage...
+[0m[32;1m[OK] All 16384 slots covered.
+[0m
+14:30:22 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:30:27 horizon SmartSim[3447] DEBUG Cluster status verified
+14:30:27 horizon SmartSim[3447] INFO Database cluster created with 16 shards
+14:30:27 horizon SmartSim[3447] DEBUG Orchestrator launched on nodes: ['10.128.1.23', '10.128.1.30', '10.128.1.29', '10.128.1.24', '10.128.1.25', '10.128.1.21', '10.128.1.34', '10.128.1.26', '10.128.1.31', '10.128.1.27', '10.128.1.32', '10.128.1.33', '10.128.1.28', '10.128.1.22', '10.128.1.19', '10.128.1.20']
+14:30:27 horizon SmartSim[3447] INFO Orchestrator Database created and running
+14:30:27 horizon SmartSim[3447] INFO Running with threads: 32
+14:30:27 horizon SmartSim[3447] INFO Working in previously created experiment
+14:30:27 horizon SmartSim[3447] DEBUG Producer session created
+14:30:27 horizon SmartSim[3447] INFO Working in previously created experiment
+14:30:27 horizon SmartSim[3447] DEBUG Consumer session created
+14:30:27 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 128
+	ntasks-per-node = 32
+	nodes = 4
+aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 128
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:30:27 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:30:32 horizon SmartSim[3447] DEBUG Cluster status verified
+14:30:32 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:30:33 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:30:36 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967
+14:30:39 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b
+14:30:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:30:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): New
+14:30:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:30:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:30:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:30:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:30:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:30:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:19 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:24 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:24 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:29 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:29 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:34 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:34 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:39 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:39 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:44 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:44 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:49 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:49 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:54 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:54 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:31:59 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:31:59 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:32:04 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:32:04 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:32:09 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:32:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:32:14 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Running
+14:32:14 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Running
+14:32:17 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-3967(3958311.24): Completed
+14:32:17 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N4-T32-DBN16-ITER100-TB1024-TPD4-CT32-b11b(3958311.25): Completed
+14:32:19 horizon SmartSim[3447] INFO Running with threads: 32
+14:32:19 horizon SmartSim[3447] INFO Working in previously created experiment
+14:32:19 horizon SmartSim[3447] DEBUG Producer session created
+14:32:19 horizon SmartSim[3447] INFO Working in previously created experiment
+14:32:19 horizon SmartSim[3447] DEBUG Consumer session created
+14:32:19 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 256
+	ntasks-per-node = 32
+	nodes = 8
+aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 256
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:32:19 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:32:24 horizon SmartSim[3447] DEBUG Cluster status verified
+14:32:24 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:32:24 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:32:27 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6
+14:32:31 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3
+14:32:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): New
+14:32:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): New
+14:32:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:32:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:32:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:32:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:32:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:32:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:32:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:32:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:33:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:33:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:34:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:34:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:34:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:34:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:34:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:34:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:34:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Running
+14:34:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Running
+14:34:17 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-3fb6(3958311.26): Completed
+14:34:17 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N8-T32-DBN16-ITER100-TB1024-TPD4-CT32-34a3(3958311.27): Completed
+14:34:21 horizon SmartSim[3447] INFO Running with threads: 32
+14:34:21 horizon SmartSim[3447] INFO Working in previously created experiment
+14:34:21 horizon SmartSim[3447] DEBUG Producer session created
+14:34:21 horizon SmartSim[3447] INFO Working in previously created experiment
+14:34:21 horizon SmartSim[3447] DEBUG Consumer session created
+14:34:21 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 512
+	ntasks-per-node = 32
+	nodes = 16
+aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 512
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:34:21 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:34:26 horizon SmartSim[3447] DEBUG Cluster status verified
+14:34:26 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:34:26 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:34:29 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618
+14:34:32 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406
+14:34:37 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:34:37 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:34:42 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:34:42 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:34:47 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:34:47 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:34:52 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:34:52 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:34:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:34:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:35:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:35:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:36:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:36:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:36:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:36:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:36:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:36:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:36:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:36:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:36:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Running
+14:36:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Running
+14:36:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Completed
+14:36:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-f618(3958311.28): Completed
+14:36:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Completed
+14:36:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N16-T32-DBN16-ITER100-TB1024-TPD4-CT32-d406(3958311.29): Completed
+14:36:33 horizon SmartSim[3447] INFO Running with threads: 32
+14:36:33 horizon SmartSim[3447] INFO Working in previously created experiment
+14:36:33 horizon SmartSim[3447] DEBUG Producer session created
+14:36:33 horizon SmartSim[3447] INFO Working in previously created experiment
+14:36:33 horizon SmartSim[3447] DEBUG Consumer session created
+14:36:33 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 1024
+	ntasks-per-node = 32
+	nodes = 32
+aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 1024
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:36:33 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:36:38 horizon SmartSim[3447] DEBUG Cluster status verified
+14:36:38 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:36:38 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:36:41 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad
+14:36:45 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1
+14:36:50 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:36:50 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:36:55 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:36:55 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:00 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:00 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:05 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:05 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:10 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:10 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:15 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:15 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:20 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:20 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:25 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:25 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:30 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:30 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:35 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:35 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:40 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:40 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:45 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:45 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:50 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:50 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:37:55 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:37:55 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:00 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:00 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:05 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:05 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:10 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:10 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:15 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:15 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:20 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:20 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:25 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:25 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:30 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:30 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:35 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:35 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:40 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:40 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:45 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:45 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:50 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:50 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:55 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Running
+14:38:55 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Running
+14:38:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-57ad(3958311.30): Completed
+14:38:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N32-T32-DBN16-ITER100-TB1024-TPD4-CT32-01d1(3958311.31): Completed
+14:39:00 horizon SmartSim[3447] INFO Running with threads: 32
+14:39:00 horizon SmartSim[3447] INFO Working in previously created experiment
+14:39:00 horizon SmartSim[3447] DEBUG Producer session created
+14:39:00 horizon SmartSim[3447] INFO Working in previously created experiment
+14:39:00 horizon SmartSim[3447] DEBUG Consumer session created
+14:39:00 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 2048
+	ntasks-per-node = 32
+	nodes = 64
+aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 2048
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:39:00 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:39:05 horizon SmartSim[3447] DEBUG Cluster status verified
+14:39:05 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:39:05 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:39:08 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c
+14:39:11 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825
+14:39:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): New
+14:39:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:39:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:39:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:11 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:16 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:21 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:21 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:26 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:26 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:31 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:31 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:36 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:36 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:41 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:41 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:46 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:46 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:51 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:51 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:40:56 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:40:56 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:41:01 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:41:01 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:41:06 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:41:06 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Running
+14:41:09 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-CT32-4825(3958311.33): Completed
+14:41:11 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:41:16 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Running
+14:41:19 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N64-T32-DBN16-ITER100-TB1024-TPD4-1d5c(3958311.32): Completed
+14:41:21 horizon SmartSim[3447] INFO Running with threads: 32
+14:41:21 horizon SmartSim[3447] INFO Working in previously created experiment
+14:41:21 horizon SmartSim[3447] DEBUG Producer session created
+14:41:21 horizon SmartSim[3447] INFO Working in previously created experiment
+14:41:21 horizon SmartSim[3447] DEBUG Consumer session created
+14:41:21 horizon SmartSim[3447] INFO 
+
+=== Launch Summary ===
+Experiment: results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Experiment Path: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+Launcher: slurm
+Models: 2
+Database Status: active
+
+=== Models ===
+aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_producer
+Executable Arguments: 1024 4
+Run Command: srun
+Run Arguments:
+	ntasks = 4096
+	ntasks-per-node = 32
+	nodes = 128
+aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb
+Executable: /lus/cls01029/richaama/smartsim-scaling/SmartSim-Scaling/cpp-data-aggregation/build/aggregation_consumer
+Executable Arguments: 4096
+Run Command: srun
+Run Arguments:
+	ntasks-per-node = 1
+	cpus-per-task = 64
+	cpu-bind = v
+	nodes = 1
+
+
+
+14:41:21 horizon SmartSim[3447] DEBUG Beginning database cluster status check...
+14:41:27 horizon SmartSim[3447] DEBUG Cluster status verified
+14:41:27 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:41:27 horizon SmartSim[3447] DEBUG Running on allocation 3958311 gleaned from user environment
+14:41:30 horizon SmartSim[3447] DEBUG Launching aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f
+14:41:33 horizon SmartSim[3447] DEBUG Launching aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb
+14:41:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): New
+14:41:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): New
+14:41:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:41:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:41:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:41:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:41:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:41:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:41:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:41:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:42:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:42:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:13 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:13 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:18 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:18 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:23 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:23 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:28 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:28 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:33 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:33 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:38 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:38 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:43 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:43 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:48 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:48 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:53 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:53 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:43:58 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:43:58 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:44:03 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:44:03 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:44:08 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Running
+14:44:08 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Running
+14:44:10 horizon SmartSim[3447] INFO aggregate-sess-prod-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-8f4f(3958311.34): Completed
+14:44:10 horizon SmartSim[3447] INFO aggregate-sess-cons-cpp-N128-T32-DBN16-ITER100-TB1024-TPD4-CT32-2cdb(3958311.35): Completed
+14:44:13 horizon SmartSim[3447] INFO Stopping model orchestrator with job name orchestrator-CU78YGO7H8LB

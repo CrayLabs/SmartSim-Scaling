@@ -1,0 +1,2 @@
+,name,date,db,smartsim,smartredis,client_total,client_per_node,client_nodes,database_nodes,database_cpus,iterations,tensor_bytes,t_per_dataset,language
+0,aggregate-sess-prod-for-python-consumer-file-system-cpp-N16-T32-DBN0-ITER100-TB1024-TPD4-c690,2023-07-20,redis-server,0.5.0,0.3.1,512,32,16,0,0,100,1024,4,cpp

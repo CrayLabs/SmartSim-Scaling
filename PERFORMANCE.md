@@ -27,10 +27,10 @@ were run on 8 CPUs and 8 threads per queue.
 
 ## Inference Performance Analysis
 
-INSERT ANALYSIS - am rerunning the inference tests : ignore Inference section for this review
+> Note that Inference is the process of running data points into a machine learning model to calculate an output such as a single numerical score. The SmartSim-Scaling tests use Pytorch's implementation of Resnet50 to...
 
 ## Throughput Standard
-The following are scaling results for a standard throughput test, run with 48 client threads on each node. The databases were run on 8 CPUs and 8 threads per queue. 
+The following configuration file for the example Throughput Standard scaling test is shown below. 
 
 ```bash
 [run]
@@ -58,7 +58,7 @@ wall_time = 05:00:00
 ![Throughput Std Unpack](/figures/new_std_thro.png "Throughput Standard")
 
 ## Throughput Colocated
-The following are scaling results for a colocated throughput test, run with 48 client threads on each node. The databases were run on 8 CPUs and 8 threads per queue. 
+The following configuration file for the example Throughput Colocated scaling test is shown below. 
 
 ```bash
 [run]
@@ -86,11 +86,16 @@ language = ['cpp']
 
 ## Throughput Performance Analysis
 
-1. The Throughput Standard test density decreases as the database nodes increase. Outliers become greater as client total increases. This is because as there are more clients, there is a longer wait time. We can also tell that the standard takes longer than colocated because the client nodes are having to travel offsight to the database client node. Each database is having to handle more requests since they do not 
-have their own clients. 
+> Note that Throughput measures the total time it takes to push and pull data from a database.
+The SmartSim Scaling studies produces..
 
-2. Put/Unpack tensor for Throughput Colocated stays consistent with density across all client totals.
-It takes much less time to complete using a colocated orchestrator since all the computations are happening on the same node. Less time it takes to communicate since the db and app are on the same node.
+Starting with the Throughput Standard tests, we first notice the outside points for both `put_tensor` and 
+`unpack_tensor` are notabley higher than the median for each plot. The outliers increase with the less
+database nodes we use. We predict that this is because...
+
+Moving on to the Throughput Colocated tests, the lower and upper adjacent values are 
+
+
 
 ## Data Aggregation Standard
 
@@ -180,20 +185,16 @@ language = ['cpp']
 
 ## Data Aggregation Performance Analysis
 
-1. The Standard Data Aggregation test performs the fastest get_list() client function. We
-can assume this is due to the fact that there is one less communication layer
-than the other two tests that use python consumer clients with c++ producer clients. 
-We can also see that as the database node count increases, the violin plot
-density decreases. We can assume this is happening because there are more shards
-of the database avaiable to complete the function get_list().
+> Note that Data Aggregation is the process of summarizing a large pool of data for high level analysis.
+For the aggregation tests below...
 
-2. The Standard Data Aggregation Python test seems to be less stable than the previous test using all C++ clients. Elements of the list might be distributed unevenly causing a contention between this test and the
-previous.
+Looking at the data agg violin plots above, we present the argument that retrieving tensors from 
+the database shows no large performance difference when comparing a C++ client and a Python client. 
+More specifically, using a Python Client instead of a C++ Client will leave you with a `get_list()` performance hit
+to the hundredth of a second. However, there is a large performance hit when working with the file system with 
+outside points of the violin plots reaching to 2.50 / 1.20 seconds in comparison to the C++ Client: 0.10 seconds and Python Client: 0.18 seconds. We can infer that reading from a database is much faster than from the file system.
 
-3. The Standard Data Aggregation File System test shows much faster results in the poll_list()
-chart than the previous test. This is because it is much faster to write to a file system
-than using a database since there is signigicantly less nodes. 
-However, it is much faster to read from a database than the file system.
+If we compare the `poll_list()` violin plots, pulling tensors from the file system proves to be significanlty faster than pulling tensors from a database. 
 
 ## Advanced Performance Tips
 

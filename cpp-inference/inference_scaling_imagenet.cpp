@@ -100,7 +100,6 @@ void run_mnist(const std::string& model_name,
   bool should_set = get_set_flag();
   std::string model_key = "resnet_model";
   std::string script_key = "resnet_script";
-
   // setting up string to debug set vars
   std::string program_vars = "Running rank with vars should_set: ";
   program_vars += std::to_string(should_set) + " - num_device: ";
