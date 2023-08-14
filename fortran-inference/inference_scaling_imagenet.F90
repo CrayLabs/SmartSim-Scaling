@@ -61,9 +61,8 @@ poll_model_code = client%poll_model(model_key, 200, 100, poll_model_bool)
 if (poll_model_code /= SRNoError) stop 'SR Error finding model'
 if (.not. poll_model_bool) stop 'Bool Error finding model'
 
-
 script_key = "resnet_script"
-poll_script_code = client%poll_key(script_key, 1000, 1000, poll_script_bool)
+poll_script_code = client%poll_model(script_key, 200, 100, poll_script_bool)
 if (poll_script_code /= SRNoError) stop 'SR Error finding script'
 if (.not. poll_script_bool) stop 'Bool Error finding script'
 

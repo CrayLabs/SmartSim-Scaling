@@ -25,9 +25,9 @@ class Inference:
                            launcher="auto",
                            run_db_as_batch=False,
                            db_node_feature = {"constraint": "P100"},
-                           node_feature = {"constraint": "SK48"},
+                           node_feature = {"constraint": "SK48"}, #100
                            db_hosts=[],
-                           db_nodes=[4],
+                           db_nodes=[4,8,16],
                            db_cpus=[8],
                            db_tpq=[1],
                            db_port=6780,
@@ -36,10 +36,10 @@ class Inference:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[4], #client_nodes
+                           client_nodes=[16,32,64], #client_nodes
                            rebuild_model=False, #force_rebuild
                            iterations=100, #--exclusive -t 10:00:00
-                           languages=["fortran"],
+                           languages=["cpp","fortran"],
                            wall_time="15:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
@@ -171,7 +171,7 @@ class Inference:
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[3],
+                            nodes=[4,8,12,16],
                             clients_per_node=[18],
                             db_cpus=[8],
                             db_tpq=[1],

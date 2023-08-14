@@ -172,9 +172,10 @@ def attach_resnet(model, res_model_path, device, num_devices, batch_size):
     print("passed 5")
     #removed devices per node
     model.add_script("resnet_script",
+                        devices_per_node=num_devices,
                         script_path="./imagenet/data_processing_script.txt",
                         device="GPU")
-    print("passed 6")
+    
     logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 def write_run_config(path, **kwargs):

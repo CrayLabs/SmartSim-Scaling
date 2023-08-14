@@ -98,8 +98,27 @@ void run_mnist(const std::string& model_name,
   int num_devices = get_num_devices();
   bool use_multigpu = (0 == device.compare("GPU")) && num_devices > 1;
   bool should_set = get_set_flag();
+
   std::string model_key = "resnet_model";
+  bool poll_model_bool;
+  int poll_model_code = client.poll_model(model_key, 100, 100);
+  if (poll_model_code != SRNoError) {
+    log_error(context, LLInfo, "SR Error finding model");
+  }
+  if (!poll_model_bool) {
+    log_error(context, LLInfo, "Bool Error finding model");
+  }
+  //poll model change it
   std::string script_key = "resnet_script";
+  bool poll_script_bool;
+  int poll_script_code = client.poll_key(script_key, 100, 100);
+  if (poll_script_code != SRNoError) {
+    log_error(context, LLInfo, "SR Error finding script");
+  }
+  if (!poll_script_bool) {
+    log_error(context, LLInfo, "Bool Error finding script");
+  }
+
   // setting up string to debug set vars
   std::string program_vars = "Running rank with vars should_set: ";
   program_vars += std::to_string(should_set) + " - num_device: ";
