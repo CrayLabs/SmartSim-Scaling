@@ -19,11 +19,34 @@ the SmartSim paper on arXiv
 
 ## Colocated Inference
 
-The following are scaling results for a colocated inference test, run on 12 36-core Intel Broadwell nodes,
-each one equipped with 8 Nvidia V100 GPUs. On each node, 28 client threads were run, and the databases
-were run on 8 CPUs and 8 threads per queue. 
+```bash
+[run]
+name = run-2023-08-13-21:29:20
+path = results/inference-colocated-scaling/run-2023-08-13-21:29:20
+smartsim_version = 0.5.0
+smartredis_version = 0.3.1
+db = redis-server
+date = 2023-08-13
+language = ['cpp', 'fortran']
 
-![Inference Colo](/figures/inf_colo.png "Inference Colocated")
+[attributes]
+colocated = 1
+client_per_node = [18]
+client_nodes = [4, 8, 12, 16]
+database_cpus = [8]
+database_port = 6780
+batch_size = [96]
+device = GPU
+num_devices = 1
+iterations = 100
+language = ['cpp', 'fortran']
+node_feature = {'constraint': 'P100'}
+```
+
+![Inference Colo](/figures/put_tensor.png "Inference Colocated")
+![Inference Colo](/figures/run_model.png "Inference Colocated")
+![Inference Colo](/figures/run_script.png "Inference Colocated")
+![Inference Colo](/figures/unpack_tensor.png "Inference Colocated")
 
 ## Inference Performance Analysis
 
