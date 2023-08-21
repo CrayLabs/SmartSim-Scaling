@@ -164,7 +164,6 @@ void run_mnist(const std::string& model_name,
   client.put_tensor(in_key, array, {224, 224, 3},
                     SRTensorTypeFloat,
                     SRMemLayoutNested);
-  double put_tensor_end = MPI_Wtime();
   log_data(context, LLDebug, "put_tensor completed");
   if (use_multigpu) {
     client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
@@ -200,10 +199,11 @@ void run_mnist(const std::string& model_name,
 
   // Begin the actual iteration loop
   log_data(context, LLDebug, "Iteration loop starting...");
+  MPI_Barrier(MPI_COMM_WORLD); // try to put one in between all of them
   double loop_start = MPI_Wtime();
   for (int i = 0; i < iterations + 1; i++) {
     log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
-    MPI_Barrier(MPI_COMM_WORLD);
+    // MPI_Barrier(MPI_COMM_WORLD); // move this to outside loop just as test case
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);

@@ -36,8 +36,7 @@ class Inference:
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[16,32,64], #client_nodes
-                           rebuild_model=False, #force_rebuild
+                           client_nodes=[25,50,75,100], #client_nodes
                            iterations=100, #--exclusive -t 10:00:00
                            languages=["cpp","fortran"],
                            wall_time="15:00:00",
@@ -76,8 +75,6 @@ class Inference:
         :type clients_per_node: list[int], optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
         :type client_nodes: list[int], optional
-        :param rebuild_model: force rebuild of PyTorch model even if it is available
-        :type rebuild_model: bool
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param languages: list of languages to use for the tester "cpp" and/or "fortran"
@@ -116,7 +113,6 @@ class Inference:
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
-            print(perm)
             db = start_database(exp,
                                 db_node_feature,
                                 db_port,
@@ -127,9 +123,8 @@ class Inference:
                                 run_db_as_batch,
                                 db_hosts,
                                 wall_time)
-            print("passed 1")
             # setup a an instance of the synthetic C++ app and start it
-            infer_session, resnet_model = self._create_inference_session(exp,
+            infer_session = self._create_inference_session(exp,
                                                      node_feature,
                                                      c_nodes,
                                                      cpn,
@@ -139,19 +134,15 @@ class Inference:
                                                      batch,
                                                      device,
                                                      num_devices,
-                                                     rebuild_model,
                                                      iterations,
                                                      language)
-            print(f"passed 2 with infer: {infer_session}, res: {resnet_model}")
             logger.debug("Inference session created")
             address = db.get_address()[0]
-            print(f"address: {address}")
             attach_resnet(infer_session,
-                        resnet_model,
+                        f"./imagenet/resnet50.{device}.pt",
                         device,
                         num_devices,
                         batch)
-            print("passed attaching resnet")
             logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
@@ -182,7 +173,6 @@ class Inference:
                             num_devices=1,
                             net_type="uds",
                             net_ifname="lo",
-                            rebuild_model=False,
                             iterations=100,
                             languages=["cpp","fortran"],
                             plot="database_cpus"
@@ -218,15 +208,13 @@ class Inference:
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
-        :param rebuild_model: force rebuild of PyTorch model even if it is available
-        :type rebuild_model: bool
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
         :param plot: flag to plot against in process results
         :type plot: str
         """
         logger.info("Starting inference colocated scaling tests")
-        check_model(device, force_rebuild=rebuild_model) #can the force rebuild
+        check_model(device)
         
         check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
@@ -251,7 +239,7 @@ class Inference:
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
 
-            infer_session, resnet_model = self._create_colocated_inference_session(exp,
+            infer_session = self._create_colocated_inference_session(exp,
                                                                node_feature,
                                                                c_nodes,
                                                                cpn,
@@ -264,13 +252,11 @@ class Inference:
                                                                batch,
                                                                device,
                                                                num_devices,
-                                                               rebuild_model,
                                                                iterations,
                                                                language)
             logger.debug("Inference session created")
-            #resnet_model = f"./imagenet/resnet50.{device}.pt"
             attach_resnet(infer_session,
-                        "./imagenet/resnet50.GPU.pt",
+                        f"./imagenet/resnet50.{device}.pt",
                         device,
                         num_devices,
                         batch)
@@ -282,21 +268,6 @@ class Inference:
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
-
-
-    @staticmethod
-    def _set_resnet_model(device="GPU", force_rebuild=False):
-            resnet_model = f"./imagenet/resnet50.{device}.pt" #we just need this line but can the whole thing
-            # if not Path(resnet_model).exists() or force_rebuild:
-            #     logger.info(f"AI Model {resnet_model} does not exist or rebuild was asked, it will be created")
-            #     try:
-            #         save_model(device)
-            #     except:
-            #         logger.error(f"Could not save {resnet_model} for {device}.")
-            #         sys.exit(1)
-
-            # logger.info(f"Using model {resnet_model}")
-            return resnet_model
 
     @classmethod
     def _create_inference_session(cls,
@@ -310,11 +281,9 @@ class Inference:
                                 batch_size,
                                 device,
                                 num_devices,
-                                rebuild_model,
                                 iterations,
                                 language
                                 ):
-        resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         cluster = 1 if db_nodes > 1 else 0
         run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
@@ -350,7 +319,7 @@ class Inference:
 
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                            resnet_model,
+                                            f"./imagenet/resnet50.{device}.pt",
                                             "./imagenet/data_processing_script.txt"])
         exp.generate(model, overwrite=True)
         write_run_config(model.path,
@@ -368,7 +337,7 @@ class Inference:
                         iterations=iterations,
                         node_feature=node_feature)
 
-        return model, resnet_model
+        return model
 
     @classmethod
     def _create_colocated_inference_session(cls,
@@ -385,10 +354,8 @@ class Inference:
                                        batch_size,
                                        device,
                                        num_devices,
-                                       rebuild_model,
                                        iterations,
                                        language):
-        resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
         run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
@@ -420,7 +387,7 @@ class Inference:
             ))
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                            resnet_model,
+                                            f"./imagenet/resnet50.{device}.pt",
                                             "./imagenet/data_processing_script.txt"])
 
         db_opts = dict(
@@ -456,4 +423,4 @@ class Inference:
                         language=language,
                         iterations=iterations,
                         node_feature=node_feature)
-        return model, resnet_model
+        return model

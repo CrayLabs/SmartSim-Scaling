@@ -14,7 +14,7 @@ is initialized on every rank.
 Each client performs 10 executions of the following commands
 
   1) ``put_tensor``     (send image to database)
-  2) ``unpack_tensor``  (Retrieve the inference result)
+  2) ``unpack_tensor``  (Retrieve the image)
 
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.

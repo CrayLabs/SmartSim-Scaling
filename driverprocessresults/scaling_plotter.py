@@ -155,7 +155,7 @@ class PlotResults:
                         #
                         for aidx, val in enumerate(xticks):
                             if len(var_list) > 1:
-                                new_xticks.append(val + (15*idx) - 15)
+                                new_xticks.append(val + (200*idx) - 200)
                             else:
                                 new_xticks.append(val)
                         plot = axs[lang_idx].violinplot(data, positions=new_xticks, **violin_opts)
@@ -173,7 +173,7 @@ class PlotResults:
                     axs[lang_idx].set_title(language)
                     axs[lang_idx].set_xticks(xticks, labels=ordered_client_total, minor=False)
                     axs[lang_idx].set_ylabel(f'{function_name}\nTime (s)')
-                    axs[lang_idx].yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%2.2f'))
+                    axs[lang_idx].yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%2.3f'))
                     axs[lang_idx].yaxis.set_minor_locator(AutoMinorLocator())
                     plt.tight_layout()
                     plt.draw()

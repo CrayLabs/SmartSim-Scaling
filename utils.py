@@ -47,7 +47,7 @@ def get_time():
     current_time = now.strftime("%H:%M:%S")
     return current_time
 
-def check_model(device, force_rebuild=False):
+def check_model(device):
     """Regenerate model on specified device if True.
 
     This function will rebuild the model on the specified node type.
@@ -57,7 +57,7 @@ def check_model(device, force_rebuild=False):
     :param force_rebuild: force rebuild of PyTorch model even if it is available
     :type force_rebuild: bool
     """
-    if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
+    if device.startswith("GPU") and (not Path("./imagenet/resnet50.GPU.pt").exists()):
         from torch.cuda import is_available
         if not is_available():
             message = "resnet50.GPU.pt model missing in ./imagenet directory. \n"
@@ -122,7 +122,6 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     :return: orchestrator instance
     :rtype: Orchestrator
     """
-    print(f"node fet: {db_node_feature}")
     db = exp.create_database(port=port,
                             db_nodes=nodes,
                             batch=run_as_batch,
@@ -140,7 +139,6 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
     db.set_cpus(cpus)
     exp.generate(db, overwrite=True)
     exp.start(db)
-    #print(f"status of db: {exp.status(db)}")
     logger.info("Orchestrator Database created and running")
     return db
 
@@ -160,16 +158,13 @@ def attach_resnet(model, res_model_path, device, num_devices, batch_size):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    print(f"passed 4 model: {model}, res: {res_model_path}, device: {device}, num: {num_devices}, batch: {batch_size}")
     device = device.upper()
-    print(f"model: {model}")
     model.add_ml_model(name="resnet_model",
                         devices_per_node=num_devices,
                         backend="TORCH",
                         model_path=res_model_path,
                         batch_size=batch_size,
                         device=device)
-    print("passed 5")
     #removed devices per node
     model.add_script("resnet_script",
                         devices_per_node=num_devices,

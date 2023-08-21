@@ -219,38 +219,38 @@ runs of inference standard with the default `exp_name` would look like:
 
 ```bash
 results/
-├─ inference-standard-scaling/ # name of scaling test
-│  ├─ run-2023-07-17-13:21:17/ #
-│  │  ├─ database/ # 
-│  │  │  ├─  orchestrator.err
-│  │  │  ├─  orchestrator.out
-│  │  │  ├─  smartsim_db.dat
-│  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4/
-│  │  │  ├─ cat.raw # include?
-│  │  │  ├─ data_processing_script.txt
-│  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4.err
-│  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4.out
-│  │  │  ├─ rank_0_timing.csv
-│  │  │  ├─ resnet50.GPU.pt
-│  │  │  ├─ run.cfg
-│  │  │  ├─ srlog.out
+├─ inference-standard-scaling/ # Holds all the runs for a scaling test
+│  ├─ run-2023-07-17-13:21:17/ # Holds all information for a specific run
+│  │  ├─ database/ # Holds orchestrator information
+│  │  │  ├─  orchestrator.err # Will output an error within the Orchestrator
+│  │  │  ├─  orchestrator.out # Will output messages pushed during an Orchestrator run
+│  │  │  ├─  smartsim_db.dat 
+│  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4/ # Holds all information for a session
+│  │  │  ├─ cat.raw # Holds all timings from infer run
+│  │  │  ├─ data_processing_script.txt # Script used during the infer session
+│  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4.err # Stores error messages during inf session
+│  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4.out # Stores print messages during inf session
+│  │  │  ├─ rank_0_timing.csv # Holds timings for the given rank, in this case rank 0
+│  │  │  ├─ resnet50.GPU.pt # The model used for the infer session
+│  │  │  ├─ run.cfg # Setting file for the infer session
+│  │  │  ├─ srlog.out # Log file for SmartRedis
 │  │  ├─ infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-f8a6/
-│  │  ├─ run.cfg
-│  │  ├─ scaling-2023-07-19.log
-│  ├─ stats/
-│  │  ├─ run-2023-07-17-13:21:17/
-│  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4/
+│  │  ├─ run.cfg # Setting file for the run
+│  │  ├─ scaling-2023-07-19.log # Log file for information on run
+│  ├─ stats/ # Holds all the statistical results per run
+│  │  ├─ run-2023-07-17-13:21:17/ # The run 
+│  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4/ # certain sessiom
 │  │  │  │  ├─ infer-sess-cpp-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-80e4.csv
-│  │  │  │  ├─ put_tensor.pdf
-│  │  │  │  ├─ run_model.pdf
-│  │  │  │  ├─ run_script.pdf
-│  │  │  │  ├─ unpack_tensor.pdf
+│  │  │  │  ├─ put_tensor.pdf # PDF version of b/w plots
+│  │  │  │  ├─ run_model.pdf # PDF version of b/w plots
+│  │  │  │  ├─ run_script.pdf # PDF version of b/w plots
+│  │  │  │  ├─ unpack_tensor.pdf # PDF version of b/w plots
 │  │  │  ├─ infer-sess-fortran-N4-T18-DBN4-DBCPU8-ITER100-DBTPQ8-f8a6/
-│  │  ├─ dataframe.csv.gz
-│  │  ├─ put_tensor.png
-│  │  ├─ run_model.png
-│  │  ├─ run_script.png
-│  │  ├─ unpack_tensor.png
+│  │  ├─ dataframe.csv.gz # Dataframe wit
+│  │  ├─ put_tensor.png # Violin plot for put_tensor timings
+│  │  ├─ run_model.png # Violin plot for run_model timings
+│  │  ├─ run_script.png # Violin plot for run_script timings
+│  │  ├─ unpack_tensor.png # Violin plot for unpack_tensor timings
 ```
 
 Within each run folder there is a subset of files that will be useful to you. 
