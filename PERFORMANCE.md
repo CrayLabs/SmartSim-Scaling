@@ -43,10 +43,10 @@ language = ['cpp', 'fortran']
 node_feature = {'constraint': 'P100'}
 ```
 
-![Inference Colo](/figures/put_tensor.png "Inference Colocated")
-![Inference Colo](/figures/run_model.png "Inference Colocated")
-![Inference Colo](/figures/run_script.png "Inference Colocated")
-![Inference Colo](/figures/unpack_tensor.png "Inference Colocated")
+![Inference Colo](/figures/put_tensor_inf_colo.png "Inference Colocated")
+![Inference Colo](/figures/run_model_inf_colo.png "Inference Colocated")
+![Inference Colo](/figures/run_script_inf_colo.png "Inference Colocated")
+![Inference Colo](/figures/unpack_tensor_inf_colo.png "Inference Colocated")
 
 ## Inference Performance Analysis
 
