@@ -12,7 +12,7 @@ the first iteration time.
 
 The following are scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50
 and the imagenet dataset. For more information on these scaling tests, please see
-the SmartSim paper on arXiv
+the SmartSim paper on [arXiv](https://arxiv.org/pdf/2104.09355.pdf).
 
 ```bash
 [run]
@@ -94,19 +94,22 @@ node_feature = {'constraint': 'P100'}
 
 ## Inference Performance Analysis
 
-In this section, we will compare 
+In this section, we will compare inference clients: `put-tensor`, `unpack-tensor`, `run_model` and `run_script`,
+for colocated and standard deployement.
 
-`put-tensor`: std has a inconsistent med, colo has the same med across all number of clients, colo faster
+`put-tensor`: Colo deployement offers a consistent median for put_tensor times. Std deployement shows a slight
+increase in median as client count grows. However, due to machine constraints, colo maxes at 288 clients while
+std maxes at 1800. We can conclude that there is not a significant performance hit putting information into 
+the database when comparing std and colo.
 
-`unpack-tensor`: std unpack tensor has higher outside plots even tho colo also does but not as great of time, no
-sustantial performance difference
+`unpack-tensor`: There is no significant performance advantage when using colo deployement vs std for the client
+unpack_tensor. However, std offers higher times concerning outside points than colo. 
 
-`run_model`: colo has a consistent median, std has a variation in the median, median increases exponetially 
-as node count increases
+`run_model`: Colo deployment offers a significanlty faster run_model client than std deployment. We can 
+infer colo deployement is able to transfer information faster when running a ML model than std deployement.
 
-`run_script`: std med increases expo, colo med stays consistent - outliers change
-
-
+`run_script`: Colo deployment offers a significanlty faster run_script client than std deployment. We can 
+infer colo deployement is able to transfer information faster when running a ML script than std deployement.
 
 ## Throughput Standard
 
@@ -145,22 +148,23 @@ The following configuration file for the example Throughput Colocated scaling te
 
 ```bash
 [run]
-name = run-2023-08-07-10:03:47
-path = results/throughput-colocated-scaling/run-2023-08-07-10:03:47
+[run]
+name = run-2023-08-20-21:03:55
+path = results/throughput-colocated-scaling/run-2023-08-20-21:03:55
 smartsim_version = 0.5.0
 smartredis_version = 0.3.1
 db = redis-server
-date = 2023-08-07
+date = 2023-08-20
 language = ['cpp']
 
 [attributes]
 colocated = 1
 custom_pinning = [False]
-client_per_node = [48]
-client_nodes = [4, 8, 16, 32, 64, 128]
+client_per_node = [32]
+client_nodes = [16, 32, 64, 128]
 database_cpus = [8]
 iterations = 100
-tensor_bytes = [1024, 8192, 16384, 32769, 65538, 131076, 262152, 524304, 1024000]
+tensor_bytes = [1024]
 language = ['cpp']
 ```
 
@@ -168,6 +172,9 @@ language = ['cpp']
 ![Throughput colo Unpack](/figures/test.png "Colocated Throughput")
 
 ## Throughput Performance Analysis
+
+In this section, we will compare throughput clients: `put-tensor` and `unpack-tensor`,
+for colocated and standard deployement.
 
 Starting with the Throughput Standard tests, we first notice the outside points for both `put_tensor` and 
 `unpack_tensor` are notabley higher than the median for each plot. The outliers increase with the less
@@ -241,6 +248,9 @@ wall_time = 05:00:00
 ![Data Agg Py Poll List](/figures/data_agg_py.png "Data Aggregation Py Standard")
 
 ## Data Aggregation Performance Analysis
+
+In this section, we will compare throughput clients: `get-list` and `poll-list`,
+for colocated and standard deployement.
 
 Looking at the data agg violin plots above, we present the argument that retrieving tensors from 
 the database shows no large performance difference when comparing a C++ client and a Python client. 
