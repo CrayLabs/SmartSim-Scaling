@@ -97,18 +97,18 @@ node_feature = {'constraint': 'P100'}
 In this section, we will compare inference clients: `put-tensor`, `unpack-tensor`, `run_model` and `run_script`,
 for colocated and standard deployement.
 
-- `put-tensor`: Colo deployement offers a consistent median for put_tensor times. Std deployement shows a slight
+- `put-tensor` : Colo deployement offers a consistent median for put_tensor times. Std deployement shows a slight
 increase in median as client count grows. However, due to machine constraints, colo maxes at 288 clients while
 std maxes at 1800. We can conclude that there is not a significant performance hit putting information into 
 the database when comparing std and colo.
 
-- `unpack-tensor`: There is no significant performance advantage when using colo deployement vs std for the client
+- `unpack-tensor` : There is no significant performance advantage when using colo deployement vs std for the client
 unpack_tensor. However, std offers higher times concerning outside points than colo. 
 
-- `run_model`: Colo deployment offers a significanlty faster run_model client than std deployment. We can 
+- `run_model` : Colo deployment offers a significanlty faster run_model client than std deployment. We can 
 infer colo deployement is able to transfer information faster when running a ML model than std deployement.
 
-- `run_script`: Colo deployment offers a significanlty faster run_script client than std deployment. We can 
+- `run_script` : Colo deployment offers a significanlty faster run_script client than std deployment. We can 
 infer colo deployement is able to transfer information faster when running a ML script than std deployement.
 
 ## Throughput Standard
@@ -177,9 +177,9 @@ In this section, we will compare throughput clients: `put-tensor` and `unpack-te
 for colocated and standard deployement.
 
 Moving on to the Throughput Colocated tests, the lower and upper adjacent values are 
-- `put_tensor`: 
+- `put_tensor` : 
 
-- `unpack_tensor`: We notice that for both colo and std, unpack_tensor is much faster than put_tensor. 
+- `unpack_tensor` : We notice that for both colo and std, unpack_tensor is much faster than put_tensor. 
 
 ## Data Aggregation Standard
 
@@ -242,7 +242,7 @@ language = ['cpp']
 wall_time = 05:00:00
 ```
 
-![Data Agg Py Poll List](/figures/std1_py_data_agg.png.png "Data Aggregation Py Standard")
+![Data Agg Py Poll List](/figures/std1_py_data_agg.png "Data Aggregation Py Standard")
 
 ## Data Aggregation Performance Analysis
 
@@ -256,8 +256,8 @@ to the hundredth of a second. However, there is a large performance hit when wor
 outside points of the violin plots reaching to 2.50 / 1.20 seconds in comparison to the C++ Client: 0.10 seconds and Python Client: 0.18 seconds. We can infer that reading from a database is much faster than from the file system.
 
 If we compare the `poll_list()` violin plots, pulling tensors from the file system proves to be significanlty faster than pulling tensors from a database. 
-`get_list`:
-`poll_list`:
+`get_list` :
+`poll_list` :
 ## Advanced Performance Tips
 
 There are a few places users can look to get every last bit of performance.
