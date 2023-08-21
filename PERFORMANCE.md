@@ -1,6 +1,6 @@
 # Performance Results
 
-The performance of SmartSim is detailed below across various types of systems.
+The performance of SmartSim is detailed below across the Super Computer Horizon.
 
 Note that the first iteration can take longer (up to several seconds) than the rest of the execution. This
 is due to the DB loading libraries when the first RedisAI call is made. In the following plots, we excluded
@@ -8,7 +8,7 @@ the first iteration time.
 
 ## Inference Standard
 
-The following are standard deployement scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50 and the imagenet dataset. For more information on these scaling tests, please see
+The following are standard deployment scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on [arXiv](https://arxiv.org/pdf/2104.09355.pdf).
 
 #### Inference Std Run Configuration File
@@ -54,7 +54,7 @@ wall_time = 15:00:00
 
 ## Colocated Inference
 
-The following are colocated deployement scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50 and the imagenet dataset. For more information on these scaling tests, please see
+The following are colocated deployment scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on [arXiv](https://arxiv.org/pdf/2104.09355.pdf).
 
 #### Inference Colo Run Configuration File
@@ -96,36 +96,37 @@ node_feature = {'constraint': 'P100'}
 
 ## Inference Performance Analysis
 
-In this section, we will compare inference clients: `put-tensor`, `unpack-tensor`, `run_model` and `run_script`,
-for colocated and standard deployement.
+In this section, we will compare inference clients: `put-tensor`, `unpack-tensor`, `run_model` and `run_script`
+for colocated and standard deployment.
 
 > Note that Inference is the process of running data points into a machine learning model to calculate an output such as a single numerical score. The SmartSim-Scaling tests use Pytorch's implementation of Resnet50 to feed 
-the ImageNet dataset through. The Imagenet dataset to put into the database via put_tensor. run_script and run_model is applied to the data and then it is retrieved with unpack_tensor.
+the ImageNet dataset through. We put the ImageNet data into the database via put_tensor, process the data via run_script, run a machine learning model with the data via run_model then retrieve the data via unpack_tensor.
 
-- `put-tensor` : Colo deployement offers a consistent median for put_tensor times. Std deployement shows a slight
+- `put-tensor` : Colo deployment offers a consistent median for put_tensor times. Std deployment shows a slight
 increase in median as client count grows. However, due to machine constraints, colo is maxed at 288 clients while
 std maxes at 1800 clients. We can conclude that there is not a significant performance hit putting information into the database when comparing std and colo.
 
-- `run_script` : Colo deployment offers a significanlty faster run_script client than std deployment. We can 
-infer colo deployement is able to transfer information faster when running a ML script than std deployement.
+- `run_script` : Colo deployment offers a faster run_script client than std deploymnt. We can 
+infer colo deployment is able to transfer information faster when processing data than std deployment. This
+is likely because communiction time is cut when using colo deployment.
 
-- `run_model` : Colo deployment offers a significanlty faster run_model client than std deployment. We can 
-infer colo deployement is able to transfer information faster when running a ML model than std deployement.
+- `run_model` : Colo deployment offers a faster run_model client than std deployment. Like mentioned before,
+the communication time is cut when using colocated since the app and database are on the same node.
 
-- `unpack-tensor` : There is no significant performance advantage when using colo deployement vs std for the client
-unpack_tensor. However, std offers higher times concerning outside points than colo. 
+- `unpack-tensor` : There is no significant performance advantage when using colo deployment vs std for the client
+unpack_tensor. However, std shows larger outside points than colo. 
 
-There is no `put-tensor` or `unpack-tensor` performance hit when using standard versus colocated deployement
+There is no `put-tensor` or `unpack-tensor` performance hit when using standard versus colocated deployment
 shown in the violin plots above. This is likely due to our testing constraints as the number of available
-GPUs on Horizon is 16 nodes. Therefore, we were not able to fully scale the colocated deployement to the node
+GPUs on Horizon is 16 nodes. Therefore, we were not able to fully scale the colocated deployment to the node
 size of standard. Future expansive testing may indicate a larger performance hit.
 
-We do however notice a colocated deployement advantage with clients `run_model` and `run_script`. We can infer
+We do however notice a colocated deployment advantage with clients `run_model` and `run_script`. We can infer
 that this is because the model and script are on the same node, therefore, it takes less time to communicate.
 
 ## Throughput Standard
 
-The following are standard deployement scaling results from the cpp-throughput.
+The following are standard deployment scaling results from the cpp-throughput.
 
 #### Throughput Std Run Configuration File
 ```bash
@@ -155,7 +156,7 @@ wall_time = 05:00:00
 
 ## Throughput Colocated
 
-The following are colocated deployement scaling results from the cpp-throughput.
+The following are colocated deployment scaling results from the cpp-throughput.
 
 #### Throughput Colo Run Configuration File
 
@@ -187,18 +188,18 @@ language = ['cpp']
 ## Throughput Performance Analysis
 
 In this section, we will compare throughput clients: `put-tensor` and `unpack-tensor`,
-for colocated and standard deployement.
+for colocated and standard deployment.
 
 > Note that Throughput measures the total time it takes to push and pull data from a database.
-The SmartSim Scaling studies produces a series of tensors to add and pull from a Redis DB.
+The SmartSim Scaling studies produces a series of generated tensors to add and pull from a Redis Database.
 
-- `put_tensor` : We notice that for both colocated and standard deployement, put_tensor performance
+- `put_tensor` : We notice that for both colocated and standard deployment, put_tensor performance
 extremley quickly with both medians performing faster than .001 seconds. The difference here lies 
 within the outside points. Looking at the standard violin plots, the outside point values are much
 higher than colocated.
 
 - `unpack_tensor` : We notice that for both colo and std, unpack_tensor is much faster than put_tensor. However,
-both deployements performance similarly to eachother with the difference being highlighted in the outside points.
+both deployments performance similarly to eachother with the difference being highlighted in the outside points.
 Like mentioned before, standard shows larger outside points than colocated.
 
 Since we do not see a significant performance difference with colo vs std, in the future we plan
@@ -206,7 +207,7 @@ to expand testing to compare Throughput with a Redis Database and KeyDB.
 
 ## Data Aggregation Standard
 
-The following are standard deployement scaling results from the cpp-data-aggregation.
+The following are standard deployment scaling results from the cpp-data-aggregation.
 
 #### Data Agg Std Run Configuration File
 ```bash
@@ -237,7 +238,7 @@ wall_time = 10:00:00
 
 ## Data Aggregation Standard Py
 
-The following are standard deployement scaling results from the cpp-py-data-aggregation/db.
+The following are standard deployment scaling results from the cpp-py-data-aggregation/db.
 
 #### Data Agg Py Std Run Configuration File
 ```bash
@@ -269,10 +270,10 @@ wall_time = 05:00:00
 ## Data Aggregation Performance Analysis
 
 In this section, we will compare throughput clients: `get-list` and `poll-list`,
-for colocated and standard deployement.
+for colocated and standard deployment.
 
 > Note that Data Aggregation is the process of summarizing a large pool of data for high level analysis.
-For the data agg tests, we produce tensors to store in the database.
+For the data agg tests, we produce and store tensors in the database to poll and get.
 
 - `poll_list` : Polling tensors from the database shows no large performance difference when comparing a C++ client and a Python client.
 
