@@ -97,18 +97,18 @@ node_feature = {'constraint': 'P100'}
 In this section, we will compare inference clients: `put-tensor`, `unpack-tensor`, `run_model` and `run_script`,
 for colocated and standard deployement.
 
-`put-tensor`: Colo deployement offers a consistent median for put_tensor times. Std deployement shows a slight
+- `put-tensor`: Colo deployement offers a consistent median for put_tensor times. Std deployement shows a slight
 increase in median as client count grows. However, due to machine constraints, colo maxes at 288 clients while
 std maxes at 1800. We can conclude that there is not a significant performance hit putting information into 
 the database when comparing std and colo.
 
-`unpack-tensor`: There is no significant performance advantage when using colo deployement vs std for the client
+- `unpack-tensor`: There is no significant performance advantage when using colo deployement vs std for the client
 unpack_tensor. However, std offers higher times concerning outside points than colo. 
 
-`run_model`: Colo deployment offers a significanlty faster run_model client than std deployment. We can 
+- `run_model`: Colo deployment offers a significanlty faster run_model client than std deployment. We can 
 infer colo deployement is able to transfer information faster when running a ML model than std deployement.
 
-`run_script`: Colo deployment offers a significanlty faster run_script client than std deployment. We can 
+- `run_script`: Colo deployment offers a significanlty faster run_script client than std deployment. We can 
 infer colo deployement is able to transfer information faster when running a ML script than std deployement.
 
 ## Throughput Standard
@@ -176,13 +176,10 @@ language = ['cpp']
 In this section, we will compare throughput clients: `put-tensor` and `unpack-tensor`,
 for colocated and standard deployement.
 
-Starting with the Throughput Standard tests, we first notice the outside points for both `put_tensor` and 
-`unpack_tensor` are notabley higher than the median for each plot. The outliers increase with the less
-database nodes we use. We predict that this is because...
-
 Moving on to the Throughput Colocated tests, the lower and upper adjacent values are 
-`put_tensor`
-`unpack_tensor`
+- `put_tensor`: 
+
+- `unpack_tensor`: We notice that for both colo and std, unpack_tensor is much faster than put_tensor. 
 
 ## Data Aggregation Standard
 
@@ -190,18 +187,18 @@ The following are scaling results for a data aggregation test, run with 32 clien
 
 ```bash
 [run]
-name = run-2023-07-20-14:04:10
-path = results/aggregation-standard-scaling/run-2023-07-20-14:04:10
+name = run-2023-08-20-21:55:15
+path = results/aggregation-standard-scaling/run-2023-08-20-21:55:15
 smartsim_version = 0.5.0
 smartredis_version = 0.3.1
 db = redis-server
-date = 2023-07-20
+date = 2023-08-20
 language = ['cpp']
 
 [attributes]
 colocated = 0
 client_per_node = [32]
-client_nodes = [4, 8, 16, 32, 64, 128]
+client_nodes = [16, 32, 64, 128]
 db_cpus = 36
 iterations = 100
 tensor_bytes = [1024]
@@ -212,7 +209,7 @@ language = ['cpp']
 wall_time = 10:00:00
 ```
 #### Get List - retrieve the data from the aggregation list
-![Data Agg Get List](/figures/get_list_data_agg.png "Data Aggregation Standard")
+![Data Agg Get List](/figures/std1_data_agg.png "Data Aggregation Standard")
 
 ## Data Aggregation Standard Py
 
@@ -223,18 +220,18 @@ The following are scaling results for a data aggregation py test, run with 32 cl
 
 ```bash
 [run]
-name = run-2023-07-20-14:51:41
-path = results/aggregation-standard-scaling-py/run-2023-07-20-14:51:41
+name = run-2023-08-20-22:47:22
+path = results/aggregation-standard-scaling-py/run-2023-08-20-22:47:22
 smartsim_version = 0.5.0
 smartredis_version = 0.3.1
 db = redis-server
-date = 2023-07-20
+date = 2023-08-20
 language = ['cpp']
 
 [attributes]
 colocated = 0
 client_per_node = [32]
-client_nodes = [4, 8, 16, 32, 64, 128]
+client_nodes = [16, 32, 64, 128]
 db_cpus = 32
 iterations = 100
 tensor_bytes = [1024]
@@ -245,7 +242,7 @@ language = ['cpp']
 wall_time = 05:00:00
 ```
 
-![Data Agg Py Poll List](/figures/data_agg_py.png "Data Aggregation Py Standard")
+![Data Agg Py Poll List](/figures/std1_py_data_agg.png.png "Data Aggregation Py Standard")
 
 ## Data Aggregation Performance Analysis
 
