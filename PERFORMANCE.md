@@ -8,8 +8,7 @@ the first iteration time.
 
 ## Inference Standard
 
-The following are scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50
-and the imagenet dataset. For more information on these scaling tests, please see
+The following are standard deployement scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on [arXiv](https://arxiv.org/pdf/2104.09355.pdf).
 
 #### Inference Std Run Configuration File
@@ -41,19 +40,22 @@ node_feature = {'constraint': 'SK48'}
 wall_time = 15:00:00
 ```
 
-#### Put Tensor
+#### Put Tensor (send image to database)
 ![Inference Colo](/figures/put_tensor_inf_std.png "Inference Colocated")
 
-#### Unpack Tensor
-![Inference Colo](/figures/unpack_tensor_inf_std.png "Inference Colocated")
-
-#### Run Model
-![Inference Colo](/figures/run_model_inf_std.png "Inference Colocated")
-
-#### Run Script
+#### Run Script (preprocess image)
 ![Inference Colo](/figures/run_script_inf_std.png "Inference Colocated")
 
+#### Run Model (run resnet50 on the image)
+![Inference Colo](/figures/run_model_inf_std.png "Inference Colocated")
+
+#### Unpack Tensor (retrieve the inference result)
+![Inference Colo](/figures/unpack_tensor_inf_std.png "Inference Colocated")
+
 ## Colocated Inference
+
+The following are colocated deployement scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50 and the imagenet dataset. For more information on these scaling tests, please see
+the SmartSim paper on [arXiv](https://arxiv.org/pdf/2104.09355.pdf).
 
 #### Inference Colo Run Configuration File
 ```bash
@@ -80,17 +82,17 @@ language = ['cpp', 'fortran']
 node_feature = {'constraint': 'P100'}
 ```
 
-#### Put Tensor
+#### Put Tensor (send image to database)
 ![Inference Colo](/figures/put_tensor_inf_colo.png "Inference Colocated")
 
-#### Unpack Tensor
-![Inference Colo](/figures/unpack_tensor_inf_colo.png "Inference Colocated")
+#### Run Script (preprocess image)
+![Inference Colo](/figures/run_script_inf_colo.png "Inference Colocated")
 
-#### Run Model
+#### Run Model (run resnet50 on the image)
 ![Inference Colo](/figures/run_model_inf_colo.png "Inference Colocated")
 
-#### Run Script
-![Inference Colo](/figures/run_script_inf_colo.png "Inference Colocated")
+#### Unpack Tensor (retrieve the inference result)
+![Inference Colo](/figures/unpack_tensor_inf_colo.png "Inference Colocated")
 
 ## Inference Performance Analysis
 
@@ -104,14 +106,14 @@ the ImageNet dataset through. The Imagenet dataset to put into the database via 
 increase in median as client count grows. However, due to machine constraints, colo is maxed at 288 clients while
 std maxes at 1800 clients. We can conclude that there is not a significant performance hit putting information into the database when comparing std and colo.
 
-- `unpack-tensor` : There is no significant performance advantage when using colo deployement vs std for the client
-unpack_tensor. However, std offers higher times concerning outside points than colo. 
+- `run_script` : Colo deployment offers a significanlty faster run_script client than std deployment. We can 
+infer colo deployement is able to transfer information faster when running a ML script than std deployement.
 
 - `run_model` : Colo deployment offers a significanlty faster run_model client than std deployment. We can 
 infer colo deployement is able to transfer information faster when running a ML model than std deployement.
 
-- `run_script` : Colo deployment offers a significanlty faster run_script client than std deployment. We can 
-infer colo deployement is able to transfer information faster when running a ML script than std deployement.
+- `unpack-tensor` : There is no significant performance advantage when using colo deployement vs std for the client
+unpack_tensor. However, std offers higher times concerning outside points than colo. 
 
 There is no `put-tensor` or `unpack-tensor` performance hit when using standard versus colocated deployement
 shown in the violin plots above. This is likely due to our testing constraints as the number of available
@@ -122,6 +124,8 @@ We do however notice a colocated deployement advantage with clients `run_model` 
 that this is because the model and script are on the same node, therefore, it takes less time to communicate.
 
 ## Throughput Standard
+
+The following are standard deployement scaling results from the cpp-throughput.
 
 #### Throughput Std Run Configuration File
 ```bash
@@ -146,10 +150,12 @@ language = ['cpp']
 wall_time = 05:00:00
 ```
 
-#### Put Tensor () & Unpack Tensor ()
+#### Put Tensor (send image to database) & Unpack Tensor (retrieve the image)
 ![Throughput Std Unpack](/figures/new_std_thro.png "Throughput Standard")
 
 ## Throughput Colocated
+
+The following are colocated deployement scaling results from the cpp-throughput.
 
 #### Throughput Colo Run Configuration File
 
@@ -175,7 +181,7 @@ tensor_bytes = [1024]
 language = ['cpp']
 ```
 
-#### Put Tensor () & Unpack Tensor ()
+#### Put Tensor (send image to database) & Unpack Tensor (retrieve the image)
 ![Throughput colo Unpack](/figures/test.png "Colocated Throughput")
 
 ## Throughput Performance Analysis
@@ -199,6 +205,8 @@ Since we do not see a significant performance difference with colo vs std, in th
 to expand testing to compare Throughput with a Redis Database and KeyDB. 
 
 ## Data Aggregation Standard
+
+The following are standard deployement scaling results from the cpp-data-aggregation.
 
 #### Data Agg Std Run Configuration File
 ```bash
@@ -224,12 +232,12 @@ cpu_hyperthreads = 2
 language = ['cpp']
 wall_time = 10:00:00
 ```
-#### Get List (retrieve the data from the aggregation list)
+#### Poll List (check when the next list is ready) & Get List (retrieve the data from the aggregation list)
 ![Data Agg Get List](/figures/std1_data_agg.png "Data Aggregation Standard")
 
 ## Data Aggregation Standard Py
 
-The following are scaling results for a data aggregation py test, run with 32 client threads on each node. The databases were run on 36 CPUs and 4 threads per dataset.
+The following are standard deployement scaling results from the cpp-py-data-aggregation/db.
 
 #### Data Agg Py Std Run Configuration File
 ```bash
@@ -255,7 +263,7 @@ cpu_hyperthreads = 2
 language = ['cpp']
 wall_time = 05:00:00
 ```
-#### Get List (retrieve the data from the aggregation list)
+#### Poll List (check when the next list is ready) & Get List (retrieve the data from the aggregation list)
 ![Data Agg Py Poll List](/figures/std1_py_data_agg.png "Data Aggregation Py Standard")
 
 ## Data Aggregation Performance Analysis
