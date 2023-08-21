@@ -8,25 +8,62 @@ the first iteration time.
 
 ## Inference Standard
 
-The following are scaling results from the cpp-inference scaling tests with ResNet-50
+> Note that Inference is the process of running data points into a machine learning model to calculate an output such as a single numerical score. The SmartSim-Scaling tests use Pytorch's implementation of Resnet50 to...
+
+The following are scaling results from the cpp-inference and fortran-inference scaling tests with ResNet-50
 and the imagenet dataset. For more information on these scaling tests, please see
 the SmartSim paper on arXiv
 
+```bash
+[run]
+name = run-2023-08-17-16:10:12
+path = results/inference-standard-scaling/run-2023-08-17-16:10:12
+smartsim_version = 0.5.0
+smartredis_version = 0.3.1
+db = redis-server
+date = 2023-08-17
+language = ['cpp', 'fortran']
+
+[attributes]
+colocated = 0
+client_per_node = [18]
+client_nodes = [25, 50, 75, 100]
+database_hosts = []
+database_nodes = [4, 8, 16]
+database_cpus = [8]
+database_port = 6780
+batch_size = [1000]
+device = GPU
+num_devices = 1
+iterations = 100
+language = ['cpp', 'fortran']
+db_node_feature = {'constraint': 'P100'}
+node_feature = {'constraint': 'SK48'}
+wall_time = 15:00:00
+```
+
+#### Put Tensor
 ![Inference Colo](/figures/put_tensor_inf_std.png "Inference Colocated")
+
+#### Unpack Tensor
 ![Inference Colo](/figures/unpack_tensor_inf_std.png "Inference Colocated")
+
+#### Run Model
 ![Inference Colo](/figures/run_model_inf_std.png "Inference Colocated")
+
+#### Run Script
 ![Inference Colo](/figures/run_script_inf_std.png "Inference Colocated")
 
 ## Colocated Inference
 
 ```bash
 [run]
-name = run-2023-08-13-21:29:20
-path = results/inference-colocated-scaling/run-2023-08-13-21:29:20
+name = run-2023-08-17-18:23:38
+path = results/inference-colocated-scaling/run-2023-08-17-18:23:38
 smartsim_version = 0.5.0
 smartredis_version = 0.3.1
 db = redis-server
-date = 2023-08-13
+date = 2023-08-17
 language = ['cpp', 'fortran']
 
 [attributes]
@@ -43,16 +80,39 @@ language = ['cpp', 'fortran']
 node_feature = {'constraint': 'P100'}
 ```
 
+#### Put Tensor
 ![Inference Colo](/figures/put_tensor_inf_colo.png "Inference Colocated")
-![Inference Colo](/figures/run_model_inf_colo.png "Inference Colocated")
-![Inference Colo](/figures/run_script_inf_colo.png "Inference Colocated")
+
+#### Unpack Tensor
 ![Inference Colo](/figures/unpack_tensor_inf_colo.png "Inference Colocated")
+
+#### Run Model
+![Inference Colo](/figures/run_model_inf_colo.png "Inference Colocated")
+
+#### Run Script
+![Inference Colo](/figures/run_script_inf_colo.png "Inference Colocated")
 
 ## Inference Performance Analysis
 
-> Note that Inference is the process of running data points into a machine learning model to calculate an output such as a single numerical score. The SmartSim-Scaling tests use Pytorch's implementation of Resnet50 to...
+In this section, we will compare 
+
+`put-tensor`: std has a inconsistent med, colo has the same med across all number of clients, colo faster
+
+`unpack-tensor`: std unpack tensor has higher outside plots even tho colo also does but not as great of time, no
+sustantial performance difference
+
+`run_model`: colo has a consistent median, std has a variation in the median, median increases exponetially 
+as node count increases
+
+`run_script`: std med increases expo, colo med stays consistent - outliers change
+
+
 
 ## Throughput Standard
+
+> Note that Throughput measures the total time it takes to push and pull data from a database.
+The SmartSim Scaling studies produces..
+
 The following configuration file for the example Throughput Standard scaling test is shown below. 
 
 ```bash
@@ -105,20 +165,17 @@ language = ['cpp']
 ```
 
 #### Put Tensor & Unpack Tensor
-![Throughput colo Unpack](/figures/new_colo_thro.png "Colocated Throughput")
+![Throughput colo Unpack](/figures/test.png "Colocated Throughput")
 
 ## Throughput Performance Analysis
-
-> Note that Throughput measures the total time it takes to push and pull data from a database.
-The SmartSim Scaling studies produces..
 
 Starting with the Throughput Standard tests, we first notice the outside points for both `put_tensor` and 
 `unpack_tensor` are notabley higher than the median for each plot. The outliers increase with the less
 database nodes we use. We predict that this is because...
 
 Moving on to the Throughput Colocated tests, the lower and upper adjacent values are 
-
-
+`put_tensor`
+`unpack_tensor`
 
 ## Data Aggregation Standard
 
@@ -151,6 +208,10 @@ wall_time = 10:00:00
 ![Data Agg Get List](/figures/get_list_data_agg.png "Data Aggregation Standard")
 
 ## Data Aggregation Standard Py
+
+> Note that Data Aggregation is the process of summarizing a large pool of data for high level analysis.
+For the aggregation tests below...
+
 The following are scaling results for a data aggregation py test, run with 32 client threads on each node. The databases were run on 36 CPUs and 4 threads per dataset.
 
 ```bash
@@ -179,37 +240,7 @@ wall_time = 05:00:00
 
 ![Data Agg Py Poll List](/figures/data_agg_py.png "Data Aggregation Py Standard")
 
-## Data Aggregation Standard Py Fs
-The following are scaling results for a data aggregation py fs test, run with 32 client threads on each node.
-
-```bash
-[run]
-name = run-2023-07-20-15:56:58
-path = results/aggregation-standard-scaling-py-fs/run-2023-07-20-15:56:58
-smartsim_version = 0.5.0
-smartredis_version = 0.3.1
-db = redis-server
-date = 2023-07-20
-language = ['cpp']
-
-[attributes]
-colocated = 0
-client_per_node = [32]
-client_nodes = [4, 8, 16, 32, 64, 128]
-iterations = 100
-tensor_bytes = [1024]
-tensors_per_dataset = [4]
-client_threads = [32]
-cpu_hyperthreads = 2
-language = ['cpp']
-```
-
-![Data Agg Py Fs Get List](/figures/data_agg_fs.png "Data Aggregation Py Fs Standard")
-
 ## Data Aggregation Performance Analysis
-
-> Note that Data Aggregation is the process of summarizing a large pool of data for high level analysis.
-For the aggregation tests below...
 
 Looking at the data agg violin plots above, we present the argument that retrieving tensors from 
 the database shows no large performance difference when comparing a C++ client and a Python client. 
@@ -218,7 +249,8 @@ to the hundredth of a second. However, there is a large performance hit when wor
 outside points of the violin plots reaching to 2.50 / 1.20 seconds in comparison to the C++ Client: 0.10 seconds and Python Client: 0.18 seconds. We can infer that reading from a database is much faster than from the file system.
 
 If we compare the `poll_list()` violin plots, pulling tensors from the file system proves to be significanlty faster than pulling tensors from a database. 
-
+`get_list`:
+`poll_list`:
 ## Advanced Performance Tips
 
 There are a few places users can look to get every last bit of performance.
