@@ -12,7 +12,7 @@ Continue below for more information on both respective tests.
 The inference tests run as an MPI program where a single SmartRedis C++ client
 is initialized on every rank.
 
-Currently supported inference tests
+Supported inference tests:
 
   1) Resnet50 CNN with ImageNet dataset
 
@@ -96,9 +96,6 @@ FLAGS
     --db_port=DB_PORT
         Default: 6780
         port to use for the database
-    --pin_app_cpus=PIN_APP_CPUS
-        Default: [False]
-        pin the threads of the application to 0-(n-db_cpus)
     --batch_size=BATCH_SIZE
         Default: [96]
         batch size to set Resnet50 model with
@@ -114,9 +111,6 @@ FLAGS
     --net_ifname=NET_IFNAME
         Default: 'lo'
         network interface to use i.e. "ib0" for infiniband or "ipogif0" aries networks
-    --rebuild_model=FORCE_REBUILD
-        Default: False
-        force rebuild of PyTorch model even if it is available
     --iterations=ITERATIONS
         Default: 100
         number of put/get loops run by the applications
@@ -132,6 +126,7 @@ So for example, the following command could be run to execute a battery of
 tests in the same allocation
 
 ```bash
+# alloc must contain at least 16 GPU nodes
 python driver.py inference_colocated --clients_per_node=[18] \
                                      --nodes=[16] --db_tpq=[1,2,4] \
                                      --db_cpus=[1,2,4,8] --net_ifname="ipogif0" \
@@ -149,7 +144,6 @@ or used in a batch script such as the following for Slurm based systems
 #SBATCH -C P100
 #SBATCH -t 10:00:00
 
-module load slurm
 python driver.py inference_colocated --clients_per_node=[18] \
                                      --nodes=[16] --db_tpq=[1,2,4] \
                                      --db_cpus=[1,2,4,8] --net_ifname="ipogif0" \
@@ -166,7 +160,7 @@ inference workloads with SmartSim, however, if you want to deploy the Orchestrat
 database and the application on different nodes, you want to use standard
 deployment.
 
-For example, if you only have a small number of GPU nodes and want to test a large
+For example, if you only have access to a small number of GPU nodes and want to test a large
 CPU application, standard deployment is optimal. For more information
 on Orchestrator deployment methods, please see
 [our documentation](https://www.craylabs.org/docs/orchestrator.html)
@@ -193,7 +187,7 @@ FLAGS
         Default: 'auto'
         workload manager i.e. "slurm", "pbs"
     --run_db_as_batch=RUN_DB_AS_BATCH
-        Default: True
+        Default: False
         run database as separate batch submission each iteration
     --db_node_feature=DB_NODE_FEATURE
         Default: {'constraint': 'P100'}
@@ -234,9 +228,6 @@ FLAGS
     --client_nodes=CLIENT_NODES
         Default: [4,8,16,32,64,128]
         number of compute nodes to use for the synthetic scaling app
-    --rebuild_model=FORCE_REBUILD
-        Default: False
-        force rebuild of PyTorch model even if it is available
     --iterations=ITERATIONS
         Default: 100
         number of put/get loops run by the applications
@@ -256,7 +247,7 @@ battery of tests chosen by the user. There are multiple ways to run this.
 
 1. Everything in the same interactive (or batch file) without caring about placement
 ```bash
-# alloc must contain at least 120 (max client_nodes) + 16 nodes (max db_nodes)
+# alloc must contain at least 120 (max client_nodes) + 16 GPU nodes (max db_nodes)
 python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
                                     --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
                                     --db_cpus=[1,4,8,16] --run_db_as_batch=False \
@@ -274,6 +265,7 @@ based systems.
 #!/bin/bash
 
 #SBATCH -N 136
+#SBATCH -C "[P100*16&SK48*120]"
 #SBATCH --exclusive
 #SBATCH -t 10:00:00
 
@@ -301,7 +293,8 @@ python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
 python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
                                     --db_nodes=[4,8,16] --db_tpq=[1,2,4] \
                                     --db_cpus=[1,4,8,16] --batch_args='{"C":"V100", "exclusive": None}' \
-                                    --net_ifname="ipogif0" --device="GPU"
+                                    --net_ifname="ipogif0" --device="GPU" \
+                                    --run_db_as_batch=True
 ```
 
 All three options will conduct ``n`` scaling tests where ``n`` is the multiple of

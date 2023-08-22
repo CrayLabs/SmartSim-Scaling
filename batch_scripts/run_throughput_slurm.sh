@@ -7,10 +7,9 @@
 #SBATCH --oversubscribe
 
 cd ..
-module load slurm
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
-                                    --db_cpus=32 --net_ifname=ipogif0 \
+                                    --db_cpus=[32] --net_ifname=ipogif0 \
                                     --run_db_as_batch=False
 

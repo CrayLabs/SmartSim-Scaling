@@ -6,5 +6,4 @@
 #SBATCH -t 10:00:00
 
 cd ..
-module load slurm
 python driver.py inference_colocated --nodes=[4, 8, 12, 16]

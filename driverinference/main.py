@@ -25,21 +25,21 @@ class Inference:
                            launcher="auto",
                            run_db_as_batch=False,
                            db_node_feature = {"constraint": "P100"},
-                           node_feature = {"constraint": "SK48"}, #100
+                           node_feature = {},
                            db_hosts=[],
                            db_nodes=[4,8,16],
                            db_cpus=[8],
-                           db_tpq=[1],
+                           db_tpq=[8],
                            db_port=6780,
                            batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
                            clients_per_node=[18],
-                           client_nodes=[25,50,75,100], #client_nodes
-                           iterations=100, #--exclusive -t 10:00:00
+                           client_nodes=[4,8,16,32,64,128],
+                           iterations=100,
                            languages=["cpp","fortran"],
-                           wall_time="15:00:00",
+                           wall_time="05:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
         :param exp_name: name of output dir
@@ -84,11 +84,10 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting inference standard scaling tests")
-        #check_node_allocation(client_nodes, db_nodes)
-        logger.info("Experiment allocation passed check")
+        logger.info("Starting inference standard scaling test")
 
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        
         logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=0,
@@ -146,28 +145,22 @@ class Inference:
             logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
-            # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
-    #went to the log, tracked the error message and not sure what causing the other error message
-    #add logging to the piece - find if anything is an empty string via logging poke at it
-    #poke the things that are being passed in
-    #looked at the fortran code that corresponding to the run_script
-    #error was that it wasnt load the script - looked at the path to the script
-    #found that that was the issue
+
+
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[4,8,12,16],
+                            nodes=[4,8,16,32,64,128],
                             clients_per_node=[18],
                             db_cpus=[8],
-                            db_tpq=[1],
+                            db_tpq=[8],
                             db_port=6780,
-                            pin_app_cpus=[False],
                             batch_size=[96],
                             device="GPU",
                             num_devices=1,
@@ -195,8 +188,6 @@ class Inference:
         :type db_tpq: list[int], optional
         :param db_port: port to use for the database
         :type db_port: int, optional
-        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: list[bool], optional
         :param batch_size: batch size to set Resnet50 model with
         :type batch_size: list, optional
         :param device: device used to run the models in the database
@@ -234,7 +225,7 @@ class Inference:
                         language=languages,
                         node_feature=node_feature)
         print_yml_file(Path(result_path) / "run.cfg", logger)
-        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
+        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, languages))
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
@@ -263,7 +254,6 @@ class Inference:
 
             exp.start(infer_session, block=True, summary=True)
 
-            # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
@@ -345,7 +335,6 @@ class Inference:
                                        node_feature,
                                        nodes,
                                        tasks,
-                                       pin_app_cpus,
                                        net_type,
                                        net_ifname,
                                        db_cpus,

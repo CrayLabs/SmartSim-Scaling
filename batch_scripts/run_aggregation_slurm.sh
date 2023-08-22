@@ -7,7 +7,6 @@
 #SBATCH --oversubscribe
 
 cd ..
-module load slurm
 python driver.py aggregation_scaling --exp_name='aggregation-scaling-batch' \
                                      --client_nodes=[60] \
                                      --clients_per_node=[48] \

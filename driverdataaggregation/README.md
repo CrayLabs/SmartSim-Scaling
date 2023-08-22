@@ -30,21 +30,20 @@ There is only a single MPI rank for the consumer application, which means there 
 one SmartRedis client active for the consumer application.  The consumer application client
 invokes the following SmartRedis commands:
 
-  1) ``poll_list_length``         (check when the next aggregation list is ready)
-  2) ``get_datasets_from_list``   (retrieve the data from the aggregation list)
+  1) ``poll_list``  (check when the next aggregation list is ready)
+  2) ``get_list``   (retrieve the data from the aggregation list)
 
 The input parameters to the test are used to generate permutations
 of tests with varying configurations.
 
 ## Why Standard Deployment for Data Aggregation vs Colocated?
 
-SmartSim-Scaling supports standard deployment for all three data aggregation tests. For standard deployement, the Orchestrator database and the application will be launched on different nodes: database nodes and client nodes. To perform data aggregation, each client will create a new thread to try to grab a dataset from multiple database shards.
+SmartSim-Scaling supports standard deployment for all three data aggregation tests. For standard deployement, the Orchestrator database and the application will be launched on different nodes: database nodes and client nodes. The client performing the data aggregation will spawn a number of threads, determined by the environment variable `SR_THREAD_COUNT` to retrieve datasets from the list in parallel. Each thread is assigned to a specific database shard, so increasing `SR_THREAD_COUNT` higher than the amount of shards is not likely to increase performance.
+
+For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time with colocated deployement.
 
 Co-located deployment supports a database on the same node as the application. If we used 
-co-located deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial. 
-
-For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time with 
-colocated deployement.
+co-located deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial like mentioned previously.
 
 ## Data Aggregation Standard - C++ Client
 

@@ -6,7 +6,6 @@
 #SBATCH -t 10:00:00
 
 cd ..
-module load slurm
 python driver.py inference_standard --client_nodes=[25, 50, 75, 100] \
                                     --db_nodes=[4, 8, 16] --db_tpq=[1] \
                                     --db_cpus=[8]

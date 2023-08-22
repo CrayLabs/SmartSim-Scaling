@@ -118,11 +118,6 @@ throughput workloads with SmartSim, however, if you want to deploy the Orchestra
 database and the application on different nodes, you want to use standard
 deployment.
 
-For example, if you only have a small number of GPU nodes and want to test a large
-CPU application, standard deployment is optimal. For more information
-on Orchestrator deployment methods, please see
-[our documentation](https://www.craylabs.org/docs/orchestrator.html)
-
 Like the above colocated throughput tests, the standard throughput tests also provide
 a method of running a battery of tests all at once. Below is the help output.
 The arguments which are lists control the possible permutations that will be run.
@@ -222,7 +217,6 @@ based systems.
 #SBATCH --oversubscribe
 
 cd ..
-module load slurm
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
@@ -251,7 +245,7 @@ python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \
                                     --db_nodes=[32] \
                                     --db_cpus=[32] --net_ifname="ipogif0" \
-                                    --run_db_as_batch=False \
+                                    --run_db_as_batch=True \
                                     --db_node_feature='{"C":"V100", "exclusive": None}' \
 ```
 

@@ -30,10 +30,11 @@ class Throughput:
                            db_cpus=[2],
                            db_port=6780,
                            net_ifname="ipogif0",
-                           clients_per_node=[32],
-                           client_nodes=[16,32,64,128],
+                           clients_per_node=[48],
+                           client_nodes=[4,8,16,32,64,128],
                            iterations=100,
-                           tensor_bytes=[1024],
+                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
                            languages=["cpp"],
                            wall_time="05:00:00",
                            plot="database_nodes"):
@@ -217,10 +218,11 @@ class Throughput:
                            db_cpus=[8],
                            db_port=6780,
                            net_ifname="lo",
-                           clients_per_node=[32],
+                           clients_per_node=[48],
                            pin_db_cpus=[False],
                            iterations=100,
-                           tensor_bytes=[1024],
+                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
                            languages=["cpp"],
                            plot="database_cpus"):
 

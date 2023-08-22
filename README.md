@@ -34,8 +34,8 @@ six total versions detailed below:
 
 | Inference Type | Client | Parallelization |
 | :--- | --- | --- |
-| Standard | C++ | MPI |
-| Colocated | C++ | MPI |
+| Standard | C++ AND Fortran | MPI |
+| Colocated | C++ AND Fortran | MPI |
 
 #### `Throughput Tests`
 
@@ -54,20 +54,20 @@ six total versions detailed below:
 
 ## Colocated vs Standard Deployement
 
-The scaling repo offers two types of Orchestrator deployement: Standard and Colocated.
+The scaling repo offers two types of Orchestrator deployment: Standard and Colocated.
 
-> Note that the Orchestrator is the name in SmartSim for a Redis or KeyDB database with a RedisAI module built into it with the ML runtimes.
+> Note that the Orchestrator is a SmartSim term for a Redis or KeyDB database with a RedisAI module built into it with the ML runtimes.
 
 1. `Colocated (non-Clustered Deployement)`
   : A colocated Orchestrator is a special type of Orchestrator that is deployed on the same compute hosts as the application. 
   This is particularly important for GPU-intensive workloads which require frequent communication with the database. You can specify the number of nodes via the `client_nodes` flag. 
 
 2. `Standard (Clustered Deployement)`
-  : When running with Standard deployement, your database will be deployed on different compute nodes
+  : When running with Standard deployment, your database will be deployed on different compute nodes
 than your application. You will notice that all Standard scaling tests share a `db_nodes` flag. By setting the flag to `db_nodes=[4,8]` - you are telling the program to split up your database to four shards on the first permutation, then eight shards on the second permutation. Each shard of the database will communicate with each application node. You can specify the number of application nodes via the `client_nodes` flag in each scaling test.
 
 See [our installation docs](https://www.craylabs.org/docs/orchestrator.html) for 
-more information on clustered and colocated deployement
+more information on clustered and colocated deployment
 
 ## Building
 
@@ -78,8 +78,8 @@ For the inference tests, be sure to have installed SmartSim with support
 for the device (CPU or GPU) you wish to run the tests on, as well as
 have built support for the PyTorch backend. If you would also like to 
 run the Fortran tests, make sure to run `make lib-with-fortran` from 
-the install docs for SmartRedis. For C++ scaling tests, run
-`make lib`.
+the install docs for SmartRedis. For C++ scaling tests, running
+`make lib` is sufficient.
 
 Installing SmartSim and SmartRedis may look something like:
 
@@ -140,8 +140,8 @@ The app locations are shown below:
    - `cpp-py-data-aggregation/fs/CMakeLists.txt`
 
 > Note that there are three different `CMakeLists.txt` files for the Data Aggregation tests.
-You will need to build per Data Aggregation scaling test. This is the same for the 
-C++ and Fortran inference test.
+You will need to build each associated application per Data Aggregation scaling test. 
+This is the same for the C++ and Fortran inference tests.
 
 ## Running
 
@@ -214,7 +214,7 @@ places results in the `results/inference-standard-scaling` directory.
 
 Each time you run a scaling test it is considered a single run. This is how the 
 `results/'exp_name'` is organized. The results will be within a folder named 
-`run-YEAR-MONTH-DAY-TIME`. A results folder with multiple
+`run-YEAR-MONTH-DAY-TIME`. A result's folder with multiple
 runs of inference standard with the default `exp_name` would look like:
 
 ```bash

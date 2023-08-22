@@ -5,7 +5,6 @@
 #SBATCH -t 24:00:00
 
 cd ..
-module load slurm
 python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \
                                             --client_nodes=[60] \
                                             --clients_per_node=[48] \
