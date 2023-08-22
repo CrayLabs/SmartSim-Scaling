@@ -310,7 +310,7 @@ For the data aggregation tests, we produce and store tensors in the database to 
 
 Overall, we can conclude that there is not a notable performance hit when comparing the use of a Python client and
 a C++ client. In the future, it is worth expanding the data aggregation testing to a larger number of clients which
-might show otherwise. 
+might show otherwise. However, there is a large performance hit when comparing the use of a file system over a database. Using a database allows for more efficient lookup of data, are scalable and reliable, and add structure to your data.
 
 ## Advanced Performance Tips
 
