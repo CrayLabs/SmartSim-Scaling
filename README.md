@@ -56,7 +56,7 @@ six total versions detailed below:
 
 The scaling repo offers two types of Orchestrator deployments: Standard and Colocated.
 
-> The Orchestrator is a SmartSim term for a Redis or KeyDB database with a RedisAI module built into it with the ML runtimes.
+> The Orchestrator is a SmartSim term for a Redis or KeyDB database with the SmartRedis client software wrapped around it.
 
 1. `Standard (Clustered Deployement)`
   : When running with Standard deployment, your Orchestrator will be deployed on different compute nodes
