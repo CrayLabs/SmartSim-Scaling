@@ -2,13 +2,13 @@
 
 SmartSim-Scaling currently offers three data aggregation test versions:
 
- 1. Data Aggregation Standard               (C++ Client and SmartRedis Orchestrator)
- 2. Data Aggregation Standard Python        (Python Client and SmartRedis Orchestrator)
- 3. Data Aggregation Standard File System   (Python Client and File System)
+ 1. Data Aggregation Standard               (C++ Application, SmartRedis Orchestrator)
+ 2. Data Aggregation Standard Python        (Python Application, SmartRedis Orchestrator)
+ 3. Data Aggregation Standard File System   (Python Application, File System)
 
 ## Client Description
 
-The data aggregation scaling test runs two applications. The first application
+The data aggregation scaling test runs two applications. The first
 is an MPI application that produces datasets that are added to an aggregation list.
 In this producer application, each MPI rank has a single-threaded client.  The second
 application is a consumer application. This application consumes the aggregation
@@ -23,7 +23,7 @@ By default, the clients in the producer application perform an adjustable 100 ex
   1) ``append_to_list`` (add dataset to the aggregation list)
 
 Note that the client on rank 0 of the producer application performs a ``get_list_length()``
-function invocation prior to an ``MPI_BARRIER`` in order to only produce the next aggregation
+function invocation prior to a ``MPI_BARRIER`` in order to only produce the next aggregation
 list after the previous aggregation list was consumed by the consumer application.
 
 There is only a single MPI rank for the consumer application, which means there is only
@@ -42,8 +42,8 @@ SmartSim-Scaling supports standard deployment for all three data aggregation tes
 
 For example, if you had a dataset list of length 8 (each dataset stored on a separate shard), then you could pull all 8 of them simultaneously if you had 8 threads for SmartRedis which is hypothetically 8x faster than requesting them one at a time with colocated deployement.
 
-Co-located deployment supports a database on the same node as the application. If we used 
-co-located deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial like mentioned previously.
+Colocated deployment supports a database on the same node as the application. If we used 
+colocated deployement for data aggregation, there would be no performance benefit since it would aggregate the data in serial like mentioned previously.
 
 ## Data Aggregation Standard - C++ Client
 
@@ -133,6 +133,8 @@ FLAGS
 For example, the following command could be run to execute a battery of
 tests in the same allocation. The battery of test will be determined by the number 
 of permutations computed based on the list inputs.
+
+> The interface name may be different on your target system. Please update the `net_ifname` flag to the appropriate value.
 
 ```bash
 python driver.py aggregation_scaling --client_nodes=[60] \
@@ -260,6 +262,8 @@ FLAGS
 For example, the following command could be run to execute a battery of
 tests in the same allocation. The number of tests executed will be computed based
 on the number of permutations from the list inputs given.
+
+> The interface name may be different on your target system. Please update the `net_ifname` flag to the appropriate value.
 
 ```bash
 python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \

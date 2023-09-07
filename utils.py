@@ -165,7 +165,6 @@ def attach_resnet(model, res_model_path, device, num_devices, batch_size):
                         model_path=res_model_path,
                         batch_size=batch_size,
                         device=device)
-    #removed devices per node
     model.add_script("resnet_script",
                         devices_per_node=num_devices,
                         script_path="./imagenet/data_processing_script.txt",

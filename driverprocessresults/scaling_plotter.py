@@ -96,9 +96,6 @@ class PlotResults:
         """
         df = pd.read_csv(Path("results/" + scaling_test_name + "/stats") / os.path.basename(run_cfg_path) / "dataframe.csv.gz")
         try:
-            #save the results of the processing to a python pickle file
-            #pass in the saved dataframe to the plotting part
-            #palette = sns.set_palette("colorblind", color_codes=True)
             font = {'family' : 'sans',
                     'weight' : 'normal',
                     'size'   : 14}
@@ -131,11 +128,9 @@ class PlotResults:
                     showextrema = True, #will display extrema  
                     widths= grid_spacing/(len(database_nodes)*5)
                 )
-            #ranks = [node*threads for node in nnodes]
             for function_name in tqdm(function_names, desc="Processing function name...", ncols=80):
                 #declare a figure and figsize is width, height in inches
                 fig = plt.figure(figsize=[16,5]) #keep it constant since it is just plotting it - everything else is relative to the data
-                #nrows = 1 ncols= 
                 axs = fig.subplots(1,2,sharey=True)
                 
                 for lang_idx, language in tqdm(enumerate(languages), desc="Processing languages...", ncols=80):

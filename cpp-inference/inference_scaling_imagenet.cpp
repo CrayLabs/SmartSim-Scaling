@@ -100,23 +100,15 @@ void run_mnist(const std::string& model_name,
   bool should_set = get_set_flag();
 
   std::string model_key = "resnet_model";
-  bool poll_model_bool;
-  int poll_model_code = client.poll_model(model_key, 100, 100);
-  if (poll_model_code != SRNoError) {
+  bool poll_model_code = client.poll_model(model_key, 100, 100);
+  if (!poll_model_code) {
     log_error(context, LLInfo, "SR Error finding model");
   }
-  if (!poll_model_bool) {
-    log_error(context, LLInfo, "Bool Error finding model");
-  }
-  //poll model change it
+
   std::string script_key = "resnet_script";
-  bool poll_script_bool;
-  int poll_script_code = client.poll_key(script_key, 100, 100);
-  if (poll_script_code != SRNoError) {
+  bool poll_script_code = client.poll_key(script_key, 100, 100);
+  if (!poll_script_code) {
     log_error(context, LLInfo, "SR Error finding script");
-  }
-  if (!poll_script_bool) {
-    log_error(context, LLInfo, "Bool Error finding script");
   }
 
   // setting up string to debug set vars
@@ -199,11 +191,10 @@ void run_mnist(const std::string& model_name,
 
   // Begin the actual iteration loop
   log_data(context, LLDebug, "Iteration loop starting...");
-  MPI_Barrier(MPI_COMM_WORLD); // try to put one in between all of them
+  MPI_Barrier(MPI_COMM_WORLD);
   double loop_start = MPI_Wtime();
   for (int i = 0; i < iterations + 1; i++) {
     log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
-    // MPI_Barrier(MPI_COMM_WORLD); // move this to outside loop just as test case
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);

@@ -19,8 +19,8 @@
 This repository holds all of the scripts and materials for testing
 the scaling of SmartSim and SmartRedis clients.
 
-The scalability tests mimic an HPC workload by making calls to SmartSim 
-and SmartRedis infrastructure to complete in parallel highly complex, data-intensive 
+The scaling tests mimic an HPC workload by making calls to SmartSim 
+and SmartRedis infrastructure to complete parallel highly complex, data-intensive 
 tasks that are spread across compute resources. 
 These applications are used to test the performance of SmartSim and 
 SmartRedis across various system types.
@@ -32,21 +32,21 @@ six total versions detailed below:
 
 #### `Inference Tests`
 
-| Inference Type | Client | Parallelization |
+| Inference Database | Client Languages | Parallelization |
 | :--- | --- | --- |
-| Standard | C++ AND Fortran | MPI |
-| Colocated | C++ AND Fortran | MPI |
+| Standard | C++, Fortran | MPI |
+| Colocated | C++, Fortran | MPI |
 
 #### `Throughput Tests`
 
-| Throughput Type | Client | Parallelization |
+| Throughput Database | Client Languages | Parallelization |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Colocated | C++ | MPI |
 
 #### `Data Aggregation Tests`
 
-| Data Aggregation Type | Client | Parallelization |
+| Data Aggregation Database | Client Languages | Parallelization |
 | :--- | --- | --- |
 | Standard | C++ | MPI |
 | Standard | Python | MPI |
@@ -54,17 +54,17 @@ six total versions detailed below:
 
 ## Colocated vs Standard Deployement
 
-The scaling repo offers two types of Orchestrator deployment: Standard and Colocated.
+The scaling repo offers two types of Orchestrator deployments: Standard and Colocated.
 
-> Note that the Orchestrator is a SmartSim term for a Redis or KeyDB database with a RedisAI module built into it with the ML runtimes.
+> The Orchestrator is a SmartSim term for a Redis or KeyDB database with a RedisAI module built into it with the ML runtimes.
 
-1. `Colocated (non-Clustered Deployement)`
-  : A colocated Orchestrator is a special type of Orchestrator that is deployed on the same compute hosts as the application. 
-  This is particularly important for GPU-intensive workloads which require frequent communication with the database. You can specify the number of nodes via the `client_nodes` flag. 
-
-2. `Standard (Clustered Deployement)`
-  : When running with Standard deployment, your database will be deployed on different compute nodes
+1. `Standard (Clustered Deployement)`
+  : When running with Standard deployment, your Orchestrator will be deployed on different compute nodes
 than your application. You will notice that all Standard scaling tests share a `db_nodes` flag. By setting the flag to `db_nodes=[4,8]` - you are telling the program to split up your database to four shards on the first permutation, then eight shards on the second permutation. Each shard of the database will communicate with each application node. You can specify the number of application nodes via the `client_nodes` flag in each scaling test.
+
+2. `Colocated (non-Clustered Deployement)`
+  : A Colocated Orchestrator is deployed on the same compute hosts as the application. This differs from standard deployment that launches the database on separate database nodes.
+  Colocated deployment is particularly important for GPU-intensive workloads which require frequent communication with the database. You can specify the number of nodes to launch both the database and application on via the `client_nodes` flag. 
 
 See [our installation docs](https://www.craylabs.org/docs/orchestrator.html) for 
 more information on clustered and colocated deployment
@@ -76,10 +76,7 @@ installed.** See [our installation docs](https://www.craylabs.org/docs/installat
 
 For the inference tests, be sure to have installed SmartSim with support
 for the device (CPU or GPU) you wish to run the tests on, as well as
-have built support for the PyTorch backend. If you would also like to 
-run the Fortran tests, make sure to run `make lib-with-fortran` from 
-the install docs for SmartRedis. For C++ scaling tests, running
-`make lib` is sufficient.
+have built support for the PyTorch backend.
 
 Installing SmartSim and SmartRedis may look something like:
 
@@ -90,7 +87,8 @@ source /path/to/new/environment/bin/activate
 
 # Install SmartRedis and build the library
 pip install smartredis
-make lib
+# If you are running a Fortran app - use `make lib-with-fortran`
+make lib # or make lib-with-fortran
 
 # Install SmartSim
 pip install smartsim
@@ -110,13 +108,14 @@ cd SmartSim-Scaling
 pip install -r requirements.txt
 ```
 
-> Note that if you are using a Cray machine, you will need to run `CC=cc CXX=CC pip install -r requirements.txt`.
+> If you are using a Cray machine, you will need to run `CC=cc CXX=CC pip install -r requirements.txt`.
 
 Lastly, the C++ applications themselves need to be built. To complete this, 
 one CMake edit is required. When running `cmake ..`, 
 change the path to the ``SMARTREDIS`` variable to the top level of the directory 
 where you built or installed the SmartRedis library using the ``-DSMARTREDIS`` flag.
-An example of this is shown below.
+An example of this is shown below. If no SmartRedis path is specified, the program
+will look for the SmartRedis library in path ``"../../SmartRedis"``.
 
 All tests can be built by running
 
@@ -127,7 +126,7 @@ All tests can be built by running
   make
 ```
 
-The app locations are shown below: 
+The CMake files used to build the various apps are shown below:
 
 1. Inference
    - `cpp-inference/CMakeLists.txt`
@@ -139,9 +138,9 @@ The app locations are shown below:
    - `cpp-py-data-aggregation/db/CMakeLists.txt`
    - `cpp-py-data-aggregation/fs/CMakeLists.txt`
 
-> Note that there are three different `CMakeLists.txt` files for the Data Aggregation tests.
-You will need to build each associated application per Data Aggregation scaling test. 
-This is the same for the C++ and Fortran inference tests.
+> There are three different `CMakeLists.txt` files for the Data Aggregation tests.
+A separate build folder will need to be created within each CMake folder if you plan to run
+all three data agg tests. You will need to navigate into the respective CMake file per Data Aggregation scaling test and run the app steps above. This is the same for the C++ and Fortran inference tests.
 
 ## Running
 
@@ -197,7 +196,7 @@ COMMANDS
      
 ```
 
-Each of the command provides their own help menu that show the
+Each of the command provides their own help menu that shows the
 arguments possible for each.
 
 ## Results

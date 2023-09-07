@@ -1,6 +1,7 @@
 # Performance Results
 
 We have collected SmartSim performance results on Horizon, a Cray XC50 supercomputer.
+
 Horizon Node Hardware Summary:
 
 | Nodes | Cores | Threads | Processor | Memory | GPU |

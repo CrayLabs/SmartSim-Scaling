@@ -3,7 +3,7 @@
 SmartSim-Scaling offers two inference versions:
 
  1. Inference Standard              (C++ client and SmartRedis Orchestrator)
- 2. Inference Co-located Python     (C++ client and SmartRedis Orchestrator)
+ 2. Inference Colocated Python     (C++ client and SmartRedis Orchestrator)
 
 Continue below for more information on both respective tests.
 
@@ -52,12 +52,12 @@ means that it could be required to run the script through the workload manager l
 to execute it on a node with a GPU, for example).
 
 
-## Co-located inference
+## Colocated inference
 
-Co-located Orchestrators are deployed on the same nodes as the
+Colocated Orchestrators are deployed on the same nodes as the
 application. This improves inference performance as no data movement
-"off-node" occurs with co-located deployment. For more information
-on co-located deployment, see [our documentation](https://www.craylabs.org/docs/orchestrator.html)
+"off-node" occurs with colocated deployment. For more information
+on colocated deployment, see [our documentation](https://www.craylabs.org/docs/orchestrator.html)
 
 Below is the help output. The arguments which are lists control
 the possible permutations that will be run.
@@ -83,7 +83,7 @@ FLAGS
         workload manager i.e. "slurm", "pbs"
     --nodes=NODES
         Default: [4,8,16,32,64,128]
-        compute nodes to use for synthetic scaling app with a co-located orchestrator database
+        compute nodes to use for synthetic scaling app with a colocated orchestrator database
     --clients_per_node=CLIENTS_PER_NODE
         Default: [18]
         client tasks per compute node for the synthetic scaling app
@@ -122,6 +122,8 @@ FLAGS
         flag to plot against in process results
 ```
 
+> The interface name may be different on your target system. Please update the `net_ifname` flag to the appropriate value.
+
 So for example, the following command could be run to execute a battery of
 tests in the same allocation
 
@@ -155,7 +157,7 @@ Examples of batch scripts to use are provided in the ``batch_scripts`` directory
 
 ## Standard Inference
 
-Co-located deployment is the preferred method for running tightly coupled
+Colocated deployment is the preferred method for running tightly coupled
 inference workloads with SmartSim, however, if you want to deploy the Orchestrator
 database and the application on different nodes, you want to use standard
 deployment.
@@ -245,6 +247,8 @@ FLAGS
 The standard inference tests will spin up a database for each iteration in the
 battery of tests chosen by the user. There are multiple ways to run this.
 
+> The interface name may be different on your target system. Please update the `net_ifname` flag to the appropriate value.
+
 1. Everything in the same interactive (or batch file) without caring about placement
 ```bash
 # alloc must contain at least 120 (max client_nodes) + 16 GPU nodes (max db_nodes)
@@ -297,5 +301,5 @@ python driver.py inference_standard --client_nodes=[20,40,60,80,100,120] \
                                     --run_db_as_batch=True
 ```
 
-All three options will conduct ``n`` scaling tests where ``n`` is the multiple of
+All three options will conduct ``n`` scaling tests where ``n`` is the product of
 all lists specified as options.

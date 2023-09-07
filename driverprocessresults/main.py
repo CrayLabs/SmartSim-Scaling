@@ -81,25 +81,25 @@ class ProcessResults:
                         logger.warning(f"Skipping {run}: could not plot performance results")
                         logger.error(e)
                         continue
-                # for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80):
-                #     try:
-                #         session_name = os.path.basename(session)
-                #         split = os.path.dirname(session)
-                #         run_name = os.path.basename(split)
-                #         stats_path = os.path.join(final_stat_dir, run_name, session_name, session_name + ".csv")
-                #         run_df = pd.read_csv(str(stats_path))
-                #         dataframes.append(run_df)
-                #         logger.debug(f"Results collected for session: {session}")
+                for session in tqdm(session_folders, desc="Collecting scaling results...", ncols=80):
+                    try:
+                        session_name = os.path.basename(session)
+                        split = os.path.dirname(session)
+                        run_name = os.path.basename(split)
+                        stats_path = os.path.join(final_stat_dir, run_name, session_name, session_name + ".csv")
+                        run_df = pd.read_csv(str(stats_path))
+                        dataframes.append(run_df)
+                        logger.debug(f"Results collected for session: {session}")
                     
-                #     # catch all and skip for reason listed above
-                #     except Exception as e:
-                #         logger.warning(f"Skipping path {session}: could not read results csv")
-                #         logger.error(e)
-                #         continue
-                # final_df = pd.concat(dataframes, join="outer")
-                # exp_name = os.path.basename(scaling_results_dir)
-                # csv_path = final_stat_dir / f"{exp_name}-{get_date()}.csv"
-                # final_df.to_csv(str(csv_path))
+                    # catch all and skip for reason listed above
+                    except Exception as e:
+                        logger.warning(f"Skipping path {session}: could not read results csv")
+                        logger.error(e)
+                        continue
+                final_df = pd.concat(dataframes, join="outer")
+                exp_name = os.path.basename(scaling_results_dir)
+                csv_path = final_stat_dir / f"{exp_name}-{get_date()}.csv"
+                final_df.to_csv(str(csv_path))
 
             except Exception:
                 logger.error(f"Could not preprocess results for {scaling_results_dir}")
@@ -169,7 +169,7 @@ class ProcessResults:
     @staticmethod
     def _make_hist_plot(data, title, fname, session_stats_dir):
         x = plt.hist(data, color = 'blue', edgecolor = 'black', bins = 500)
-        plt.title(title)                                   
+        plt.title(title)
         plt.xlabel('Time (s)')
         plt.ylabel('MPI Ranks')
         med = median(data)

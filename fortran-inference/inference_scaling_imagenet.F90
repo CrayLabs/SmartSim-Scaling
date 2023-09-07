@@ -58,13 +58,13 @@ call init_client(client, rank, use_cluster, timing_unit)
 
 model_key = "resnet_model"
 poll_model_code = client%poll_model(model_key, 200, 100, poll_model_bool)
-if (poll_model_code /= SRNoError) stop 'SR Error finding model'
-if (.not. poll_model_bool) stop 'Bool Error finding model'
+if (poll_model_code /= SRNoError) stop 'Something went wrong during poll_model execution'
+if (.not. poll_model_bool) stop 'Model was not found'
 
 script_key = "resnet_script"
 poll_script_code = client%poll_model(script_key, 200, 100, poll_script_bool)
-if (poll_script_code /= SRNoError) stop 'SR Error finding script'
-if (.not. poll_script_bool) stop 'Bool Error finding script'
+if (poll_script_code /= SRNoError) stop 'Something went wrong during poll_model execution'
+if (.not. poll_script_bool) stop 'Script was not found'
 
 call MPI_Barrier(MPI_COMM_WORLD, ierror)
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
