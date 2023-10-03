@@ -14,15 +14,13 @@ Horizon Node Hardware Summary:
 | 53 | 48 | 96 | Xeon 8260 CPU @ 2.40GHz CSL | 384 GB DDR4-2933 | --- |
 | 28 | 64 | 256 | ThunderX2 CN9980 v2.2 @ 2.50GHz | 256 GB DDR4-2666 | --- |
 
-Below you will scaling results demonstrated in the form of violin plots for the following:
+We have provided scaling results represented in the form of violin plots for the following:
 
 1. Inference Standard & Colocated
 2. Throughput Standard & Colocated
 3. Data Aggregation Standard
 
-All scaling tests utilize a redis database besides the last data aggregation test that uses the file system.
-
-Note that the first iteration can take longer (up to several seconds) than the rest of the execution. This
+All scaling tests utilize a redis database excluding the last data aggregation test that uses the file system. Note that the first iteration can take longer (up to several seconds) than the rest of the execution. This
 is due to the DB loading libraries when the first RedisAI call is made. In the following plots, we excluded
 the first iteration time.
 
