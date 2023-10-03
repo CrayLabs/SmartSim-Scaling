@@ -5,7 +5,7 @@
 #SBATCH -t 12:00:00
 #SBATCH -C SK48
 #SBATCH --oversubscribe
-
+echo "Note: The flag net_ifname should be replaced with the appropriate value on the target system"
 cd ..
 python driver.py aggregation_scaling --exp_name='aggregation-scaling-batch' \
                                      --client_nodes=[60] \

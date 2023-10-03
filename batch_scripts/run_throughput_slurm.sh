@@ -5,7 +5,7 @@
 #SBATCH -t 10:00:00
 #SBATCH -C SK48
 #SBATCH --oversubscribe
-
+echo "Note: The flag net_ifname should be replaced with the appropriate value on the target system"
 cd ..
 python driver.py throughput_standard --client_nodes=[60] \
                                     --clients_per_node=[48] \

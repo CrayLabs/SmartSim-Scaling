@@ -3,7 +3,7 @@
 #SBATCH -N 93
 #SBATCH --exclusive
 #SBATCH -t 24:00:00
-
+echo "Note: The flag net_ifname should be replaced with the appropriate value on the target system"
 cd ..
 python driver.py aggregation_scaling_python --exp_name='aggregation-scaling-py-batch' \
                                             --client_nodes=[60] \

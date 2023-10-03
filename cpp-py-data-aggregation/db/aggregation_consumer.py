@@ -30,7 +30,7 @@ def run_aggregation_consumer(timing_file: t.TextIO, list_length: int) -> None:
 
     # Connect a client and save connection time
     constructor_start = MPI.Wtime()
-    client = Client(cluster=True)
+    client = Client(cluster=True, logger)
     constructor_stop = MPI.Wtime()
     delta_t = constructor_stop - constructor_start
     timing_file.write(f"{rank},client(),{delta_t}\n")

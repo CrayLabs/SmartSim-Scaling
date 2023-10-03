@@ -5,7 +5,7 @@
 #PBS -o throughput.out
 #PBS -N smartsim-throughput
 #PBS -V
-
+echo "Note: The flag net_ifname should be replaced with the appropriate value on the target system"
 PYTHON=/lus/snx11242/spartee/miniconda/envs/0.4.0/bin/python
 cd $PBS_O_WORKDIR/../
 $PYTHON driver.py throughput_standard --client_nodes=[128,256,512] \
