@@ -10,9 +10,12 @@ def save_model(device: str = "CPU"):
             raise Exception("Requested to create GPU model, but CUDA was not found.")
     # Device's torch name
     device_name = "cuda" if device.startswith("GPU") else "cpu"
-    # model = models.resnet50(pretrained=True)
+
+    # Many of the Imagenet models could be used. shufflenet has about the the same number of
+    # parameters as the ones used in our use cases
     model = models.shufflenet_v2_x0_5(pretrained=True)
-    #model = models.resnet152(pretrained=True)
+    # model = models.resnet50(pretrained=True)  # ~250k parameters
+    # model = models.resnet152(pretrained=True) # ~500k parameters
     model.to(torch.device(device_name))
     model.eval()
 

@@ -88,7 +88,7 @@ def create_experiment_and_dir(exp_name, launcher):
     except Exception as e:
         logger.error(e)
         raise
-    
+
     log_to_file(f"{exp.exp_path}/scaling-{get_date()}.log")
     return exp, result_path
 
@@ -159,17 +159,21 @@ def attach_resnet(model, res_model_path, device, num_devices, batch_size):
     :type cluster: bool
     """
     device = device.upper()
-    model.add_ml_model(name="resnet_model",
-                        devices_per_node=num_devices,
-                        backend="TORCH",
-                        model_path=res_model_path,
-                        batch_size=batch_size,
-                        device=device)
-    model.add_script("resnet_script",
-                        devices_per_node=num_devices,
-                        script_path="./imagenet/data_processing_script.txt",
-                        device="GPU")
-    
+    model.add_ml_model(
+        name="resnet_model",
+        devices_per_node=num_devices,
+        backend="TORCH",
+        model_path=res_model_path,
+        batch_size=batch_size,
+        device=device
+    )
+    model.add_script(
+        "resnet_script",
+        devices_per_node=num_devices,
+        script_path="./imagenet/data_processing_script.txt",
+        device="GPU"
+    )
+
     logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 def write_run_config(path, **kwargs):
@@ -207,7 +211,7 @@ def get_uuid():
     """
     uid = str(uuid4())
     return uid[:4]
-    
+
 
 def get_db_backend():
     """Return database backend.
@@ -230,7 +234,7 @@ def check_node_allocation(client_nodes, db_nodes):
         raise ValueError("db_nodes cannot be empty")
     if not client_nodes:
         raise ValueError("client_nodes cannot be empty")
-    
+
     if detect_launcher() == "slurm":
         total_nodes = os.getenv("SLURM_NNODES")
     else:
