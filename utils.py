@@ -47,7 +47,7 @@ def get_time():
     current_time = now.strftime("%H:%M:%S")
     return current_time
 
-def check_model(device, force_rebuild=False):
+def check_model(device):
     """Regenerate model on specified device if True.
 
     This function will rebuild the model on the specified node type.
@@ -57,7 +57,7 @@ def check_model(device, force_rebuild=False):
     :param force_rebuild: force rebuild of PyTorch model even if it is available
     :type force_rebuild: bool
     """
-    if device.startswith("GPU") and (force_rebuild or not Path("./imagenet/resnet50.GPU.pt").exists()):
+    if device.startswith("GPU") and (not Path("./imagenet/resnet50.GPU.pt").exists()):
         from torch.cuda import is_available
         if not is_available():
             message = "resnet50.GPU.pt model missing in ./imagenet directory. \n"
@@ -133,13 +133,16 @@ def start_database(exp, db_node_feature, port, nodes, cpus, tpq, net_ifname, run
         db.set_walltime(wall_time)
         for k, v in db_node_feature.items():
             db.set_batch_arg(k, v)
+    if not run_as_batch:
+        for k, v in db_node_feature.items():
+            db.set_run_arg(k, v)
     db.set_cpus(cpus)
     exp.generate(db, overwrite=True)
     exp.start(db)
     logger.info("Orchestrator Database created and running")
     return db
 
-def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
+def attach_resnet(model, res_model_path, device, num_devices, batch_size):
     """Set and configure the PyTorch resnet50 model for inference
 
     :param model: path to serialized resnet model
@@ -155,31 +158,19 @@ def setup_resnet(model, device, num_devices, batch_size, address, cluster=True):
     :param cluster: true if using a cluster orchestrator
     :type cluster: bool
     """
-    client = Client(address=address, cluster=cluster)
     device = device.upper()
-    if (device == "GPU") and (num_devices > 1):
-        client.set_model_from_file_multigpu("resnet_model",
-                                            model,
-                                            "TORCH",
-                                            0, num_devices,
-                                            batch_size)
-        client.set_script_from_file_multigpu("resnet_script",
-                                             "./imagenet/data_processing_script.txt",
-                                             0, num_devices)
-        logger.info(f"Resnet Model and Script in Orchestrator on {num_devices} GPUs")
-    else:
-        # Redis does not accept CPU:<n>. We are either
-        # setting (possibly multiple copies of) the model and script on CPU, or one
-        # copy of them (resnet_model_0, resnet_script_0) on ONE GPU.
-        client.set_model_from_file(f"resnet_model",
-                                    model,
-                                    "TORCH",
-                                    device,
-                                    batch_size)
-        client.set_script_from_file(f"resnet_script",
-                                    "./imagenet/data_processing_script.txt",
-                                    device)
-        logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
+    model.add_ml_model(name="resnet_model",
+                        devices_per_node=num_devices,
+                        backend="TORCH",
+                        model_path=res_model_path,
+                        batch_size=batch_size,
+                        device=device)
+    model.add_script("resnet_script",
+                        devices_per_node=num_devices,
+                        script_path="./imagenet/data_processing_script.txt",
+                        device="GPU")
+    
+    logger.info(f"Resnet Model and Script in Orchestrator on device {device}")
 
 def write_run_config(path, **kwargs):
     """Write config attributes to run file.
@@ -264,21 +255,3 @@ def print_yml_file(path, logger):
         logger.info(f"Running {key} with value: {value}")
     for key, value in config._sections['attributes'].items():
         logger.info(f"Running {key} with value: {value}")
-
-def check_database_folder(result_path, logger):
-    """Cleans the database folder within results.
-
-    :param result_path: path to results folder
-    :type result_path: str
-    :param logger: name of logger
-    :type logger: str
-    """
-    time.sleep(5)
-    for _ in range(5):
-        rdb_folders = os.listdir(Path(result_path) / "database")
-        for fold in rdb_folders:
-            if '.rdb' in fold:
-                logger.debug(f"Database folder removed: {fold}")
-                os.remove(Path(result_path) / "database" / fold)
-                break
-        time.sleep(1)

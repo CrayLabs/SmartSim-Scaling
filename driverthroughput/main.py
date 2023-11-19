@@ -22,7 +22,7 @@ class Throughput:
     def throughput_standard(self,
                            exp_name="throughput-standard-scaling",
                            launcher="auto",
-                           run_db_as_batch=True,
+                           run_db_as_batch=False,
                            node_feature={},
                            db_node_feature={},
                            db_hosts=[],
@@ -30,15 +30,14 @@ class Throughput:
                            db_cpus=[2],
                            db_port=6780,
                            net_ifname="ipogif0",
-                           clients_per_node=[32],
-                           client_nodes=[10],
-                           iterations=3,
-                           tensor_bytes=[1024,8192,16384,32769,65538,
-                                          131076,262152,524304,1024000],
+                           clients_per_node=[48],
+                           client_nodes=[4,8,16,32,64,128],
+                           iterations=100,
+                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
                            languages=["cpp"],
                            wall_time="05:00:00",
-                           plot="database_nodes",
-                           smartsim_logging=False):
+                           plot="database_nodes"):
 
         """Run the throughput scaling tests with standard Orchestrator deployment
 
@@ -95,49 +94,50 @@ class Throughput:
                     wall_time=wall_time)
         print_yml_file(Path(result_path) / "run.cfg", logger)
         first_perms = list(product(db_nodes, db_cpus))
-        for i, first_perm in enumerate(first_perms, start=1):
-            dbn, dbc = first_perm
-            # start the database only once per value in db_nodes so all permutations
-            # are executed with the same database size without bringin down the database
-            db = start_database(exp,
-                                db_node_feature,
-                                db_port,
-                                dbn,
-                                dbc,
-                                None, # not setting threads per queue in throughput tests
-                                net_ifname,
-                                run_db_as_batch,
-                                db_hosts,
-                                wall_time)
-            logger.debug("database created and returned")
-            
-            second_perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))
-            for j, second_perm in enumerate(second_perms, start=1):
-                c_nodes, cpn, _bytes, db_cpu, language = second_perm
-                logger.info(f"Running permutation {i} of {len(second_perms)} for database node index {j} of {len(first_perms)}")
-                # setup a an instance of the C++ driver and start it
-                throughput_session = self._create_throughput_session(exp,
-                                                               node_feature,
-                                                               c_nodes,
-                                                               cpn,
-                                                               dbn,
-                                                               db_cpu,
-                                                               iterations,
-                                                               _bytes,
-                                                               language)
-                logger.debug("Throughput session created")
-                exp.start(throughput_session, summary=True)
-                logger.debug("experiment started")
-                # confirm scaling test run successfully
-                stat = exp.get_status(throughput_session)
-                if stat[0] != status.STATUS_COMPLETED: # might need to add error check to inference tests
-                    logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
+        try:
+            for i, first_perm in enumerate(first_perms, start=1):
+                dbn, dbc = first_perm
+                # start the database only once per value in db_nodes so all permutations
+                # are executed with the same database size without bringin down the database
+                db = start_database(exp,
+                                    db_node_feature,
+                                    db_port,
+                                    dbn,
+                                    dbc,
+                                    None, # not setting threads per queue in throughput tests
+                                    net_ifname,
+                                    run_db_as_batch,
+                                    db_hosts,
+                                    wall_time)
+                logger.debug("database created and returned")
+                
+                second_perms = list(product(client_nodes, clients_per_node, tensor_bytes, db_cpus, languages))
+                for j, second_perm in enumerate(second_perms, start=1):
+                    c_nodes, cpn, _bytes, db_cpu, language = second_perm
+                    logger.info(f"Running permutation {i} of {len(second_perms)} for database node index {j} of {len(first_perms)}")
+                    # setup a an instance of the C++ driver and start it
+                    throughput_session = self._create_throughput_session(exp,
+                                                                node_feature,
+                                                                c_nodes,
+                                                                cpn,
+                                                                dbn,
+                                                                db_cpu,
+                                                                iterations,
+                                                                _bytes,
+                                                                language)
+                    logger.debug("Throughput session created")
+                    exp.start(throughput_session, summary=True)
+                    logger.debug("experiment started")
+                    # confirm scaling test run successfully
+                    stat = exp.get_status(throughput_session)
+                    if stat[0] != status.STATUS_COMPLETED: # might need to add error check to inference tests
+                        logger.error(f"ERROR: One of the scaling tests failed {throughput_session.name}")
 
-            # stop database after this set of permutations have finished
-            exp.stop(db)
-            #Added to clean up db folder bc of issue with exp.stop()
-            time.sleep(5)
-            check_database_folder(result_path, logger)
+                # stop database after this set of permutations have finished
+                exp.stop(db)
+        except Exception as e:
+            #logger.warning(f"Skipping {run} in {scaling_results_dir}: could not process results")
+            logger.error(e)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
@@ -214,15 +214,15 @@ class Throughput:
                            exp_name="throughput-colocated-scaling",
                            launcher="auto",
                            node_feature={},
-                           nodes=[10],
-                           db_cpus=[5],
+                           nodes=[16,32,64,128],
+                           db_cpus=[8],
                            db_port=6780,
                            net_ifname="lo",
                            clients_per_node=[48],
-                           pin_app_cpus=[False],
-                           iterations=3,
-                           tensor_bytes=[1024,8192,16384,32769,65538,
-                                          131076,262152,524304,1024000],
+                           pin_db_cpus=[False],
+                           iterations=100,
+                           tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
                            languages=["cpp"],
                            plot="database_cpus"):
 
@@ -247,8 +247,8 @@ class Throughput:
         :type net_ifname: str, optional
         :param clients_per_node: client tasks per compute node for the synthetic scaling app
         :type clients_per_node: list[int], optional
-        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: list[bool], optional
+        :param pin_db_cpus: pin the threads of the database to 0-(n-db_cpus)
+        :type pin_db_cpus: list[bool], optional
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param tensor_bytes: list of tensor sizes in bytes
@@ -259,13 +259,13 @@ class Throughput:
         :type plot: str
         """
         logger.info("Starting throughput colocated scaling tests")
-        check_node_allocation(nodes, [0])
+        #check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
         
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
         write_run_config(result_path,
                     colocated=1,
-                    pin_app_cpus=str(pin_app_cpus),
+                    custom_pinning=str(pin_db_cpus),
                     client_per_node=clients_per_node,
                     client_nodes=nodes,
                     database_cpus=db_cpus,
@@ -274,9 +274,9 @@ class Throughput:
                     language=languages)
         print_yml_file(Path(result_path) / "run.cfg", logger)
 
-        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_app_cpus, languages))
+        perms = list(product(nodes, clients_per_node, db_cpus, tensor_bytes, pin_db_cpus, languages))
         for i, perm in enumerate(perms, start=1):
-            c_nodes, cpn, dbc, _bytes, pin_app, language = perm
+            c_nodes, cpn, dbc, _bytes, pin_db, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
 
             # setup a an instance of the C++ driver and start it
@@ -288,7 +288,7 @@ class Throughput:
                                                             db_port,
                                                             iterations,
                                                             _bytes,
-                                                            pin_app,
+                                                            pin_db,
                                                             net_ifname,
                                                             language)
             logger.debug("Throughput session created")
@@ -310,7 +310,7 @@ class Throughput:
                               db_port,
                               iterations,
                               _bytes,
-                              pin_app_cpus,
+                              pin_db_cpus,
                               net_ifname,
                               language):
         """Run the throughput scaling tests with colocated Orchestrator deployment
@@ -331,8 +331,8 @@ class Throughput:
         :type iterations: int
         :param _bytes: size in bytes of tensors to use for throughput scaling
         :type _bytes: int
-        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: bool, optional
+        :param pin_db_cpus: pin the threads of the database to 0-(n-db_cpus)
+        :type pin_db_cpus: bool, optional
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
@@ -356,7 +356,7 @@ class Throughput:
             "N"+str(nodes),
             "T"+str(tasks),
             "DBCPU"+str(db_cpus),
-            "PIN"+str(pin_app_cpus),
+            "PIN"+str(pin_db_cpus),
             "ITER"+str(iterations),
             "TB"+str(_bytes),
             get_uuid()
@@ -367,7 +367,7 @@ class Throughput:
         model.colocate_db(port=db_port,
                         db_cpus=db_cpus,
                         ifname=net_ifname,
-                        limit_app_cpus=pin_app_cpus,
+                        custom_pinning=pin_db_cpus,
                         debug=True,
                         loglevel="notice")
         
@@ -375,7 +375,7 @@ class Throughput:
         
         write_run_config(model.path,
                     colocated=1,
-                    pin_app_cpus=int(pin_app_cpus),
+                    custom_pinning=int(pin_db_cpus),
                     client_total=tasks*nodes,
                     client_per_node=tasks,
                     client_nodes=nodes,

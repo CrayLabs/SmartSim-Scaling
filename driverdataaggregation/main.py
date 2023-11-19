@@ -31,16 +31,16 @@ class DataAggregation:
                             db_cpus=36,
                             db_port=6780,
                             net_ifname="ipogif0",
-                            clients_per_node=[48],
-                            client_nodes=[60],
-                            iterations=20,
-                            tensor_bytes=[1024,8192,16384,32769,65538,
-                                              131076,262152,524304,1024000],
+                            clients_per_node=[32],
+                            client_nodes=[128, 256, 512],
+                            iterations=100,
+                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
                             tensors_per_dataset=[4],
-                            client_threads=[8],
+                            client_threads=[32],
                             cpu_hyperthreads=2,
                             languages=["cpp"],
-                            wall_time="05:00:00",
+                            wall_time="10:00:00",
                             plot="database_nodes"):
 
         """Run the data aggregation scaling tests.  Permutations of the test
@@ -167,9 +167,6 @@ class DataAggregation:
 
             # stop database after this set of permutations have finished
             exp.stop(db)
-            #Added to clean up db folder bc of issue with exp.stop()
-            time.sleep(5)
-            check_database_folder(result_path, logger)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
     
     @classmethod
@@ -378,12 +375,12 @@ class DataAggregation:
                                 db_port=6780,
                                 net_ifname="ipogif0",
                                 clients_per_node=[32],
-                                client_nodes=[60],
-                                iterations=20,
-                                tensor_bytes=[1024,8192,16384,32769,65538,
-                                          131076,262152,524304,1024000],
+                                client_nodes=[128, 256, 512],
+                                iterations=100,
+                                tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
                                 tensors_per_dataset=[4],
-                                client_threads=[1,2,4,8,16,32],
+                                client_threads=[32],
                                 cpu_hyperthreads=2,
                                 languages=["cpp"],
                                 wall_time="05:00:00",
@@ -510,9 +507,6 @@ class DataAggregation:
 
                 # stop database after this set of permutations have finished
                 exp.stop(db)
-                #Added to clean up db folder bc of issue with exp.stop()
-                time.sleep(5)
-                check_database_folder(result_path, logger)
             self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
 
     @classmethod
@@ -560,12 +554,12 @@ class DataAggregation:
                             prod_node_feature = {},
                             cons_node_feature = {},
                             clients_per_node=[32],
-                            client_nodes=[24, 48],
-                            iterations=20,
-                            tensor_bytes=[1024,8192,16384,32769,65538,
-                                          131076,262152,524304,1024000],
-                            tensors_per_dataset=[1,4],
-                            client_threads=[1,2,4,8,16,32],
+                            client_nodes=[128, 256, 512],
+                            iterations=100,
+                            tensor_bytes=[1024, 8192, 16384, 32768, 65536, 131072,
+                                         262144, 524288, 1024000, 2048000, 4096000],
+                            tensors_per_dataset=[4],
+                            client_threads=[32],
                             cpu_hyperthreads=2,
                             languages=["cpp"],
                             plot="clients_per_node"):
@@ -613,7 +607,7 @@ class DataAggregation:
         
         write_run_config(result_path,
                     colocated=0,
-                    client_per_node=clients_per_node,
+                    clients_per_node=clients_per_node,
                     client_nodes=client_nodes,
                     iterations=iterations,
                     tensor_bytes=tensor_bytes,

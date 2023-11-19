@@ -23,23 +23,22 @@ class Inference:
     def inference_standard(self,
                            exp_name="inference-standard-scaling",
                            launcher="auto",
-                           run_db_as_batch=True,
+                           run_db_as_batch=False,
                            db_node_feature = {"constraint": "P100"},
                            node_feature = {},
                            db_hosts=[],
-                           db_nodes=[4,8],
+                           db_nodes=[4,8,16],
                            db_cpus=[8],
-                           db_tpq=[1],
+                           db_tpq=[8],
                            db_port=6780,
                            batch_size=[1000], #bad default min_batch_time_out
                            device="GPU",
                            num_devices=1,
                            net_ifname="ipogif0",
-                           clients_per_node=[48],
-                           client_nodes=[1],
-                           rebuild_model=False,
-                           iterations=2,
-                           languages=["cpp", "fortran"],
+                           clients_per_node=[18],
+                           client_nodes=[4,8,16,32,64,128],
+                           iterations=100,
+                           languages=["cpp","fortran"],
                            wall_time="05:00:00",
                            plot="database_nodes"):
         """Run ResNet50 inference tests with standard Orchestrator deployment
@@ -76,8 +75,6 @@ class Inference:
         :type clients_per_node: list[int], optional
         :param client_nodes: number of compute nodes to use for the synthetic scaling app
         :type client_nodes: list[int], optional
-        :param rebuild_model: force rebuild of PyTorch model even if it is available
-        :type rebuild_model: bool
         :param iterations: number of put/get loops run by the applications
         :type iterations: int
         :param languages: list of languages to use for the tester "cpp" and/or "fortran"
@@ -87,15 +84,14 @@ class Inference:
         :param plot: flag to plot against in process results
         :type plot: str
         """
-        logger.info("Starting inference standard scaling tests")
-        check_node_allocation(client_nodes, db_nodes)
-        logger.info("Experiment allocation passed check")
+        logger.info("Starting inference standard scaling test")
 
         exp, result_path = create_experiment_and_dir(exp_name, launcher)
+        
         logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=0,
-                        clients_per_node=clients_per_node,
+                        client_per_node=clients_per_node,
                         client_nodes=client_nodes,
                         database_hosts=db_hosts,
                         database_nodes=db_nodes,
@@ -116,8 +112,6 @@ class Inference:
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbn, dbc, dbtpq, batch, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
-            print(perm)
-
             db = start_database(exp,
                                 db_node_feature,
                                 db_port,
@@ -129,7 +123,7 @@ class Inference:
                                 db_hosts,
                                 wall_time)
             # setup a an instance of the synthetic C++ app and start it
-            infer_session, resnet_model = self._create_inference_session(exp,
+            infer_session = self._create_inference_session(exp,
                                                      node_feature,
                                                      c_nodes,
                                                      cpn,
@@ -139,44 +133,39 @@ class Inference:
                                                      batch,
                                                      device,
                                                      num_devices,
-                                                     rebuild_model,
                                                      iterations,
                                                      language)
             logger.debug("Inference session created")
             address = db.get_address()[0]
-            setup_resnet(resnet_model,
+            attach_resnet(infer_session,
+                        f"./imagenet/resnet50.{device}.pt",
                         device,
                         num_devices,
-                        batch,
-                        address,
-                        cluster=dbn>1)
+                        batch)
             logger.debug("Resnet model set")
 
             exp.start(infer_session, block=True, summary=True)
-            # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
             exp.stop(db)
-            check_database_folder(result_path, logger)
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
-  
+
+
     def inference_colocated(self,
                             exp_name="inference-colocated-scaling",
                             node_feature={"constraint": "P100"},
                             launcher="auto",
-                            nodes=[1],
-                            clients_per_node=[12,24,36,60,96],
-                            db_cpus=[12],
-                            db_tpq=[1],
+                            nodes=[4,8,16,32,64,128],
+                            clients_per_node=[18],
+                            db_cpus=[8],
+                            db_tpq=[8],
                             db_port=6780,
-                            pin_app_cpus=[False],
                             batch_size=[96],
                             device="GPU",
                             num_devices=1,
                             net_type="uds",
                             net_ifname="lo",
-                            rebuild_model=False,
                             iterations=100,
                             languages=["cpp","fortran"],
                             plot="database_cpus"
@@ -199,8 +188,6 @@ class Inference:
         :type db_tpq: list[int], optional
         :param db_port: port to use for the database
         :type db_port: int, optional
-        :param pin_app_cpus: pin the threads of the application to 0-(n-db_cpus)
-        :type pin_app_cpus: list[bool], optional
         :param batch_size: batch size to set Resnet50 model with
         :type batch_size: list, optional
         :param device: device used to run the models in the database
@@ -212,16 +199,13 @@ class Inference:
         :param net_ifname: network interface to use i.e. "ib0" for infiniband or
                            "ipogif0" aries networks
         :type net_ifname: str, optional
-        :param rebuild_model: force rebuild of PyTorch model even if it is available
-        :type rebuild_model: bool
         :param languages: which language to use for the tester "cpp" or "fortran"
         :type languages: str
         :param plot: flag to plot against in process results
         :type plot: str
         """
         logger.info("Starting inference colocated scaling tests")
-        
-        check_model(device, force_rebuild=rebuild_model)
+        check_model(device)
         
         check_node_allocation(nodes, [0])
         logger.info("Experiment allocation passed check")
@@ -230,27 +214,18 @@ class Inference:
         logger.debug("Experiment and Results folder created")
         write_run_config(result_path,
                         colocated=1,
-                        node_feature=node_feature,
-                        experiment_name=exp_name,
-                        launcher=launcher,
-                        nodes=nodes,
-                        clients_per_node=clients_per_node,
+                        client_per_node=clients_per_node,
+                        client_nodes=nodes,
                         database_cpus=db_cpus,
-                        database_threads_per_queue=db_tpq,
                         database_port=db_port,
-                        pin_app_cpus=pin_app_cpus,
                         batch_size=batch_size,
                         device=device,
                         num_devices=num_devices,
-                        net_type=net_type,
-                        net_ifname=net_ifname,
-                        rebuild_model=rebuild_model,
                         iterations=iterations,
                         language=languages,
-                        plot=plot
-                        )
+                        node_feature=node_feature)
         print_yml_file(Path(result_path) / "run.cfg", logger)
-        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, pin_app_cpus, languages))
+        perms = list(product(nodes, clients_per_node, db_cpus, db_tpq, batch_size, languages))
         for i, perm in enumerate(perms, start=1):
             c_nodes, cpn, dbc, dbtpq, batch, pin_app, language = perm
             logger.info(f"Running permutation {i} of {len(perms)}")
@@ -268,33 +243,21 @@ class Inference:
                                                                batch,
                                                                device,
                                                                num_devices,
-                                                               rebuild_model,
                                                                iterations,
                                                                language)
             logger.debug("Inference session created")
+            attach_resnet(infer_session,
+                        f"./imagenet/resnet50.{device}.pt",
+                        device,
+                        num_devices,
+                        batch)
 
             exp.start(infer_session, block=True, summary=True)
 
-            # confirm scaling test run successfully
             stat = exp.get_status(infer_session)
             if stat[0] != status.STATUS_COMPLETED:
                 logger.error(f"One of the scaling tests failed {infer_session.name}")
         self.process_scaling_results(scaling_results_dir=exp_name, plot_type=plot)
-
-
-    @staticmethod
-    def _set_resnet_model(device="GPU", force_rebuild=False):
-            resnet_model = f"./imagenet/resnet50.{device}.pt"
-            if not Path(resnet_model).exists() or force_rebuild:
-                logger.info(f"AI Model {resnet_model} does not exist or rebuild was asked, it will be created")
-                try:
-                    save_model(device)
-                except:
-                    logger.error(f"Could not save {resnet_model} for {device}.")
-                    sys.exit(1)
-
-            logger.info(f"Using model {resnet_model}")
-            return resnet_model
 
     @classmethod
     def _create_inference_session(cls,
@@ -308,11 +271,9 @@ class Inference:
                                 batch_size,
                                 device,
                                 num_devices,
-                                rebuild_model,
                                 iterations,
                                 language
                                 ):
-        resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model) #the resnet file name does not store full length of node name
         cluster = 1 if db_nodes > 1 else 0
         run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
@@ -348,7 +309,7 @@ class Inference:
 
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                            resnet_model,
+                                            f"./imagenet/resnet50.{device}.pt",
                                             "./imagenet/data_processing_script.txt"])
         exp.generate(model, overwrite=True)
         write_run_config(model.path,
@@ -366,7 +327,7 @@ class Inference:
                         iterations=iterations,
                         node_feature=node_feature)
 
-        return model, resnet_model
+        return model
 
     @classmethod
     def _create_colocated_inference_session(cls,
@@ -374,7 +335,6 @@ class Inference:
                                        node_feature,
                                        nodes,
                                        tasks,
-                                       pin_app_cpus,
                                        net_type,
                                        net_ifname,
                                        db_cpus,
@@ -383,10 +343,8 @@ class Inference:
                                        batch_size,
                                        device,
                                        num_devices,
-                                       rebuild_model,
                                        iterations,
                                        language):
-        resnet_model = cls._set_resnet_model(device, force_rebuild=rebuild_model)
         # feature = db_node_feature.split( )
         run_settings = exp.create_run_settings(f"./{language}-inference/build/run_resnet_inference", run_args=node_feature)
         run_settings.set_nodes(nodes)
@@ -418,13 +376,12 @@ class Inference:
             ))
         model = exp.create_model(name, run_settings)
         model.attach_generator_files(to_copy=["./imagenet/cat.raw",
-                                            resnet_model,
+                                            f"./imagenet/resnet50.{device}.pt",
                                             "./imagenet/data_processing_script.txt"])
 
         db_opts = dict(
             db_cpus=db_cpus,
-            limit_app_cpus=pin_app_cpus,
-            threads_per_queue=db_tpq,
+            threads_per_queue=db_tpq, #limit_app_cpus=False,
             # turning this to true can result in performance loss
             # on networked file systems(many writes to db log file)
             debug=True,
@@ -442,23 +399,17 @@ class Inference:
                 **db_opts
             )
         exp.generate(model, overwrite=True)
-        write_run_config(
-            model.path,
-            colocated=1,
-            nodes=nodes,
-            client_total=tasks*nodes,
-            clients_per_node=tasks,
-            database_cpus=db_cpus,
-            database_threads_per_queue=db_tpq,
-            database_port=db_port,
-            pin_app_cpus=pin_app_cpus,
-            batch_size=batch_size,
-            device=device,
-            num_devices=num_devices,
-            net_type=net_type,
-            net_ifname=net_ifname,
-            rebuild_model=rebuild_model,
-            iterations=iterations,
-            language=language
-        )
+        write_run_config(model.path,
+                        colocated=1,
+                        client_total=tasks*nodes,
+                        client_per_node=tasks,
+                        client_nodes=nodes,
+                        database_cpus=db_cpus,
+                        database_threads_per_queue=db_tpq,
+                        batch_size=batch_size,
+                        device=device,
+                        num_devices=num_devices,
+                        language=language,
+                        iterations=iterations,
+                        node_feature=node_feature)
         return model

@@ -4,13 +4,21 @@ use utils, only : get_env_var
 use smartredis_client, only : client_type
 use smartredis_errors, only : print_last_error
 use mpi
+use, intrinsic :: iso_fortran_env, only: error_unit
 
 implicit none
 
 ! Configuration parameters
 integer :: batch_size, num_devices, client_count
 character(len=255) :: device_type
-logical :: should_set, use_cluster
+logical :: use_cluster
+logical :: poll_model_bool
+logical :: poll_script_bool
+integer :: poll_model_code
+integer :: poll_script_code
+
+! File imports
+include "enum_fortran.inc"
 
 ! MPI-related variables
 integer :: rank, ierror
@@ -32,7 +40,6 @@ character(len=255) :: script_key, model_key
 batch_size = get_env_var("SS_BATCH_SIZE", 1)
 device_type = get_env_var("SS_DEVICE", "GPU")
 num_devices = get_env_var("SS_NUM_DEVICES", 1)
-should_set = get_env_var("SS_SET_MODEL", .false.)
 use_cluster = get_env_var("SS_CLUSTER", .false.)
 client_count = get_env_var("SS_CLIENT_COUNT", 18)
 
@@ -48,10 +55,16 @@ open(newunit = timing_unit, &
     )
 
 call init_client(client, rank, use_cluster, timing_unit)
-if (should_set .and. rank == 0) call set_model(client, device_type, num_devices, batch_size)
 
 model_key = "resnet_model"
+poll_model_code = client%poll_model(model_key, 200, 100, poll_model_bool)
+if (poll_model_code /= SRNoError) stop 'Something went wrong during poll_model execution'
+if (.not. poll_model_bool) stop 'Model was not found'
+
 script_key = "resnet_script"
+poll_script_code = client%poll_model(script_key, 200, 100, poll_script_bool)
+if (poll_script_code /= SRNoError) stop 'Something went wrong during poll_model execution'
+if (.not. poll_script_bool) stop 'Script was not found'
 
 call MPI_Barrier(MPI_COMM_WORLD, ierror)
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
@@ -81,52 +94,6 @@ subroutine init_client( client, rank, use_cluster, timing_unit )
     write(timing_unit,'(I0,A,G0)') rank, ',client(),', delta_t
 
 end subroutine init_client
-
-subroutine set_model(client, device_type, num_devices, batch_size)
-    type(client_type), intent(in) :: client
-    character(len=*),  intent(in) :: device_type
-    integer,           intent(in) :: num_devices
-    integer,           intent(in) :: batch_size
-
-    include "enum_fortran.inc"
-
-    integer :: i
-    integer :: return_code
-    character(len=255) :: model_filename, script_filename
-    character(len=255) :: model_key, script_key
-
-    write(model_filename,'(A,A,A)') "./resnet50.", TRIM(device_type), '.pt'
-    script_filename = "./data_processing_script.txt"
-
-    if (num_devices > 1 .and. device_type == 'GPU') then
-        model_key = 'resnet_model'
-        script_key = 'resnet_script'
-        return_code = client%set_model_from_file_multigpu( &
-            model_key, model_filename, "TORCH", 0, num_devices, batch_size)
-        if (return_code /= SRNoError) then
-            call print_last_error()
-        endif
-        return_code = client%set_script_from_file_multigpu(script_key, script_filename, 0, num_devices)
-        if (return_code /= SRNoError) then
-            call print_last_error()
-        endif
-    else
-        do i=1,num_devices
-            model_key = 'resnet_model'
-            script_key = 'resnet_script'
-            return_code = client%set_model_from_file(model_key, model_filename, "TORCH", device_type, batch_size)
-            if (return_code /= SRNoError) then
-                call print_last_error()
-                stop 'Error in set model'
-            endif
-            return_code = client%set_script_from_file(script_key, device_type, script_filename)
-            if (return_code /= SRNoError) then
-                call print_last_error()
-                stop 'Error in set script'
-            endif
-        enddo
-    endif
-end subroutine set_model
 
 subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
     integer,          intent(in   ) :: rank
@@ -172,17 +139,25 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     if (use_multigpu) then
         return_code = client%run_script_multigpu( &
             script_key, "pre_process_3ch", [in_key], [script_out_key], rank, 0, num_devices)
+        write(error_unit, *) 'is multi 1'
     else
-        return_code = client%run_script(script_key, "pre_process_3ch", [in_key], [script_out_key])
+        return_code = client%run_script(trim(script_key), "pre_process_3ch", [in_key], [script_out_key])
+        write(error_unit, *) 'is not multi 1', script_key
     endif
-    if (return_code/=SRNoError) stop "Error in run_script"
+    if (return_code /= SRNoError) then
+        call print_last_error()
+        stop "Error in run_script (warmup)"
+    endif
 
     if (use_multigpu) then
         return_code = client%run_model_multigpu(model_key, [script_out_key], [out_key], rank, 0, num_devices)
     else
         return_code = client%run_model(model_key, [script_out_key], [out_key])
     endif
-    if (return_code/=SRNoError) stop "Error in run_model"
+    if (return_code /= SRNoError) then
+        call print_last_error()
+        stop "Error in run_model"
+    endif
 
     return_code = client%unpack_tensor(out_key, result, [1,1000])
     if (return_code/=SRNoError) stop "Error in put tensor"

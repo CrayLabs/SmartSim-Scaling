@@ -35,6 +35,9 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     // Allocate arrays to hold timings
     std::vector<double> get_list_times;
 
+    // Allocate arrays to hold timings
+    std::vector<double> poll_list_times;
+
     // Retrieve the number of iterations to run
     int iterations = get_iterations();
     log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
@@ -59,6 +62,7 @@ void run_aggregation_consumer(std::ofstream& timing_file,
             log_data(context, LLInfo, "Consuming list " + std::to_string(i));
         }
 
+        double poll_list_start = MPI_Wtime();
         // Have rank 0 check that the aggregation list is full
         if(rank == 0) {
             bool list_is_ready = client.poll_list_length(list_name,
@@ -73,7 +77,10 @@ void run_aggregation_consumer(std::ofstream& timing_file,
                 throw std::runtime_error(list_size_error);
             }
         }
-
+        double poll_list_end = MPI_Wtime();
+        log_data(context, LLDebug, "poll_list completed");
+        delta_t = poll_list_end - poll_list_start;
+        poll_list_times.push_back(delta_t);
         // Have all ranks wait until the aggregation list is full
         MPI_Barrier(MPI_COMM_WORLD);
 
@@ -104,6 +111,8 @@ void run_aggregation_consumer(std::ofstream& timing_file,
     for (int i = 0; i < iterations; i++) {
         timing_file << rank << "," << "get_list" << ","
                     << get_list_times[i] << "\n";
+        timing_file << rank << "," << "poll_list" << ","
+                    << poll_list_times[i] << "\n";
     }
 
     // Write loop time to file

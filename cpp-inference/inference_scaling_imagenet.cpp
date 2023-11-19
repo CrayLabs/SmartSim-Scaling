@@ -98,8 +98,19 @@ void run_mnist(const std::string& model_name,
   int num_devices = get_num_devices();
   bool use_multigpu = (0 == device.compare("GPU")) && num_devices > 1;
   bool should_set = get_set_flag();
+
   std::string model_key = "resnet_model";
+  bool poll_model_code = client.poll_model(model_key, 100, 100);
+  if (!poll_model_code) {
+    log_error(context, LLInfo, "SR Error finding model");
+  }
+
   std::string script_key = "resnet_script";
+  bool poll_script_code = client.poll_key(script_key, 100, 100);
+  if (!poll_script_code) {
+    log_error(context, LLInfo, "SR Error finding script");
+  }
+
   // setting up string to debug set vars
   std::string program_vars = "Running rank with vars should_set: ";
   program_vars += std::to_string(should_set) + " - num_device: ";
@@ -108,102 +119,6 @@ void run_mnist(const std::string& model_name,
   program_vars += std::to_string(is_colocated) + " - cluster: " + std::to_string(cluster);
   log_data(context, LLDebug, program_vars);
   
-  if (should_set) {
-    log_data(context, LLDebug, "Entered should_set code block");
-    int batch_size = get_batch_size();
-    int n_clients = get_client_count();
-    std::string should_set_vars = "Running rank with batch_size: ";
-    should_set_vars += std::to_string(batch_size) + " and n_clients: ";
-    should_set_vars += std::to_string(n_clients);
-    log_data(context, LLDebug, should_set_vars);
-    if (!is_colocated && rank == 0) {
-      log_data(context, LLDebug, "Setting script/model for Standard test");
-
-      std::cout<<"Setting Resnet Model from scaling app" << std::endl;
-      log_data(context, LLInfo, "Setting Resnet Model from scaling app");
-
-      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl;
-      log_data(context, LLInfo, "Setting with batch_size: " + std::to_string(batch_size));
-
-      std::cout<<"Setting on device: " << device << std::endl;
-      log_data(context, LLInfo, "Setting on device: " + device);
-
-      std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
-      log_data(context, LLInfo, "Setting on " + std::to_string(num_devices) + " devices");
-
-      std::string model_filename = "./resnet50." + device + ".pt";
-
-      if (use_multigpu) {
-        client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
-        std::string std_model_use_multigpu_vars = "Use_multigpu - model_key:" + model_key;
-        std_model_use_multigpu_vars += " model_filename:";
-        std_model_use_multigpu_vars += model_filename + " num_devices:" + std::to_string(num_devices);
-        std_model_use_multigpu_vars += " batch_size:";
-        std_model_use_multigpu_vars += std::to_string(batch_size);
-        log_data(context, LLDebug, std_model_use_multigpu_vars);
-        client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-        std::string std_script_use_multigpu_vars = "Use_multigpu - script_key:";
-        std_script_use_multigpu_vars += script_key + " script_filename:";
-        std_script_use_multigpu_vars += "./data_processing_script.txt num_devices:";
-        std_script_use_multigpu_vars += std::to_string(num_devices);
-      }
-      else {
-        client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
-        std::string std_model_vars =  "Not multigpu - model_key:" + model_key;
-        std_model_vars += " model_filename:" + model_filename + " device:";
-        std_model_vars += device + " batch_size:" + std::to_string(batch_size);
-        log_data(context, LLDebug, std_model_vars);
-        client.set_script_from_file(script_key, device, "./data_processing_script.txt");
-        std::string std_script_vars = "Not multigpu - script_key:" + script_key;
-        std_script_vars +=  " script_filename:./data_processing_script.txt device:" ;
-        std_script_vars += device;
-        log_data(context, LLDebug, std_script_vars);
-      }
-    }
-    if(is_colocated && rank % n_clients == 0) {
-      log_data(context, LLDebug, "Setting script/model for Colocated test");
-
-      std::cout<<"Setting Resnet Model from scaling app" << std::endl;
-      log_data(context, LLInfo, "Setting Resnet Model from scaling app");
-
-      std::cout<<"Setting with batch_size: " << std::to_string(batch_size) << std::endl;
-      log_data(context, LLInfo, "Setting with batch_size: " + std::to_string(batch_size));
-
-      std::cout<<"Setting on device: " << device << std::endl;
-      log_data(context, LLInfo, "Setting on device: " + device);
-
-      std::cout<<"Setting on " << std::to_string(num_devices) << " devices" <<std::endl << std::flush;
-      log_data(context, LLInfo, "Setting on " + std::to_string(num_devices) + " devices");
-
-      std::string model_filename = "./resnet50." + device + ".pt";
-
-      if (use_multigpu) {
-        client.set_model_from_file_multigpu(model_key, model_filename, "TORCH", 0, num_devices, batch_size);
-        std::string colo_model_use_multigpu_vars = "Use_multigpu=True - model_key:";
-        colo_model_use_multigpu_vars + model_key + " model_filename:" + model_filename;
-        colo_model_use_multigpu_vars += " num_devices:" + std::to_string(num_devices);
-        colo_model_use_multigpu_vars += " batch_size:" + std::to_string(batch_size);
-        log_data(context, LLDebug, colo_model_use_multigpu_vars);
-        client.set_script_from_file_multigpu(script_key, "./data_processing_script.txt", 0, num_devices);
-        std::string colo_script_use_multigpu_vars = "Use_multigpu=True - script_key:";
-        colo_model_use_multigpu_vars += script_key + " script_filename:";
-        colo_script_use_multigpu_vars += "./data_processing_script.txt num_devices:";
-        colo_model_use_multigpu_vars += std::to_string(num_devices);
-        log_data(context, LLDebug, colo_script_use_multigpu_vars);
-      }
-      else {
-        client.set_model_from_file(model_key, model_filename, "TORCH", device, batch_size);
-        std::string colo_model_vars = "Use_multigpu=False - model_key:" + model_key + " model_filename:";
-        colo_model_vars += model_filename + " device:" + device + " batch_size:";
-        colo_model_vars += std::to_string(batch_size);
-        log_data(context, LLDebug, colo_model_vars);
-        client.set_script_from_file(script_key, device, "./data_processing_script.txt");
-        std::string colo_script_vars = "Use_multigpu=False - script_key: " + script_key;
-        colo_script_vars += " script_filename:./data_processing_script.txt device:" + device;
-        log_data(context, LLDebug, colo_script_vars);
-      }
-    }
-  }
   int iterations = get_iterations();
   log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
   MPI_Barrier(MPI_COMM_WORLD);
@@ -241,7 +156,6 @@ void run_mnist(const std::string& model_name,
   client.put_tensor(in_key, array, {224, 224, 3},
                     SRTensorTypeFloat,
                     SRMemLayoutNested);
-  double put_tensor_end = MPI_Wtime();
   log_data(context, LLDebug, "put_tensor completed");
   if (use_multigpu) {
     client.run_script_multigpu(script_key, "pre_process_3ch", {in_key}, {script_out_key}, rank, 0, num_devices);
@@ -277,10 +191,10 @@ void run_mnist(const std::string& model_name,
 
   // Begin the actual iteration loop
   log_data(context, LLDebug, "Iteration loop starting...");
+  MPI_Barrier(MPI_COMM_WORLD);
   double loop_start = MPI_Wtime();
   for (int i = 0; i < iterations + 1; i++) {
     log_data(context, LLDebug, "Running iteration: " + std::to_string(i));
-    MPI_Barrier(MPI_COMM_WORLD);
     std::string in_key = "resnet_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string script_out_key = "resnet_processed_input_rank_" + std::to_string(rank) + "_" + std::to_string(i);
     std::string out_key = "resnet_output_rank_" + std::to_string(rank) + "_" + std::to_string(i);

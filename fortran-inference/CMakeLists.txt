@@ -26,7 +26,8 @@ add_executable(run_resnet_inference
 	utils.F90
 )
 target_link_libraries(run_resnet_inference
-	MPI::MPI_CXX
+	#link the fortran inference against the following libraries
+	MPI::MPI_CXX #might need to turn this to the fortran lib MPI::MPI_Fortran
 	${SR_LIB}
 	${SR_LIB_FORTRAN}
 )
