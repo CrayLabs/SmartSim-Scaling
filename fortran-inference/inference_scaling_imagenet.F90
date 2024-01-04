@@ -10,6 +10,7 @@ implicit none
 
 ! Configuration parameters
 integer :: batch_size, num_devices, client_count
+integer, parameter :: NUM_TRIALS = 100
 character(len=255) :: device_type
 logical :: use_cluster
 logical :: poll_model_bool
@@ -43,36 +44,43 @@ num_devices = get_env_var("SS_NUM_DEVICES", 1)
 use_cluster = get_env_var("SS_CLUSTER", .false.)
 client_count = get_env_var("SS_CLIENT_COUNT", 18)
 
+! Initialize MPI and start the clock for timing the entire application
 call MPI_init(ierror)
 main_start = MPI_Wtime()
-
 call MPI_comm_rank(MPI_COMM_WORLD, rank, ierror)
 
+! Open the timing file that this rank will write to
 write(timing_file,'(A,I0,A)') 'rank_', rank, '_timing.csv'
 open(newunit = timing_unit, &
     file = timing_file,     &
     status = 'REPLACE'      &
     )
 
+! Initialize the SmartRedis client
 call init_client(client, rank, use_cluster, timing_unit)
 
+! Check to that the ML model is in the database (loaded in the driver script)
 model_key = "resnet_model"
 poll_model_code = client%poll_model(model_key, 200, 100, poll_model_bool)
 if (poll_model_code /= SRNoError) stop 'Something went wrong during poll_model execution'
 if (.not. poll_model_bool) stop 'Model was not found'
 
+! Check to that the processing script is in the database (loaded in the driver script)
 script_key = "resnet_script"
 poll_script_code = client%poll_model(script_key, 200, 100, poll_script_bool)
 if (poll_script_code /= SRNoError) stop 'Something went wrong during poll_model execution'
 if (.not. poll_script_bool) stop 'Script was not found'
 
 call MPI_Barrier(MPI_COMM_WORLD, ierror)
+! Run the main loop that runs the MNIST model
 call run_mnist(rank, num_devices, device_type, model_key, script_key, timing_unit)
 
+! Finalize the program
 if (rank==0) write(*,*) "Finished Resnet test"
 main_end = MPI_Wtime()
 delta_t = main_end - main_start
 
+! Write out the timing for the entire program
 write(timing_unit,'(I0,A,G0)') rank, ',main(),', delta_t
 
 call MPI_finalize(ierror)
@@ -112,10 +120,10 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     real(kind=8) :: run_model_start, run_model_end
     real(kind=8) :: unpack_tensor_start, unpack_tensor_end
     real(kind=8) :: loop_start, loop_end
-    real(kind=8), dimension(100) :: put_tensor_times
-    real(kind=8), dimension(100) :: run_script_times
-    real(kind=8), dimension(100) :: run_model_times
-    real(kind=8), dimension(100) :: unpack_tensor_times
+    real(kind=8), dimension(NUM_TRIALS) :: put_tensor_times
+    real(kind=8), dimension(NUM_TRIALS) :: run_script_times
+    real(kind=8), dimension(NUM_TRIALS) :: run_model_times
+    real(kind=8), dimension(NUM_TRIALS) :: unpack_tensor_times
 
     real(kind=4), dimension(224,224,3) :: array
     real(kind=4), dimension(1,1000) :: result
@@ -128,11 +136,12 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     use_multigpu = (num_devices > 1) .and. (device_type == 'GPU')
     call random_number(array)
 
-    ! Warmup the database before starting the loop
+    ! Create the keys to use for this rank
     write(in_key,'(A,I0,A,I0)') 'resnet_input_rank_', rank, '_',1
     write(script_out_key,'(A,I0,A,I0)') 'resnet_processed_input_rank_', rank, '_', 1
     write(out_key,'(A,I0,A,I0)') 'resnet_output_rank_', rank, '_', 1
 
+    ! Warmup the database before starting the loop
     return_code = client%put_tensor(in_key, array, [224, 224,3])
     if (return_code/=SRNoError) stop "Error in put tensor"
 
@@ -164,19 +173,22 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
 
     ! Start the main loop
     loop_start = MPI_WTime()
-    do i=1,100
+    do i=1, NUM_TRIALS
+        ! Ensure that all ranks try to run an inference at the same time
         call MPI_Barrier(MPI_COMM_WORLD, ierror)
 
         write(in_key,'(A,I0,A,I0)') 'resnet_input_rank_', rank, '_', i
         write(script_out_key,'(A,I0,A,I0)') 'resnet_processed_input_rank_', rank, '_', i
         write(out_key,'(A,I0,A,I0)') 'resnet_output_rank_', rank, '_', i
 
+        ! Put the tensor into the database
         put_tensor_start = MPI_WTime()
         return_code = client%put_tensor(in_key, array, [224, 224,3])
         put_tensor_end = MPI_WTime()
         if (return_code/=SRNoError) stop "Error in put tensor"
         put_tensor_times(i) = put_tensor_end-put_tensor_start
 
+        ! Run the preprocessing script
         if (use_multigpu) then
             run_script_start = MPI_WTime()
             return_code = client%run_script_multigpu( &
@@ -190,6 +202,7 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
         if (return_code/=SRNoError) stop "Error in run_script"
         run_script_times(i) = run_script_end-run_script_start
 
+        ! Do the inference
         if (use_multigpu) then
             run_model_start = MPI_WTime()
             return_code = client%run_model_multigpu(model_key, [script_out_key], [out_key], rank, 0, num_devices)
@@ -202,6 +215,7 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
         if (return_code/=SRNoError) stop "Error in run_model"
         run_model_times(i) = run_model_end-run_model_start
 
+        ! Retrieve the result from the database
         unpack_tensor_start = MPI_WTime()
         return_code = client%unpack_tensor(out_key, result, [1,1000])
         unpack_tensor_end = MPI_WTime()
@@ -210,7 +224,8 @@ subroutine run_mnist(rank, num_devices, device_type, model_key, script_key, timi
     enddo
     loop_end = MPI_WTime()
 
-    do i=1,100
+    ! Write out the results of the times
+    do i=1, NUM_TRIALS
         write(timing_unit,'(I0,A,E25.16)') rank, ",put_tensor,", put_tensor_times(i)
         write(timing_unit,'(I0,A,E25.16)') rank, ",run_script,", run_script_times(i)
         write(timing_unit,'(I0,A,E25.16)') rank, ",run_model,", run_model_times(i)

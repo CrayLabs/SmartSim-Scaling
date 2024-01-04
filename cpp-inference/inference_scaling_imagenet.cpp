@@ -118,7 +118,7 @@ void run_mnist(const std::string& model_name,
   program_vars += " - use_multigpu: " + std::to_string(use_multigpu) + " - is_coloated: ";
   program_vars += std::to_string(is_colocated) + " - cluster: " + std::to_string(cluster);
   log_data(context, LLDebug, program_vars);
-  
+
   int iterations = get_iterations();
   log_data(context, LLDebug, "Running with iterations: " + std::to_string(iterations));
   MPI_Barrier(MPI_COMM_WORLD);
@@ -131,6 +131,9 @@ void run_mnist(const std::string& model_name,
   MPI_Bcast(&(p[0]), 224*224*3, MPI_FLOAT, 0, MPI_COMM_WORLD);
   float*** array = allocate_3D_array<float>(224, 224, 3);
   int c = 0;
+
+  // Fill array with random numbers. This array represents an 224x224 image
+  // with 3 color channels
   for(int i=0; i<224; i++)
     for(int j=0; j<224; j++)
       for(int k=0; k<3; k++) {
