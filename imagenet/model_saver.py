@@ -3,7 +3,18 @@ import torch
 import fire
 import os
 
-def save_model(device: str = "CPU"):
+def save_model(device: str = "CPU", model_name = "resnet50"):
+    """Serialize and save a Torchvision model
+
+    Torchvision comes with a number of imagenet models each with a different
+    architecture and number of layers. Common ones (and the number of parameters)
+    are "shufflenet_v2_x0_5" (1.4M), "resnet50" (25.6M), and "resnet152" (60.2M).
+
+    :param device: device to target for inference "CPU" or "GPU", defaults to "CPU"
+    :type device: str, optional
+    :param model_name: the Torchvision model to use, defaults to "resnet50"
+    :type model_name: str, optional
+    """
     print(f"Saving model for {device}")
     if device.startswith("GPU"):
         if not torch.cuda.is_available():
@@ -11,11 +22,7 @@ def save_model(device: str = "CPU"):
     # Device's torch name
     device_name = "cuda" if device.startswith("GPU") else "cpu"
 
-    # Many of the Imagenet models could be used. shufflenet has about the the same number of
-    # parameters as the ones used in our use cases
-    model = models.shufflenet_v2_x0_5(pretrained=True)
-    # model = models.resnet50(pretrained=True)  # ~250k parameters
-    # model = models.resnet152(pretrained=True) # ~500k parameters
+    model = getattr(models)(pretrained=True)
     model.to(torch.device(device_name))
     model.eval()
 
