@@ -22,7 +22,7 @@ def save_model(device: str = "CPU", model_name = "resnet50"):
     # Device's torch name
     device_name = "cuda" if device.startswith("GPU") else "cpu"
 
-    model = getattr(models)(pretrained=True)
+    model = getattr(models, model_name)(pretrained=True)
     model.to(torch.device(device_name))
     model.eval()
 
